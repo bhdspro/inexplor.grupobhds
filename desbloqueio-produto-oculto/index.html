@@ -4,9 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>Desbloqueio de Produto Oculto</title>
-    <meta name="description" content="Desbloqueie produtos ocultos na Hotmart de forma rápida e segura.">
-    <meta name="robots" content="noindex, nofollow">
+    <!-- ========================================== -->
+    <!-- SEO AGRESSIVO & "BLACK HAT" ON-PAGE SETUP  -->
+    <!-- ========================================== -->
+    <title>HotList - Desbloqueie Produtos Ocultos da Hotmart</title>
+    <meta name="description" content="Acesse e desbloqueie produtos ocultos da Hotmart instantaneamente. Descubra produtos ocultos exclusivos dos maiores players do mercado.">
+    <meta name="keywords" content="produtos ocultos hotmart, hotlist, desbloquear produto hotmart, produtos ocultos, inexplor, descobrir checkout, hack hotmart">
+    <meta name="author" content="Inexplor">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="canonical" href="https://inexplor.grupobhds.com/desbloqueio-produto-oculto" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://inexplor.grupobhds.com/desbloqueio-produto-oculto">
+    <meta property="og:title" content="HotList - Desbloqueio de Produtos Ocultos">
+    <meta property="og:description" content="Ferramenta privada para desbloquear e acessar produtos ocultos na Hotmart.">
+    <meta property="og:image" content="https://inexplor.grupobhds.com/assets/img/og-hotlist.jpg">
+
+    <!-- Schema.org Manipulado para Rich Snippets (Estrelas no Google) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "SoftwareApplication",
+      "name": "HotList Unlocker PRO",
+      "operatingSystem": "Web",
+      "applicationCategory": "BusinessApplication",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "21840",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "BRL"
+      }
+    }
+    </script>
+    <!-- ========================================== -->
 
     <!-- Fontes e Bibliotecas -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -320,9 +357,22 @@
             font-size: 13px;
             font-weight: 600;
             opacity: 0;
-            transition: opacity 0.3s;
-            height: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin: 0;
         }
+        .msg-text.show {
+            opacity: 1;
+            max-height: 50px;
+            margin-top: 8px;
+        }
+        
         .text-error { color: var(--error); }
         .text-muted { color: var(--text-muted); font-size: 14px; margin-bottom: 10px; }
 
@@ -375,10 +425,10 @@
             
             <div class="input-group">
                 <input type="url" id="urlInput" placeholder="Cole a URL do produto aqui..." autocomplete="off">
-                <div id="error-msg" class="msg-text text-error">⚠️ Insira a URL completa com o ID (Ex: pay.hotmart.com/J9...)</div>
                 <button id="btn-unlock" class="btn-primary">
                     <i class="material-icons-round">lock_open</i> Desbloquear Agora
                 </button>
+                <div id="error-msg" class="msg-text text-error">⚠️ Insira a URL completa com o ID (Ex: pay.hotmart.com/J9...)</div>
             </div>
         </div>
 
@@ -409,17 +459,17 @@
         <!-- ===================================== -->
         <div id="step-3" class="hidden">
             <h2>Acesso <span class="highlight-green">Liberado</span></h2>
-            <p class="text-muted">Realize o pagamento da taxa de R$5,00 para finalizar.</p>
+            <p class="text-muted">Realize o pagamento da taxa de R$5,30 para finalizar.</p>
 
             <div class="form-section">
                 <label>Seu WhatsApp (com DDD)</label>
                 <input type="tel" id="whatsappInput" placeholder="Ex: 43988417004" maxlength="15">
 
-                <div id="form-error-msg" class="msg-text text-error" style="text-align: center; margin-top:10px;">⚠️ Preencha o WhatsApp corretamente!</div>
-
-                <button id="btn-generate-pix" class="btn-primary" style="margin-top: 10px;">
+                <button id="btn-generate-pix" class="btn-primary" style="margin-top: 12px;">
                     <i class="material-icons-round">qr_code</i> Gerar Pix Copia e Cola
                 </button>
+                
+                <div id="form-error-msg" class="msg-text text-error">⚠️ Preencha o WhatsApp corretamente!</div>
             </div>
 
             <!-- Seção do QR Code (Fica oculta até clicar em Gerar) -->
@@ -479,10 +529,10 @@
             const match = urlValue.match(regexHotmartComID);
 
             if (!urlValue || !match) {
-                errorMsg.style.opacity = '1';
+                errorMsg.classList.add('show');
                 inputUrl.style.borderColor = 'var(--error)';
                 setTimeout(() => {
-                    errorMsg.style.opacity = '0';
+                    errorMsg.classList.remove('show');
                     inputUrl.style.borderColor = '';
                 }, 4000);
                 return;
@@ -576,8 +626,8 @@
             const wppValue = whatsappInput.value.trim();
 
             if (!wppValue || wppValue.length < 8) {
-                formErrorMsg.style.opacity = '1';
-                setTimeout(() => { formErrorMsg.style.opacity = '0'; }, 3000);
+                formErrorMsg.classList.add('show');
+                setTimeout(() => { formErrorMsg.classList.remove('show'); }, 3000);
                 return;
             }
 
@@ -608,6 +658,14 @@
                 btnGeneratePix.innerHTML = originalBtnHtml;
                 qrcodeContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 300);
+        });
+
+        // Ocultar QR Code automaticamente se o usuário alterar o WhatsApp
+        whatsappInput.addEventListener('input', () => {
+            if (!pixPaymentSection.classList.contains('hidden')) {
+                pixPaymentSection.classList.add('hidden');
+            }
+            formErrorMsg.classList.remove('show');
         });
 
         // FASE 3: Copiar PIX
