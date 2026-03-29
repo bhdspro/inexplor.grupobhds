@@ -90,6 +90,12 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
+        .header-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
         .header-top {
             display: flex;
             flex-direction: column;
@@ -149,7 +155,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             background: rgba(0, 0, 0, 0.2);
             color: #fff;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             transition: all 0.3s ease;
             outline: none;
@@ -277,7 +283,7 @@
         </div>
 
         <div class="form-section">
-            <input type="tel" id="whatsappInput" placeholder="Digite seu WhatsApp para receber seu acesso" maxlength="15">
+            <input type="tel" id="whatsappInput" placeholder="Digite seu WhatsApp para receber o acesso" maxlength="15">
 
             <button id="btn-generate-pix" class="btn-primary" style="margin-top: 16px;">
                 <i class="material-icons-round">qr_code</i> Gerar Pix Copia e Cola
@@ -308,6 +314,32 @@
 
         // Variável para armazenar o código Pix gerado dinamicamente
         let currentPixString = "";
+        let qrCodeInstance = null; // Guarda a instância do QR Code para atualizar sem falhas
+
+        // Máscara e validação automática para o campo de WhatsApp
+        whatsappInput.addEventListener('input', function(e) {
+            // Remove tudo o que não for número
+            let value = e.target.value.replace(/\D/g, '');
+            
+            // Aplica a máscara (XX) XXXXX-XXXX
+            let formattedValue = '';
+            if (value.length > 0) {
+                formattedValue = '(' + value.substring(0, 2);
+                if (value.length > 2) {
+                    formattedValue += ') ' + value.substring(2, 7);
+                    if (value.length > 7) {
+                        formattedValue += '-' + value.substring(7, 11);
+                    }
+                }
+            }
+            e.target.value = formattedValue;
+
+            // Ocultar QR Code e erro automaticamente se o utilizador alterar o WhatsApp
+            if (!pixPaymentSection.classList.contains('hidden')) {
+                pixPaymentSection.classList.add('hidden');
+            }
+            formErrorMsg.classList.remove('show');
+        });
 
         // Função Criadora de PIX BR Code (Dinâmico)
         function generateDynamicPix(whatsapp) {
@@ -321,8 +353,8 @@
             const nome = "BRUNO H DOS SANTOS";
             const cidade = "LONDRINA";
             const valor = "58.90";
-            // Adiciona o WhatsApp na descrição do pagamento!
-            const descricao = "Espião de Transação 50C - " + whatsapp;
+            // IMPORTANTE: Adiciona o WhatsApp na descrição. Sem acentos para não bugar o QR Code e o Banco Central!
+            const descricao = "Espiao de Transacao 50C - " + whatsapp;
 
             const merchantAccountInfo = tlv("00", "br.gov.bcb.pix") +
                                         tlv("01", chave) +
@@ -359,9 +391,11 @@
 
         // Gerar QR Code Dinâmico
         btnGeneratePix.addEventListener('click', () => {
-            const wppValue = whatsappInput.value.trim();
+            // Pega apenas os números para gerar o PIX e validar
+            const wppRawValue = whatsappInput.value.replace(/\D/g, '');
 
-            if (!wppValue || wppValue.length < 8) {
+            // Exige no mínimo 10 números (DDD + 8 ou 9 dígitos)
+            if (!wppRawValue || wppRawValue.length < 10) {
                 formErrorMsg.classList.add('show');
                 setTimeout(() => { formErrorMsg.classList.remove('show'); }, 3000);
                 return;
@@ -371,37 +405,36 @@
             const originalBtnHtml = btnGeneratePix.innerHTML;
             btnGeneratePix.innerHTML = "Atualizando Código...";
 
-            // 1. Gerar Código Pix (Copia e Cola + Payload Oculto)
-            currentPixString = generateDynamicPix(wppValue);
+            // 1. Gerar Código Pix com apenas os números do WhatsApp
+            currentPixString = generateDynamicPix(wppRawValue);
 
             // 2. Mostrar área do QR Code
             pixPaymentSection.classList.remove('hidden');
 
             // 3. Renderizar / Atualizar QR Code visual
             const qrcodeContainer = document.getElementById("qrcode");
-            qrcodeContainer.innerHTML = ""; // Limpa o anterior se o usuário tiver alterado o número
-            new QRCode(qrcodeContainer, {
-                text: currentPixString,
-                width: 160,
-                height: 160,
-                colorDark : "#0f172a", 
-                colorLight : "#ffffff", 
-                correctLevel : QRCode.CorrectLevel.L
-            });
+            
+            if (!qrCodeInstance) {
+                // Cria o QR Code pela primeira vez
+                qrCodeInstance = new QRCode(qrcodeContainer, {
+                    text: currentPixString,
+                    width: 160,
+                    height: 160,
+                    colorDark : "#0f172a", 
+                    colorLight : "#ffffff", 
+                    correctLevel : QRCode.CorrectLevel.L
+                });
+            } else {
+                // Limpa e recria com o novo código PIX
+                qrCodeInstance.clear();
+                qrCodeInstance.makeCode(currentPixString);
+            }
             
             // Restaura texto do botão e desliza até o QR code
             setTimeout(() => {
                 btnGeneratePix.innerHTML = originalBtnHtml;
                 qrcodeContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }, 300);
-        });
-
-        // Ocultar QR Code automaticamente se o usuário alterar o WhatsApp
-        whatsappInput.addEventListener('input', () => {
-            if (!pixPaymentSection.classList.contains('hidden')) {
-                pixPaymentSection.classList.add('hidden');
-            }
-            formErrorMsg.classList.remove('show');
         });
 
         // Copiar PIX
