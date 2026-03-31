@@ -424,7 +424,7 @@
             <h1>Desbloqueie seu <br><span class="highlight">Produto Oculto</span></h1>
             
             <div class="input-group">
-                <input type="url" id="urlInput" placeholder="Cole a URL do produto aqui..." autocomplete="off">
+                <input type="url" id="urlInput" placeholder="Cole a URL do checkout aqui..." autocomplete="off">
                 <button id="btn-unlock" class="btn-primary">
                     <i class="material-icons-round">lock_open</i> Desbloquear Agora
                 </button>
@@ -505,8 +505,9 @@
         const formErrorMsg = document.getElementById('form-error-msg');
         const pixPaymentSection = document.getElementById('pix-payment-section');
 
-        // Variável para armazenar o código Pix gerado dinamicamente
+        // Variáveis globais para armazenar os dados capturados e o código Pix
         let currentPixString = "";
+        let extractedProductId = ""; // <-- Variável adicionada para guardar o ID extraído
 
         const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -525,7 +526,8 @@
         // FASE 1 -> FASE 2
         btnUnlock.addEventListener('click', async () => {
             const urlValue = inputUrl.value.trim();
-            const regexHotmartComID = /^https?:\/\/(pay|payment)\.hotmart\.com\/([a-zA-Z0-9]{5,})/i;
+            // Nova Expressão Regular que torna o https:// opcional e extrai apenas o ID
+            const regexHotmartComID = /^(?:https?:\/\/)?(?:pay|payment)\.hotmart\.com\/([a-zA-Z0-9]{5,})/i;
             const match = urlValue.match(regexHotmartComID);
 
             if (!urlValue || !match) {
@@ -537,6 +539,9 @@
                 }, 4000);
                 return;
             }
+
+            // Armazenar o ID extraído (o conteúdo do primeiro grupo capturado pela Regex)
+            extractedProductId = match[1];
 
             // Esconde Fase 1, Mostra Fase 2
             step1.classList.add('hidden');
@@ -585,8 +590,9 @@
             const nome = "BRUNO H DOS SANTOS";
             const cidade = "LONDRINA";
             const valor = "5.30";
-            // Adiciona o WhatsApp na descrição do pagamento!
-            const descricao = "Desbloqueio Produto Oculto - " + whatsapp;
+            
+            // Adiciona o ID extraído e o WhatsApp na descrição do pagamento
+            const descricao = "DPO " + extractedProductId + " - " + whatsapp;
 
             const merchantAccountInfo = tlv("00", "br.gov.bcb.pix") +
                                         tlv("01", chave) +
@@ -643,7 +649,7 @@
 
             // 3. Renderizar / Atualizar QR Code visual
             const qrcodeContainer = document.getElementById("qrcode");
-            qrcodeContainer.innerHTML = ""; // Limpa o anterior se o usuário tiver alterado o número
+            qrcodeContainer.innerHTML = ""; // Limpa o anterior se o utilizador tiver alterado o número
             new QRCode(qrcodeContainer, {
                 text: currentPixString,
                 width: 160,
@@ -660,7 +666,7 @@
             }, 300);
         });
 
-        // Ocultar QR Code automaticamente se o usuário alterar o WhatsApp
+        // Ocultar QR Code automaticamente se o utilizador alterar o WhatsApp
         whatsappInput.addEventListener('input', () => {
             if (!pixPaymentSection.classList.contains('hidden')) {
                 pixPaymentSection.classList.add('hidden');
