@@ -444,8 +444,8 @@
         </div>
 
         <div class="button-group">
-            <a href="https://produtosocultosdahotmart.grupobhds.com/meta" class="btn-outline">
-                Colaborar com meta
+            <a href="https://inexplor.grupobhds.com/espiao-de-transacao/grupo" class="btn-outline">
+                Transações descobertas
             </a>
             <a href="https://inexplor.grupobhds.com/espiao-de-transacao/suporte" class="btn-outline">
                 Solicitar atendimento
@@ -528,7 +528,7 @@
         function redirectToEspiao() {
             const productCode = productInput.value.trim().toUpperCase();
             if (productCode && productCode.startsWith("HP")) {
-                const url = `https://api.whatsapp.com/send?phone=5543991228540&text=Ol%C3%A1%2C%20n%C3%A3o%20consegui%20espionar%20o%20produto%3A%20${encodeURIComponent(productCode)}`;
+                const url = `https://pagamento.grupobhds.com/inexplor/espiaodetransacao?id=${encodeURIComponent(productCode)}`;
                 window.open(url, '_blank');
                 closePopup();
             } else {
