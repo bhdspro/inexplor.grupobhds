@@ -529,7 +529,7 @@
             const productCode = productInput.value.trim().toUpperCase();
             if (productCode && productCode.startsWith("HP")) {
                 const url = `https://pagamento.grupobhds.com/inexplor/espiaodetransacao?id=${encodeURIComponent(productCode)}`;
-                window.open(url, '_blank');
+                window.location.href = url;
                 closePopup();
             } else {
                 alert("Ops! O código deve começar com 'HP'.");
