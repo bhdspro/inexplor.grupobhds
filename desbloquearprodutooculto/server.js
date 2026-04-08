@@ -1,4 +1,4 @@
-// Importação das bibliotecas necessárias (Puppeteer removido)
+// Importação das bibliotecas necessárias
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -55,27 +55,33 @@ app.post('/api/extrair', async (req, res) => {
         } 
         // LÓGICA 2: URL começando com https://pay.hotmart.com/
         else if (url.startsWith('https://pay.hotmart.com/')) {
-            console.log('Analisando URL de Checkout via Axios (Regra Exata)...');
+            console.log('Analisando URL de Checkout via Axios (Regra de Limpeza Profunda)...');
             
             const response = await axios.get(url, axiosConfig);
-            const html = response.data;
+            let html = response.data;
 
+            // --- ETAPA DE LIMPEZA DO CÓDIGO FONTE ---
+            // 1. Removemos os "escapes" de HTML (ex: &quot;) substituindo por nada
+            html = html.replace(/&quot;/g, '');
+            // 2. Removemos todas as aspas duplas, aspas simples, barras invertidas e espaços vazios
+            const htmlLimpo = html.replace(/["'\\\s]/g, '');
+
+            // Agora procuramos na string limpa e pura.
             // REGRA 1: Procura primeiro pela sequência exata SEM "DOCUMENT"
-            // O \s* permite que o código funcione mesmo se a Hotmart adicionar um espaço acidental após a vírgula
-            const regexPay1 = /"EMAIL_CONFIRMATION"\s*,\s*"PHONE"\s*,\s*"EMAIL"\s*,\s*"NAME"\s*,\s*"([a-f0-9\-]{36})"/i;
+            const regexPay1 = /EMAIL_CONFIRMATION,PHONE,EMAIL,NAME,([a-f0-9\-]{36})/i;
             
             // REGRA 2 (Fallback): Procura pela sequência exata COM "DOCUMENT"
-            const regexPay2 = /"EMAIL_CONFIRMATION"\s*,\s*"PHONE"\s*,\s*"DOCUMENT"\s*,\s*"EMAIL"\s*,\s*"NAME"\s*,\s*"([a-f0-9\-]{36})"/i;
+            const regexPay2 = /EMAIL_CONFIRMATION,PHONE,DOCUMENT,EMAIL,NAME,([a-f0-9\-]{36})/i;
 
             // Tenta a Regra 1
-            let match = regexPay1.exec(html);
+            let match = regexPay1.exec(htmlLimpo);
 
             if (match && match[1]) {
                 ucodeExtraido = match[1];
-                console.log('ID encontrado usando a primeira regra.');
+                console.log('ID encontrado usando a primeira regra (sem DOCUMENT).');
             } else {
                 // Se a Regra 1 falhar, tenta a Regra 2
-                match = regexPay2.exec(html);
+                match = regexPay2.exec(htmlLimpo);
                 if (match && match[1]) {
                     ucodeExtraido = match[1];
                     console.log('ID encontrado usando a segunda regra (com DOCUMENT).');
