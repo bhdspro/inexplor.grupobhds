@@ -60,27 +60,29 @@ app.post('/api/extrair', async (req, res) => {
         } 
         // LÓGICA 2: URL começando com https://pay.hotmart.com/
         else if (url.startsWith('https://pay.hotmart.com/')) {
-            console.log('Analisando URL de Checkout via Axios (Regra de Proximidade Estrita)...');
+            console.log('Analisando URL de Checkout via Axios (Busca Exata Literal)...');
             
             const response = await axios.get(url, axiosConfig);
-            let html = response.data;
+            const html = response.data;
 
-            // 1. Limpeza profunda: Remove escapes HTML, aspas, espaços e colchetes.
-            // O código "sujo" se transforma exatamente nisto: EMAIL_CONFIRMATION,PHONE,EMAIL,NAME,id-do-produto
-            let htmlLimpo = html.replace(/&quot;/g, '').replace(/["'\\\s\[\]\{\}]/g, '');
-
-            // 2. REGRA DE PROXIMIDADE ESTRITA: 
-            // - Exige a palavra "EMAIL_CONFIRMATION"
-            // - Exige que seja seguida por uma sequência de palavras em maiúsculo (PHONE, EMAIL, DOCUMENT, etc) separadas por vírgula
-            // - Exige que o UUID venha LOGO APÓS essas palavras.
-            // Essa regra bloqueia completamente pulos para outras partes do código.
-            const regexPayEstrita = /EMAIL_CONFIRMATION(?:,[A-Z_]+){1,10},([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/i;
+            // REGRA DE BUSCA EXATA (Conforme solicitado):
+            // Procura literalmente pela string completa, com aspas e vírgulas embutidas.
+            const regexPay1 = /"EMAIL_CONFIRMATION","PHONE","EMAIL","NAME","([a-f0-9\-]{36})"/i;
+            const regexPay2 = /"EMAIL_CONFIRMATION","PHONE","DOCUMENT","EMAIL","NAME","([a-f0-9\-]{36})"/i;
             
-            const match = regexPayEstrita.exec(htmlLimpo);
+            // Tenta a Regra 1 (Sem Document)
+            let match = regexPay1.exec(html);
 
             if (match && match[1]) {
                 ucodeExtraido = match[1];
-                console.log('ID encontrado com sucesso e com precisão absoluta.');
+                console.log('ID encontrado com sucesso: Busca Exata (sem DOCUMENT).');
+            } else {
+                // Tenta a Regra 2 (Com Document)
+                match = regexPay2.exec(html);
+                if (match && match[1]) {
+                    ucodeExtraido = match[1];
+                    console.log('ID encontrado com sucesso: Busca Exata (com DOCUMENT).');
+                }
             }
         } 
         else {
