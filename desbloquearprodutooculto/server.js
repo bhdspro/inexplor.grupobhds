@@ -11,6 +11,11 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Rota de Health Check (Essencial para o Render saber que o servidor está online e não ficar travado)
+app.get('/', (req, res) => {
+    res.status(200).send('Servidor de Extração Ativo e Rodando!');
+});
+
 // Rota principal de extração
 app.post('/api/extrair', async (req, res) => {
     const { url } = req.body;
@@ -96,7 +101,7 @@ app.post('/api/extrair', async (req, res) => {
     }
 });
 
-// Inicializando o servidor
-app.listen(PORT, () => {
+// Inicializando o servidor com '0.0.0.0' para evitar bloqueios de porta no Render
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor de Extração rodando na porta ${PORT}`);
 });
