@@ -1,706 +1,396 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desbloquear Produto Oculto - Radar de Lançamentos</title>
     
-    <!-- ========================================== -->
-    <!-- SEO AGRESSIVO & "BLACK HAT" ON-PAGE SETUP  -->
-    <!-- ========================================== -->
-    <title>Desbloqueio de Produto Oculto - Descubra Produtos Ocultos da Hotmart</title>
-    <meta name="description" content="Acesse e desbloqueie produtos ocultos da Hotmart instantaneamente. Descubra produtos ocultos exclusivos dos maiores players do mercado.">
-    <meta name="keywords" content="produtos ocultos hotmart, hotlist, desbloquear produto hotmart, produtos ocultos, inexplor, descobrir checkout, hack hotmart">
-    <meta name="author" content="Inexplor">
+    <!-- SEO Avançado e Agressivo -->
+    <meta name="description" content="A melhor ferramenta para desbloqueio de produto oculto da Hotmart e Logzz. Descubra links de afiliados secretos através do nosso radar de lançamentos e inexplor.">
+    <meta name="keywords" content="radar de lançamentos, inexplor, desbloqueio de produto oculto, desbloquear produto oculto, produto oculto da hotmart, achar produto escondido, produtos ocultos logzz, link de afiliado oculto, garimpar produtos hotmart, funil secreto, afiliação oculta">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <link rel="canonical" href="https://inexplor.grupobhds.com/desbloqueio-produto-oculto" />
+    <meta property="og:title" content="Desbloquear Produto Oculto - Radar de Lançamentos">
+    <meta property="og:description" content="Desbloqueie links de afiliação ocultos da Hotmart e Logzz rapidamente. A ferramenta definitiva para afiliados.">
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://inexplor.grupobhds.com/desbloqueio-produto-oculto">
-    <meta property="og:title" content="HotList - Desbloqueio de Produtos Ocultos">
-    <meta property="og:description" content="Ferramenta privada para desbloquear e acessar produtos ocultos na Hotmart.">
-    <meta property="og:image" content="https://inexplor.grupobhds.com/assets/img/og-hotlist.jpg">
-
-    <!-- Schema.org Manipulado para Rich Snippets (Estrelas no Google) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org/",
-      "@type": "SoftwareApplication",
-      "name": "HotList Unlocker PRO",
-      "operatingSystem": "Web",
-      "applicationCategory": "BusinessApplication",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "ratingCount": "21840",
-        "bestRating": "5",
-        "worstRating": "1"
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": "0.00",
-        "priceCurrency": "BRL"
-      }
-    }
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    
+    <!-- Tipografia Moderna (Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        surface: '#0F172A',
+                        highlight: 'rgb(220, 38, 38)',
+                        borderStrong: 'rgb(185, 28, 28)'
+                    }
+                }
+            }
+        }
     </script>
-    <!-- ========================================== -->
-
-    <!-- Fontes e Bibliotecas -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
+    <!-- Biblioteca de Partículas -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- FingerprintJS para identificação única do dispositivo -->
+    <script>
+        // ID temporário (fallback) caso o script seja bloqueado por AdBlockers ou falhe
+        let visitorId = 'fallback-' + Math.random().toString(36).substring(2, 15);
+        
+        // Inicializa o FingerprintJS com tratamento de erros e CDN mais estável (jsDelivr)
+        const fpPromise = import('https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.esm.min.js')
+            .then(FingerprintJS => FingerprintJS.load())
+            .catch(error => {
+                console.warn("Aviso: Falha ao carregar o FingerprintJS (possível bloqueio de AdBlock). Usando fallback.", error);
+                // Retorna um objeto mock para não quebrar a cadeia do Promise
+                return { get: () => Promise.resolve({ visitorId: visitorId }) };
+            });
+
+        // Obtém o ID do visitante
+        fpPromise
+            .then(fp => fp.get())
+            .then(result => {
+                if(result && result.visitorId) {
+                    visitorId = result.visitorId;
+                    console.log("Fingerprint configurado para segurança do dispositivo.");
+                }
+            });
+    </script>
+
     <style>
-        :root {
-            --primary: #8b5cf6;
-            --primary-hover: #7c3aed;
-            --secondary: #0ea5e9;
-            --bg-dark: #0f172a;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glow: 0 0 20px rgba(139, 92, 246, 0.4);
-            --success: #10b981;
-            --error: #ef4444;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
         body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.15) 0px, transparent 50%);
-            background-attachment: fixed;
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100dvh;
+            background-color: theme('colors.surface');
+            /* Grid sutil para o fundo escuro */
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
             overflow-x: hidden;
-            position: relative;
-            padding: 20px 0;
+            color: #ffffff;
         }
 
-        /* Ocultar scrollbar */
-        ::-webkit-scrollbar { display: none; }
-        * { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Grade de Fundo */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
-            z-index: -1;
-            opacity: 0.5;
-        }
-
-        .container {
-            background: var(--bg-card);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            padding: 40px 30px;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), var(--glow);
-            text-align: center;
-            width: 90%;
-            max-width: 500px;
-            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        /* --- Efeito Premium Glassmorphism na cor exata #0F172A --- */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85); /* #0F172A com leve transparência para efeito vidro */
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 2.5rem;
             position: relative;
             z-index: 10;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            /* Borda vermelha mais forte restaurada */
+            border: 2px solid rgb(185, 28, 28); 
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        /* Brilho de topo do vidro para dar volume premium */
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            z-index: 2;
         }
 
-        .header-top {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 5px;
+        /* Campo de Informação Branco (Input) */
+        .info-field-wrapper {
+            background: #ffffff;
+            border-radius: 2rem;
+            border: 2px solid transparent;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 20;
+            transition: all 0.3s ease;
         }
 
-        .title-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--success);
-            letter-spacing: 1px;
-            text-transform: uppercase;
+        .info-field-wrapper:focus-within {
+            border-color: rgba(220, 38, 38, 0.5);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
         }
 
-        .pulse-dot {
-            width: 6px;
-            height: 6px;
-            background-color: var(--success);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--success);
-            animation: pulse-dot 2s infinite;
+        @media (min-width: 768px) {
+            .info-field-wrapper { border-radius: 9999px; }
         }
 
-        @keyframes pulse-dot {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.5); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-
-        h1, h2 {
-            font-size: 26px;
-            font-weight: 800;
-            color: #f8fafc;
-            line-height: 1.3;
-            margin-bottom: 10px;
-        }
-
-        .highlight {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        /* Seta do select escura (pois o fundo agora é branco) */
+        .select-arrow {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%230f172a'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-position: right 1rem center;
+            background-repeat: no-repeat;
+            background-size: 1.1rem;
         }
         
-        .highlight-green {
-            background: linear-gradient(135deg, var(--success), #34d399);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Inputs Modernos */
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            width: 100%;
-        }
-
-        input[type="url"], input[type="tel"] {
-            width: 100%;
-            padding: 16px 20px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.2);
-            color: #fff;
-            font-size: 15px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            outline: none;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        input[type="url"]:focus, input[type="tel"]:focus {
-            border-color: var(--primary);
-            background: rgba(0, 0, 0, 0.4);
-            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15), inset 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 400;
-        }
-
-        /* Custom File Input */
-        input[type="file"] {
-            width: 100%;
-            padding: 12px;
-            border-radius: 16px;
-            border: 1px dashed rgba(255, 255, 255, 0.3);
-            background: rgba(0, 0, 0, 0.2);
-            color: var(--text-muted);
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        input[type="file"]:hover {
-            border-color: var(--primary);
-            background: rgba(139, 92, 246, 0.05);
-        }
-
-        input[type="file"]::file-selector-button {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 16px;
-            border-radius: 10px;
-            margin-right: 15px;
-            cursor: pointer;
-            font-family: inherit;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        input[type="file"]::file-selector-button:hover {
-            background: var(--primary);
-            border-color: var(--primary);
-        }
-
-        /* Botões */
-        .btn-primary {
-            width: 100%;
-            padding: 16px 24px;
-            font-size: 16px;
-            font-weight: 800;
-            border-radius: 16px;
-            cursor: pointer;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(139, 92, 246, 0.5);
+        select option {
+            background-color: #ffffff;
+            color: #0f172a;
         }
         
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-outline {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 14px 24px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 14px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-main);
-            border: 1px solid var(--glass-border);
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Terminal Elegante */
-        .terminal-container {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: left;
-            min-height: 200px;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 14px;
-            color: #cbd5e1;
-            box-shadow: inset 0 2px 15px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .status-box {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid var(--success);
-            color: var(--success);
-            text-align: center;
-            padding: 12px;
-            margin-top: 20px;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 15px;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
-            animation: pulse-success 2s infinite;
-        }
-
-        @keyframes pulse-success {
-            0%, 100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
-            50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.4); }
-        }
-
-        /* QR Code Moderno */
-        #qrcode-wrapper {
-            background: white;
-            padding: 15px;
-            border-radius: 16px;
-            display: inline-block;
-            margin: 10px 0 20px 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        /* Mensagens de Erro/Aviso */
-        .msg-text {
-            font-size: 13px;
-            font-weight: 600;
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            line-height: 1.4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            margin: 0;
-        }
-        .msg-text.show {
-            opacity: 1;
-            max-height: 50px;
-            margin-top: 8px;
-        }
-        
-        .text-error { color: var(--error); }
-        .text-muted { color: var(--text-muted); font-size: 14px; margin-bottom: 10px; }
-
-        .form-section {
-            background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 20px;
-            border-radius: 16px;
-            text-align: left;
-            margin-top: 15px;
-        }
-        .form-section label {
-            display: block;
-            font-size: 12px;
-            font-weight: 800;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            margin-top: 15px;
-        }
-        .form-section label:first-child { margin-top: 0; }
-
-        .hidden { display: none !important; }
-
-        .success-icon {
-            font-size: 64px;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--success), #34d399);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        #particles-js {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex items-center justify-center p-4 selection:bg-[rgb(220,38,38)] selection:text-white relative">
 
-    <div class="container" id="main-container">
+    <div id="particles-js"></div>
+
+    <!-- Wrapper Central -->
+    <div class="w-full max-w-4xl text-center z-10">
         
-        <!-- ===================================== -->
-        <!-- FASE 1: ENTRADA DA URL                -->
-        <!-- ===================================== -->
-        <div id="step-1">
-            <div class="header-top">
-                <div class="title-badge">
-                    <span class="pulse-dot"></span> Sistema Ativo
-                </div>
-            </div>
-
-            <h1>Desbloqueie seu <br><span class="highlight">Produto Oculto</span></h1>
+        <!-- Cartão de Vidro Premium #0F172A -->
+        <div class="glass-card p-8 md:p-12 relative overflow-hidden">
             
-            <div class="input-group">
-                <input type="url" id="urlInput" placeholder="Cole a URL do checkout aqui..." autocomplete="off">
-                <button id="btn-unlock" class="btn-primary">
-                    <i class="material-icons-round">lock_open</i> Desbloquear Agora
-                </button>
-                <div id="error-msg" class="msg-text text-error">⚠️ Insira a URL completa com o ID (Ex: pay.hotmart.com/J9...)</div>
-            </div>
-        </div>
+            <!-- Luzes internas subtis interagindo com o fundo escuro -->
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-[rgb(220,38,38)]/10 rounded-full blur-[60px] pointer-events-none z-0"></div>
+            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/5 rounded-full blur-[60px] pointer-events-none z-0"></div>
 
-        <!-- ===================================== -->
-        <!-- FASE 2: TERMINAL DE DESBLOQUEIO       -->
-        <!-- ===================================== -->
-        <div id="step-2" class="hidden">
-            <h2 style="font-size: 20px; margin-bottom: 15px;">Decodificando...</h2>
-            
-            <div class="terminal-container">
-                <div id="terminal-text"></div>
-                
-                <div id="status-container" class="hidden">
-                    <div class="status-box">
-                        <i class="material-icons-round" style="vertical-align: middle; font-size: 18px;">verified</i>
-                        STATUS: PRODUTO OCULTO
+            <div class="relative z-10">
+                <!-- Textos em Branco -->
+                <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4 drop-shadow-md">Desbloquear Produto Oculto</h1>
+                <p id="subtitle" class="text-lg md:text-xl text-slate-300 font-medium max-w-2xl mx-auto mb-2 drop-shadow-sm">
+                    Cole o link de um produto oculto da Hotmart para desbloquear o link de afiliação
+                </p>
+
+                <!-- Campo de Informações Branco -->
+                <div class="info-field-wrapper mt-10 p-2 md:p-2.5">
+                    <div class="flex flex-col md:flex-row items-center gap-2 md:gap-0">
+                        
+                        <!-- Seletor de Plataforma -->
+                        <div class="w-full md:w-auto relative z-30">
+                            <select 
+                                id="platformSelect" 
+                                onchange="mudarPlataforma()"
+                                class="w-full md:w-auto select-arrow appearance-none bg-transparent text-slate-900 font-bold text-base md:text-lg px-6 py-3 md:py-4 pr-12 rounded-[1.5rem] md:rounded-full outline-none cursor-pointer transition-all border-none"
+                            >
+                                <option value="hotmart" selected>Hotmart</option>
+                                <option value="logzz">Logzz</option>
+                            </select>
+                        </div>
+
+                        <!-- Separador visual -->
+                        <div class="hidden md:block w-px h-8 bg-slate-200 mx-2"></div>
+
+                        <!-- Campo de URL -->
+                        <input 
+                            type="url" 
+                            id="urlInput" 
+                            placeholder="Cole a URL https://pay.hotmart.com/.. ou https://hotmart.com/.." 
+                            class="w-full flex-1 bg-transparent px-6 py-3 md:py-4 text-base md:text-lg outline-none text-slate-900 placeholder-slate-400 font-medium min-w-0 z-20 relative"
+                        >
+
+                        <!-- Botão Desbloquear -->
+                        <button 
+                            id="extractBtn" 
+                            onclick="iniciarExtracao()"
+                            class="w-full md:w-auto bg-[rgb(220,38,38)] border-2 border-[rgb(185,28,28)] hover:bg-[rgb(190,30,30)] hover:border-[rgb(153,27,27)] text-white font-bold text-base md:text-lg px-8 py-3 md:py-4 rounded-[1.5rem] md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
+                            <span id="btnText">Desbloquear Produto</span>
+                        </button>
                     </div>
                 </div>
-            </div>
 
-            <button id="btn-access" class="btn-primary hidden" style="opacity: 0; transition: opacity 0.5s;">
-                Acessar Produto <i class="material-icons-round">arrow_forward</i>
-            </button>
-        </div>
+                <!-- Mensagens de Erro -->
+                <div id="errorBox" class="hidden mt-6 bg-red-50 border-l-4 border-[rgb(220,38,38)] text-red-900 px-6 py-4 rounded-2xl text-left font-bold text-sm shadow-sm z-20 relative"></div>
 
-        <!-- ===================================== -->
-        <!-- FASE 3: GERAR PIX COM WHATSAPP        -->
-        <!-- ===================================== -->
-        <div id="step-3" class="hidden">
-            <h2>Acesso <span class="highlight-green">Liberado</span></h2>
-            <p class="text-muted">Realize o pagamento da taxa de R$5,30 para finalizar.</p>
-
-            <div class="form-section">
-                <label>Seu WhatsApp (com DDD)</label>
-                <input type="tel" id="whatsappInput" placeholder="Ex: 43991228540" maxlength="15">
-
-                <button id="btn-generate-pix" class="btn-primary" style="margin-top: 12px;">
-                    <i class="material-icons-round">qr_code</i> Gerar Pix Copia e Cola
-                </button>
-                
-                <div id="form-error-msg" class="msg-text text-error">⚠️ Preencha o WhatsApp corretamente!</div>
-            </div>
-
-            <!-- Seção do QR Code (Fica oculta até clicar em Gerar) -->
-            <div id="pix-payment-section" class="hidden" style="margin-top: 20px;">
-                <div id="qrcode-wrapper">
-                    <div id="qrcode"></div>
+                <!-- Resultado -->
+                <div id="resultArea" class="hidden mt-10 pt-8 border-t border-white/10 transition-all z-20 relative">
+                    <p class="text-sm text-[rgb(220,38,38)] font-bold mb-3 uppercase tracking-widest drop-shadow-md">Sucesso! Link Desbloqueado:</p>
+                    
+                    <!-- Caixa de Resultado Branca -->
+                    <div class="bg-white p-5 rounded-3xl border border-slate-200 mb-6 break-all text-center shadow-lg">
+                        <a id="finalUrl" href="#" target="_blank" class="text-sm md:text-base font-bold text-slate-800 hover:text-[rgb(220,38,38)] underline decoration-[rgb(220,38,38)]/30 underline-offset-4 transition-colors"></a>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center justify-center gap-4">
+                        <button onclick="copiarUrl()" class="px-8 py-3 bg-[rgb(220,38,38)] border-2 border-[rgb(185,28,28)] text-white hover:bg-[rgb(190,30,30)] hover:border-[rgb(153,27,27)] font-bold text-lg rounded-full transition-all shadow-md shadow-[rgba(220,38,38,0.3)]">
+                            Copiar Link
+                        </button>
+                        <button onclick="abrirUrl()" class="px-8 py-3 bg-white/5 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/10 font-bold text-lg rounded-full transition-all shadow-sm">
+                            Abrir Produto
+                        </button>
+                    </div>
+                    <p id="copySuccess" class="text-white font-bold text-sm mt-4 hidden animate-bounce drop-shadow-md">✓ Link copiado para a área de transferência!</p>
                 </div>
-
-                <button id="btn-copy-pix" class="btn-outline">
-                    <i class="material-icons-round">content_copy</i> Copiar Pix Copia e Cola
-                </button>
             </div>
         </div>
-
     </div>
 
     <script>
-        // Elementos UI
-        const step1 = document.getElementById('step-1');
-        const step2 = document.getElementById('step-2');
-        const step3 = document.getElementById('step-3');
-        
-        const inputUrl = document.getElementById('urlInput');
-        const btnUnlock = document.getElementById('btn-unlock');
-        const btnAccess = document.getElementById('btn-access');
-        const terminalText = document.getElementById('terminal-text');
-        const statusContainer = document.getElementById('status-container');
-        const errorMsg = document.getElementById('error-msg');
+        // Configuração ParticlesJS
+        try {
+            particlesJS('particles-js', {
+              "particles": {
+                "number": { "value": 35, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#dc2626" },
+                "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" } },
+                "opacity": { "value": 0.3, "random": false, "anim": { "enable": false } },
+                "size": { "value": 3, "random": true, "anim": { "enable": false } },
+                "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 },
+                "move": { 
+                    "enable": true, 
+                    "speed": 0.5, 
+                    "direction": "none", 
+                    "random": false, 
+                    "straight": false, 
+                    "out_mode": "out", 
+                    "bounce": false,
+                    "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 }
+                }
+              },
+              "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false } } },
+              "retina_detect": true
+            });
+        } catch (e) { console.error("Erro ao inicializar fundo:", e); }
 
-        const whatsappInput = document.getElementById('whatsappInput');
-        const btnGeneratePix = document.getElementById('btn-generate-pix');
-        const btnCopyPix = document.getElementById('btn-copy-pix');
-        const formErrorMsg = document.getElementById('form-error-msg');
-        const pixPaymentSection = document.getElementById('pix-payment-section');
+        const BASE_URL = 'https://desbloquearprodutooculto.onrender.com';
 
-        // Variáveis globais para armazenar os dados capturados e o código Pix
-        let currentPixString = "";
-        let extractedProductId = ""; // <-- Variável adicionada para guardar o ID extraído
+        // Função para gerar uma string aleatória com letras minúsculas e números
+        function gerarStringAleatoria(tamanho) {
+            const caracteres = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let resultado = '';
+            for (let i = 0; i < tamanho; i++) {
+                resultado += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+            }
+            return resultado;
+        }
 
-        const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-        // Efeito Terminal
-        async function typeTerminal(text, speed = 30) {
-            terminalText.innerHTML += '<br><span style="color: var(--primary);">~</span> ';
-            let currentLine = document.createElement('span');
-            terminalText.appendChild(currentLine);
-            
-            for (let i = 0; i < text.length; i++) {
-                currentLine.innerHTML += text.charAt(i);
-                await sleep(speed);
+        function mudarPlataforma() {
+            const platform = document.getElementById('platformSelect').value;
+            if (platform === 'logzz') {
+                const isPreview = window.location.protocol === 'blob:' || window.location.hostname.includes('usercontent') || window.location.hostname.includes('google');
+                if (isPreview) {
+                    mostrarErro('Simulação: No seu domínio real, o utilizador seria levado para /logzz.');
+                    document.getElementById('platformSelect').value = 'hotmart';
+                } else {
+                    window.location.href = window.location.origin + '/logzz';
+                }
             }
         }
 
-        // FASE 1 -> FASE 2
-        btnUnlock.addEventListener('click', async () => {
-            const urlValue = inputUrl.value.trim();
-            // Nova Expressão Regular que torna o https:// opcional e extrai apenas o ID
-            const regexHotmartComID = /^(?:https?:\/\/)?(?:pay|payment)\.hotmart\.com\/([a-zA-Z0-9]{5,})/i;
-            const match = urlValue.match(regexHotmartComID);
+        function mostrarErro(mensagem) {
+            const errorBox = document.getElementById('errorBox');
+            errorBox.textContent = mensagem;
+            errorBox.classList.remove('hidden');
+            setTimeout(() => { errorBox.classList.add('hidden'); }, 6000);
+        }
 
-            if (!urlValue || !match) {
-                errorMsg.classList.add('show');
-                inputUrl.style.borderColor = 'var(--error)';
-                setTimeout(() => {
-                    errorMsg.classList.remove('show');
-                    inputUrl.style.borderColor = '';
-                }, 4000);
+        async function iniciarExtracao() {
+            // Extrai o parâmetro ?id= da URL (se existir)
+            const urlParams = new URLSearchParams(window.location.search);
+            const premiumId = urlParams.get('id');
+
+            // PRIMEIRA CAMADA DE VERIFICAÇÃO: LOCALSTORAGE (Apenas para contas gratuitas)
+            let unlockCount = parseInt(localStorage.getItem('unlockCount')) || 0;
+            
+            // Se NÃO tiver o ID premium e já tiver atingido o limite gratuito, bloqueia
+            if (!premiumId && unlockCount >= 3) {
+                window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
                 return;
             }
 
-            // Armazenar o ID extraído (o conteúdo do primeiro grupo capturado pela Regex)
-            extractedProductId = match[1];
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value.trim();
+            const btnText = document.getElementById('btnText');
+            const extractBtn = document.getElementById('extractBtn');
+            const resultArea = document.getElementById('resultArea');
 
-            // Esconde Fase 1, Mostra Fase 2
-            step1.classList.add('hidden');
-            step2.classList.remove('hidden');
+            if (!url) { mostrarErro('Por favor, cole uma URL.'); return; }
+            if (!url.startsWith('https://pay.hotmart.com/') && !url.startsWith('https://hotmart.com/')) {
+                mostrarErro('URL Inválida: Use apenas links oficiais da Hotmart.');
+                return;
+            }
 
-            // Animação Terminal
-            await typeTerminal("Iniciando conexão segura...", 20);
-            await sleep(600);
-            await typeTerminal("Analisando chaves de acesso da URL...", 20);
-            await sleep(800);
-            await typeTerminal("Identificando o status do produto...", 30);
-            await sleep(1000);
+            btnText.textContent = 'A Desbloquear...';
+            extractBtn.disabled = true;
+            extractBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
-            statusContainer.classList.remove('hidden');
-            await sleep(1200);
+            try {
+                // SEGUNDA CAMADA DE VERIFICAÇÃO (BACKEND): ENVIA A URL, FINGERPRINT E O ID PREMIUM (se houver)
+                const response = await fetch(BASE_URL + '/api/extrair', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        url: url,
+                        visitorId: visitorId, // Envia o ID único do dispositivo (Para conta gratuita)
+                        premiumId: premiumId  // Envia o ID da URL (Para assinantes)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Se o backend retornar que o limite de uso foi atingido (gratuito ou assinante sem saldo/vencido)
+                if (response.status === 403 || data.limiteAtingido) {
+                    if (!premiumId) {
+                        localStorage.setItem('unlockCount', '3'); // Força o limite local para gratuitos
+                    }
+                    window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
+                    return;
+                }
 
-            await typeTerminal("Bypass de segurança concluído.", 20);
-            await sleep(500);
-            await typeTerminal("Desbloqueio autorizado. Acesso liberado.", 20);
-            
-            await sleep(500);
-            btnAccess.classList.remove('hidden');
-            setTimeout(() => { btnAccess.style.opacity = '1'; }, 50);
-        });
+                if (!response.ok) throw new Error(data.erro || 'Erro ao processar o produto.');
 
-        // FASE 2 -> FASE 3
-        btnAccess.addEventListener('click', async () => {
-            btnAccess.innerHTML = "Liberando Acesso... <div class='pulse-dot' style='display:inline-block; margin-left:10px;'></div>";
-            btnAccess.style.pointerEvents = "none";
-            
-            await sleep(800);
-
-            step2.classList.add('hidden');
-            step3.classList.remove('hidden');
-        });
-
-        // Função Criadora de PIX BR Code (Dinâmico)
-        function generateDynamicPix(whatsapp) {
-            // Função auxiliar para formato TLV (Tag, Length, Value)
-            const tlv = (id, value) => {
-                const len = value.length.toString().padStart(2, '0');
-                return `${id}${len}${value}`;
-            };
-
-            const chave = "financeiro@grupobhds.com";
-            const nome = "BRUNO H DOS SANTOS";
-            const cidade = "LONDRINA";
-            const valor = "5.30";
-            
-            // Adiciona o ID extraído e o WhatsApp na descrição do pagamento
-            const descricao = "DPO " + extractedProductId + " - " + whatsapp;
-
-            const merchantAccountInfo = tlv("00", "br.gov.bcb.pix") +
-                                        tlv("01", chave) +
-                                        tlv("02", descricao);
-            const merchantAccountInfoTlv = tlv("26", merchantAccountInfo);
-
-            let payload = "000201" + 
-                          "010211" + 
-                          merchantAccountInfoTlv + 
-                          "52040000" + 
-                          "5303986" + 
-                          tlv("54", valor) + 
-                          "5802BR" + 
-                          tlv("59", nome) + 
-                          tlv("60", cidade) + 
-                          tlv("62", tlv("05", "***")) + 
-                          "6304";
-
-            // Calcula o CRC16 exigido pelo Banco Central
-            function crc16(str) {
-                let crc = 0xFFFF;
-                for (let c = 0; c < str.length; c++) {
-                    crc ^= str.charCodeAt(c) << 8;
-                    for (let i = 0; i < 8; i++) {
-                        if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
-                        else crc = crc << 1;
+                let urlFinal = data.urlFinal;
+                
+                // Adiciona o código aleatório APENAS se a URL for a página view/ do UCODE
+                if (urlFinal.startsWith('https://app.hotmart.com/products/view/')) {
+                    const stringAleatoria = gerarStringAleatoria(30);
+                    if (urlFinal.includes('?')) {
+                        urlFinal += '&po=' + stringAleatoria;
+                    } else {
+                        urlFinal += '?po=' + stringAleatoria;
                     }
                 }
-                return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
-            }
 
-            return payload + crc16(payload);
+                document.getElementById('finalUrl').textContent = urlFinal;
+                document.getElementById('finalUrl').href = urlFinal;
+                resultArea.classList.remove('hidden');
+                
+                // Incrementa e salva o contador no LocalStorage APENAS se for usuário gratuito
+                if (!premiumId) {
+                    unlockCount++;
+                    localStorage.setItem('unlockCount', unlockCount.toString());
+                }
+                
+                urlInput.value = '';
+            } catch (error) {
+                mostrarErro(error.message);
+            } finally {
+                btnText.textContent = 'Desbloquear Produto';
+                extractBtn.disabled = false;
+                extractBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
         }
 
-        // FASE 3: Gerar QR Code Dinâmico
-        btnGeneratePix.addEventListener('click', () => {
-            const wppValue = whatsappInput.value.trim();
+        function copiarUrl() {
+            const text = document.getElementById('finalUrl').textContent;
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            const success = document.getElementById('copySuccess');
+            success.classList.remove('hidden');
+            setTimeout(() => success.classList.add('hidden'), 3000);
+        }
 
-            if (!wppValue || wppValue.length < 8) {
-                formErrorMsg.classList.add('show');
-                setTimeout(() => { formErrorMsg.classList.remove('show'); }, 3000);
-                return;
-            }
-
-            // O botão recebe um visual de "Sucesso" momentâneo
-            const originalBtnHtml = btnGeneratePix.innerHTML;
-            btnGeneratePix.innerHTML = "Atualizando Código...";
-
-            // 1. Gerar Código Pix (Copia e Cola + Payload Oculto)
-            currentPixString = generateDynamicPix(wppValue);
-
-            // 2. Mostrar área do QR Code
-            pixPaymentSection.classList.remove('hidden');
-
-            // 3. Renderizar / Atualizar QR Code visual
-            const qrcodeContainer = document.getElementById("qrcode");
-            qrcodeContainer.innerHTML = ""; // Limpa o anterior se o utilizador tiver alterado o número
-            new QRCode(qrcodeContainer, {
-                text: currentPixString,
-                width: 160,
-                height: 160,
-                colorDark : "#0f172a", 
-                colorLight : "#ffffff", 
-                correctLevel : QRCode.CorrectLevel.L
-            });
-            
-            // Restaura texto do botão e desliza até o QR code
-            setTimeout(() => {
-                btnGeneratePix.innerHTML = originalBtnHtml;
-                qrcodeContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 300);
-        });
-
-        // Ocultar QR Code automaticamente se o utilizador alterar o WhatsApp
-        whatsappInput.addEventListener('input', () => {
-            if (!pixPaymentSection.classList.contains('hidden')) {
-                pixPaymentSection.classList.add('hidden');
-            }
-            formErrorMsg.classList.remove('show');
-        });
-
-        // FASE 3: Copiar PIX
-        btnCopyPix.addEventListener('click', () => {
-            const originalHtml = btnCopyPix.innerHTML;
-            const textArea = document.createElement("textarea");
-            textArea.value = currentPixString;
-            textArea.style.position = "fixed";
-            textArea.style.left = "-999999px";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-                document.execCommand('copy');
-                btnCopyPix.innerHTML = "<i class='material-icons-round'>check</i> Copiado com sucesso!";
-                btnCopyPix.style.borderColor = "var(--success)";
-                btnCopyPix.style.color = "var(--success)";
-            } catch (err) {
-                console.error('Falha ao copiar', err);
-            }
-            textArea.remove();
-
-            setTimeout(() => {
-                btnCopyPix.innerHTML = originalHtml;
-                btnCopyPix.style.borderColor = "";
-                btnCopyPix.style.color = "";
-            }, 3000);
-        });
+        function abrirUrl() {
+            window.open(document.getElementById('finalUrl').textContent, '_blank');
+        }
     </script>
 </body>
 </html>
