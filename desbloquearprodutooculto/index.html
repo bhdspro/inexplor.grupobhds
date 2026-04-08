@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desbloquear Produto Oculto - Inexplor</title>
+    <title>Desbloquear Produto Oculto - Radar de Lançamentos</title>
     
     <!-- SEO Avançado e Agressivo -->
     <meta name="description" content="A melhor ferramenta para desbloqueio de produto oculto da Hotmart e Logzz. Descubra links de afiliados secretos através do nosso radar de lançamentos e inexplor.">
@@ -41,6 +41,31 @@
     
     <!-- Biblioteca de Partículas -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- FingerprintJS para identificação única do dispositivo -->
+    <script>
+        // ID temporário (fallback) caso o script seja bloqueado por AdBlockers ou falhe
+        let visitorId = 'fallback-' + Math.random().toString(36).substring(2, 15);
+        
+        // Inicializa o FingerprintJS com tratamento de erros e CDN mais estável (jsDelivr)
+        const fpPromise = import('https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.esm.min.js')
+            .then(FingerprintJS => FingerprintJS.load())
+            .catch(error => {
+                console.warn("Aviso: Falha ao carregar o FingerprintJS (possível bloqueio de AdBlock). Usando fallback.", error);
+                // Retorna um objeto mock para não quebrar a cadeia do Promise
+                return { get: () => Promise.resolve({ visitorId: visitorId }) };
+            });
+
+        // Obtém o ID do visitante
+        fpPromise
+            .then(fp => fp.get())
+            .then(result => {
+                if(result && result.visitorId) {
+                    visitorId = result.visitorId;
+                    console.log("Fingerprint configurado para segurança do dispositivo.");
+                }
+            });
+    </script>
 
     <style>
         body {
@@ -187,7 +212,7 @@
                     
                     <!-- Caixa de Resultado Branca -->
                     <div class="bg-white p-5 rounded-3xl border border-slate-200 mb-6 break-all text-center shadow-lg">
-                        <a id="finalUrl" href="#" target="_blank" class="text-xl md:text-2xl font-bold text-slate-800 hover:text-[rgb(220,38,38)] underline decoration-[rgb(220,38,38)]/30 underline-offset-4 transition-colors"></a>
+                        <a id="finalUrl" href="#" target="_blank" class="text-sm md:text-base font-bold text-slate-800 hover:text-[rgb(220,38,38)] underline decoration-[rgb(220,38,38)]/30 underline-offset-4 transition-colors"></a>
                     </div>
                     
                     <div class="flex flex-wrap items-center justify-center gap-4">
@@ -264,6 +289,14 @@
         }
 
         async function iniciarExtracao() {
+            // PRIMEIRA CAMADA DE VERIFICAÇÃO: LOCALSTORAGE
+            let unlockCount = parseInt(localStorage.getItem('unlockCount')) || 0;
+            
+            if (unlockCount >= 3) {
+                window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
+                return;
+            }
+
             const urlInput = document.getElementById('urlInput');
             const url = urlInput.value.trim();
             const btnText = document.getElementById('btnText');
@@ -281,12 +314,25 @@
             extractBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
             try {
+                // SEGUNDA CAMADA DE VERIFICAÇÃO (BACKEND): ENVIA A URL E O FINGERPRINT DO DISPOSITIVO
                 const response = await fetch(BASE_URL + '/api/extrair', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url: url })
+                    body: JSON.stringify({ 
+                        url: url,
+                        visitorId: visitorId // Envia o ID único do dispositivo
+                    })
                 });
+                
                 const data = await response.json();
+                
+                // Se o backend retornar que o limite de uso foi atingido
+                if (response.status === 403 || data.limiteAtingido) {
+                    localStorage.setItem('unlockCount', '3'); // Força o limite local também
+                    window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
+                    return;
+                }
+
                 if (!response.ok) throw new Error(data.erro || 'Erro ao processar o produto.');
 
                 let urlFinal = data.urlFinal;
@@ -304,6 +350,10 @@
                 document.getElementById('finalUrl').textContent = urlFinal;
                 document.getElementById('finalUrl').href = urlFinal;
                 resultArea.classList.remove('hidden');
+                
+                // Incrementa e salva o contador após um desbloqueio com sucesso
+                unlockCount++;
+                localStorage.setItem('unlockCount', unlockCount.toString());
                 
                 urlInput.value = '';
             } catch (error) {
