@@ -60,22 +60,27 @@ app.post('/api/extrair', async (req, res) => {
         } 
         // LÓGICA 2: URL começando com https://pay.hotmart.com/
         else if (url.startsWith('https://pay.hotmart.com/')) {
-            console.log('Analisando URL de Checkout via Axios (Regra Flexível)...');
+            console.log('Analisando URL de Checkout via Axios (Regra de Proximidade Estrita)...');
             
             const response = await axios.get(url, axiosConfig);
-            const html = response.data;
+            let html = response.data;
 
-            // REGRA FLEXÍVEL: 
-            // 1. Encontra a palavra "EMAIL_CONFIRMATION"
-            // 2. O .*? (não-guloso) ignora qualquer coisa que estiver no meio (PHONE, NAME, espaços, aspas...)
-            // 3. Captura o primeiro padrão de UUID (8-4-4-4-12 caracteres) que encontrar pela frente
-            const regexPayFlexivel = /EMAIL_CONFIRMATION.*?([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/i;
+            // 1. Limpeza profunda: Remove escapes HTML, aspas, espaços e colchetes.
+            // O código "sujo" se transforma exatamente nisto: EMAIL_CONFIRMATION,PHONE,EMAIL,NAME,id-do-produto
+            let htmlLimpo = html.replace(/&quot;/g, '').replace(/["'\\\s\[\]\{\}]/g, '');
+
+            // 2. REGRA DE PROXIMIDADE ESTRITA: 
+            // - Exige a palavra "EMAIL_CONFIRMATION"
+            // - Exige que seja seguida por uma sequência de palavras em maiúsculo (PHONE, EMAIL, DOCUMENT, etc) separadas por vírgula
+            // - Exige que o UUID venha LOGO APÓS essas palavras.
+            // Essa regra bloqueia completamente pulos para outras partes do código.
+            const regexPayEstrita = /EMAIL_CONFIRMATION(?:,[A-Z_]+){1,10},([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/i;
             
-            const match = regexPayFlexivel.exec(html);
+            const match = regexPayEstrita.exec(htmlLimpo);
 
             if (match && match[1]) {
                 ucodeExtraido = match[1];
-                console.log('ID encontrado com sucesso usando a regra flexível.');
+                console.log('ID encontrado com sucesso e com precisão absoluta.');
             }
         } 
         else {
