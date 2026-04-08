@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extrair Produto Oculto</title>
+    <!-- Utilizando Tailwind CSS para o design moderno e responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+        }
+        /* Garantir transição suave no botão */
+        .btn-transition {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-2xl text-center">
+        <!-- Título Centralizado -->
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Extrair Produto Oculto</h1>
+
+        <!-- Campo e Botão lado a lado -->
+        <div class="flex flex-col md:flex-row items-center justify-center gap-3 w-full mb-6">
+            <input 
+                type="text" 
+                id="urlInput" 
+                placeholder="Cole a URL da Hotmart aqui..." 
+                class="w-full md:flex-1 px-4 py-3 rounded-full border-2 border-gray-200 focus:border-red-500 focus:outline-none text-gray-700 placeholder-gray-400"
+            >
+            <button 
+                id="extractBtn" 
+                onclick="iniciarExtracao()"
+                class="w-full md:w-auto px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-full btn-transition flex items-center justify-center gap-2 whitespace-nowrap"
+            >
+                <span id="btnText">Extrair Produto</span>
+            </button>
+        </div>
+
+        <!-- Caixa de Mensagem de Erro (Substitui o alert) -->
+        <div id="errorBox" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6 text-sm">
+            <!-- Mensagem de erro entra aqui -->
+        </div>
+
+        <!-- Área de Resultado (Inicia oculta) -->
+        <div id="resultArea" class="hidden mt-8 pt-6 border-t border-gray-100">
+            <p class="text-sm text-gray-500 mb-2">Produto encontrado com sucesso:</p>
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4 break-all text-left text-sm text-gray-700 font-mono">
+                <a id="finalUrl" href="#" target="_blank" class="text-blue-600 hover:underline"></a>
+            </div>
+            
+            <div class="flex items-center justify-center gap-4">
+                <button 
+                    onclick="copiarUrl()"
+                    class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium rounded-full btn-transition"
+                >
+                    Copiar
+                </button>
+                <button 
+                    onclick="abrirUrl()"
+                    class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full btn-transition"
+                >
+                    Abrir
+                </button>
+            </div>
+            <p id="copySuccess" class="text-green-600 text-sm mt-3 hidden">URL copiada para a área de transferência!</p>
+        </div>
+    </div>
+
+    <script>
+        // Configuração: URL onde seu servidor Backend estará rodando
+        // IMPORTANTE: Substitua 'seu-app-aqui.onrender.com' pelo link real que o Render vai te dar!
+        const BACKEND_URL = 'https://desbloquearprodutooculto.onrender.com/api/extrair';
+
+        function mostrarErro(mensagem) {
+            const errorBox = document.getElementById('errorBox');
+            errorBox.textContent = mensagem;
+            errorBox.classList.remove('hidden');
+            setTimeout(() => {
+                errorBox.classList.add('hidden');
+            }, 5000);
+        }
+
+        async function iniciarExtracao() {
+            const input = document.getElementById('urlInput');
+            const url = input.value.trim();
+            const btnText = document.getElementById('btnText');
+            const extractBtn = document.getElementById('extractBtn');
+            const resultArea = document.getElementById('resultArea');
+            const errorBox = document.getElementById('errorBox');
+
+            // Esconder mensagens anteriores
+            errorBox.classList.add('hidden');
+            resultArea.classList.add('hidden');
+
+            // Validação da URL solicitada
+            if (!url.startsWith('https://pay.hotmart.com/') && !url.startsWith('https://hotmart.com/')) {
+                mostrarErro('Inválido: A URL deve começar com https://pay.hotmart.com/ ou https://hotmart.com/');
+                return;
+            }
+
+            // Alterar estado do botão
+            btnText.textContent = 'Extraindo...';
+            extractBtn.disabled = true;
+            extractBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            try {
+                // Enviar para o Backend
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.erro || 'Erro desconhecido ao extrair o produto.');
+                }
+
+                // Mostrar o resultado com os botões
+                const finalUrlElement = document.getElementById('finalUrl');
+                finalUrlElement.textContent = data.urlFinal;
+                finalUrlElement.href = data.urlFinal;
+                resultArea.classList.remove('hidden');
+
+            } catch (error) {
+                mostrarErro(error.message || 'Falha ao conectar com o servidor. Verifique se o backend está rodando.');
+            } finally {
+                // Restaurar botão
+                btnText.textContent = 'Extrair Produto';
+                extractBtn.disabled = false;
+                extractBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        }
+
+        function copiarUrl() {
+            const finalUrl = document.getElementById('finalUrl').textContent;
+            
+            // Usar o método mais compatível (execCommand) devido a restrições de iFrame em alguns ambientes
+            const textarea = document.createElement('textarea');
+            textarea.value = finalUrl;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                const copySuccess = document.getElementById('copySuccess');
+                copySuccess.classList.remove('hidden');
+                setTimeout(() => {
+                    copySuccess.classList.add('hidden');
+                }, 3000);
+            } catch (err) {
+                mostrarErro('Não foi possível copiar automaticamente.');
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        function abrirUrl() {
+            const finalUrl = document.getElementById('finalUrl').textContent;
+            window.open(finalUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
