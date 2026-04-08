@@ -55,37 +55,22 @@ app.post('/api/extrair', async (req, res) => {
         } 
         // LÓGICA 2: URL começando com https://pay.hotmart.com/
         else if (url.startsWith('https://pay.hotmart.com/')) {
-            console.log('Analisando URL de Checkout via Axios (Regra de Limpeza Profunda)...');
+            console.log('Analisando URL de Checkout via Axios (Regra Flexível)...');
             
             const response = await axios.get(url, axiosConfig);
-            let html = response.data;
+            const html = response.data;
 
-            // --- ETAPA DE LIMPEZA DO CÓDIGO FONTE ---
-            // 1. Removemos os "escapes" de HTML (ex: &quot;) substituindo por nada
-            html = html.replace(/&quot;/g, '');
-            // 2. Removemos todas as aspas duplas, aspas simples, barras invertidas e espaços vazios
-            const htmlLimpo = html.replace(/["'\\\s]/g, '');
-
-            // Agora procuramos na string limpa e pura.
-            // REGRA 1: Procura primeiro pela sequência exata SEM "DOCUMENT"
-            const regexPay1 = /EMAIL_CONFIRMATION,PHONE,EMAIL,NAME,([a-f0-9\-]{36})/i;
+            // REGRA FLEXÍVEL: 
+            // 1. Encontra a palavra "EMAIL_CONFIRMATION"
+            // 2. O .*? (não-guloso) ignora qualquer coisa que estiver no meio (PHONE, NAME, espaços, aspas...)
+            // 3. Captura o primeiro padrão de UUID (8-4-4-4-12 caracteres) que encontrar pela frente
+            const regexPayFlexivel = /EMAIL_CONFIRMATION.*?([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/i;
             
-            // REGRA 2 (Fallback): Procura pela sequência exata COM "DOCUMENT"
-            const regexPay2 = /EMAIL_CONFIRMATION,PHONE,DOCUMENT,EMAIL,NAME,([a-f0-9\-]{36})/i;
-
-            // Tenta a Regra 1
-            let match = regexPay1.exec(htmlLimpo);
+            const match = regexPayFlexivel.exec(html);
 
             if (match && match[1]) {
                 ucodeExtraido = match[1];
-                console.log('ID encontrado usando a primeira regra (sem DOCUMENT).');
-            } else {
-                // Se a Regra 1 falhar, tenta a Regra 2
-                match = regexPay2.exec(htmlLimpo);
-                if (match && match[1]) {
-                    ucodeExtraido = match[1];
-                    console.log('ID encontrado usando a segunda regra (com DOCUMENT).');
-                }
+                console.log('ID encontrado com sucesso usando a regra flexível.');
             }
         } 
         else {
