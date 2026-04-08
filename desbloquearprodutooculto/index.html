@@ -289,10 +289,15 @@
         }
 
         async function iniciarExtracao() {
-            // PRIMEIRA CAMADA DE VERIFICAÇÃO: LOCALSTORAGE
+            // Extrai o parâmetro ?id= da URL (se existir)
+            const urlParams = new URLSearchParams(window.location.search);
+            const premiumId = urlParams.get('id');
+
+            // PRIMEIRA CAMADA DE VERIFICAÇÃO: LOCALSTORAGE (Apenas para contas gratuitas)
             let unlockCount = parseInt(localStorage.getItem('unlockCount')) || 0;
             
-            if (unlockCount >= 3) {
+            // Se NÃO tiver o ID premium e já tiver atingido o limite gratuito, bloqueia
+            if (!premiumId && unlockCount >= 3) {
                 window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
                 return;
             }
@@ -314,21 +319,24 @@
             extractBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
             try {
-                // SEGUNDA CAMADA DE VERIFICAÇÃO (BACKEND): ENVIA A URL E O FINGERPRINT DO DISPOSITIVO
+                // SEGUNDA CAMADA DE VERIFICAÇÃO (BACKEND): ENVIA A URL, FINGERPRINT E O ID PREMIUM (se houver)
                 const response = await fetch(BASE_URL + '/api/extrair', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         url: url,
-                        visitorId: visitorId // Envia o ID único do dispositivo
+                        visitorId: visitorId, // Envia o ID único do dispositivo (Para conta gratuita)
+                        premiumId: premiumId  // Envia o ID da URL (Para assinantes)
                     })
                 });
                 
                 const data = await response.json();
                 
-                // Se o backend retornar que o limite de uso foi atingido
+                // Se o backend retornar que o limite de uso foi atingido (gratuito ou assinante sem saldo/vencido)
                 if (response.status === 403 || data.limiteAtingido) {
-                    localStorage.setItem('unlockCount', '3'); // Força o limite local também
+                    if (!premiumId) {
+                        localStorage.setItem('unlockCount', '3'); // Força o limite local para gratuitos
+                    }
                     window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
                     return;
                 }
@@ -351,9 +359,11 @@
                 document.getElementById('finalUrl').href = urlFinal;
                 resultArea.classList.remove('hidden');
                 
-                // Incrementa e salva o contador após um desbloqueio com sucesso
-                unlockCount++;
-                localStorage.setItem('unlockCount', unlockCount.toString());
+                // Incrementa e salva o contador no LocalStorage APENAS se for usuário gratuito
+                if (!premiumId) {
+                    unlockCount++;
+                    localStorage.setItem('unlockCount', unlockCount.toString());
+                }
                 
                 urlInput.value = '';
             } catch (error) {
