@@ -55,18 +55,31 @@ app.post('/api/extrair', async (req, res) => {
         } 
         // LÓGICA 2: URL começando com https://pay.hotmart.com/
         else if (url.startsWith('https://pay.hotmart.com/')) {
-            console.log('Analisando URL de Checkout via Axios (Rápido e Leve)...');
+            console.log('Analisando URL de Checkout via Axios (Regra Exata)...');
             
-            // Baixa o código fonte bruto da página de pagamento de forma instantânea
             const response = await axios.get(url, axiosConfig);
             const html = response.data;
 
-            // Procura a sequência específica no HTML bruto usando Regex
-            const regexPay = /(?:"EMAIL_CONFIRMATION"|"NAME"|"PHONE"|"DOCUMENT"|"EMAIL").*?([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/i;
-            const match = regexPay.exec(html);
+            // REGRA 1: Procura primeiro pela sequência exata SEM "DOCUMENT"
+            // O \s* permite que o código funcione mesmo se a Hotmart adicionar um espaço acidental após a vírgula
+            const regexPay1 = /"EMAIL_CONFIRMATION"\s*,\s*"PHONE"\s*,\s*"EMAIL"\s*,\s*"NAME"\s*,\s*"([a-f0-9\-]{36})"/i;
+            
+            // REGRA 2 (Fallback): Procura pela sequência exata COM "DOCUMENT"
+            const regexPay2 = /"EMAIL_CONFIRMATION"\s*,\s*"PHONE"\s*,\s*"DOCUMENT"\s*,\s*"EMAIL"\s*,\s*"NAME"\s*,\s*"([a-f0-9\-]{36})"/i;
+
+            // Tenta a Regra 1
+            let match = regexPay1.exec(html);
 
             if (match && match[1]) {
                 ucodeExtraido = match[1];
+                console.log('ID encontrado usando a primeira regra.');
+            } else {
+                // Se a Regra 1 falhar, tenta a Regra 2
+                match = regexPay2.exec(html);
+                if (match && match[1]) {
+                    ucodeExtraido = match[1];
+                    console.log('ID encontrado usando a segunda regra (com DOCUMENT).');
+                }
             }
         } 
         else {
@@ -83,7 +96,7 @@ app.post('/api/extrair', async (req, res) => {
                 urlFinal: urlFinal 
             });
         } else {
-            return res.status(404).json({ erro: 'Não foi possível localizar o código do produto oculto nesta página.' });
+            return res.status(404).json({ erro: 'Não foi possível localizar o código do produto oculto nesta página com as regras fornecidas.' });
         }
 
     } catch (error) {
