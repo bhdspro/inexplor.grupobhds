@@ -30,122 +30,235 @@
                         sans: ['Outfit', 'sans-serif'],
                     },
                     colors: {
-                        surface: '#fff8f7', // Fundo levemente avermelhado (M3 Surface)
+                        surface: '#fff8f7',
                     }
                 }
             }
         }
     </script>
+    
+    <!-- Biblioteca de Partículas -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
     <style>
         body {
             background-color: theme('colors.surface');
-            /* Padrão de fundo expressivo */
             background-image: radial-gradient(#fecaca 1px, transparent 1px);
             background-size: 40px 40px;
+            overflow-x: hidden;
         }
-        .m3-shadow {
-            box-shadow: 0 12px 40px rgba(220, 38, 38, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+
+        /* --- Efeito Tracing Border (Borda que contorna) --- */
+        .trace-wrapper {
+            position: relative;
+            background: rgba(220, 38, 38, 0.1);
+            border-radius: 2.5rem;
+            padding: 2px;
+            overflow: hidden;
+            z-index: 10;
+            box-shadow: 0 20px 50px rgba(220, 38, 38, 0.15);
         }
+        
+        .trace-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 150%; height: 150%;
+            /* Brilho branco para destacar o contorno sobre o vermelho */
+            background: conic-gradient(from 0deg, transparent 70%, #ffffff 100%);
+            transform: translate(-50%, -50%);
+            animation: rotateTrace 5s linear infinite;
+            z-index: -1;
+        }
+
+        /* Efeito Glassmorphism no Card Central */
+        .trace-inner-glass {
+            background: rgba(220, 38, 38, 0.85); /* Vermelho com transparência */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: calc(2.5rem - 2px);
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Campo de Input com efeito Glass mais claro para leitura */
+        .input-trace-wrapper {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2rem;
+            padding: 2px;
+            overflow: hidden;
+            z-index: 20;
+        }
+
+        @media (min-width: 768px) {
+            .input-trace-wrapper { border-radius: 9999px; }
+        }
+
+        .input-trace-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 250%; height: 250%;
+            background: conic-gradient(from 0deg, transparent 80%, #ffffff 100%);
+            transform: translate(-50%, -50%);
+            animation: rotateTrace 4s linear infinite reverse;
+            z-index: -1;
+        }
+
+        .input-trace-inner {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: calc(2rem - 2px);
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (min-width: 768px) {
+            .input-trace-inner { border-radius: calc(9999px - 2px); }
+        }
+
+        @keyframes rotateTrace {
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
         .select-arrow {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23b91c1c'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-position: right 1rem center;
             background-repeat: no-repeat;
-            background-size: 1.2rem;
+            background-size: 1.1rem;
+        }
+        
+        #particles-js {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 selection:bg-red-200 selection:text-red-900">
+<body class="min-h-screen flex items-center justify-center p-4 selection:bg-red-200 relative">
 
-    <div class="bg-white p-8 md:p-12 rounded-[2.5rem] m3-shadow w-full max-w-4xl text-center relative overflow-hidden">
-        <!-- Elemento decorativo M3 -->
-        <div class="absolute -top-24 -right-24 w-48 h-48 bg-red-100 rounded-full blur-3xl opacity-60 pointer-events-none"></div>
-        <div class="absolute -bottom-24 -left-24 w-56 h-56 bg-red-50 rounded-full blur-3xl opacity-80 pointer-events-none"></div>
+    <div id="particles-js"></div>
 
-        <div class="relative z-10">
-            <!-- Título e Subtítulo -->
-            <h1 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-4">Desbloquear Produto Oculto</h1>
-            <p id="subtitle" class="text-lg md:text-xl text-gray-600 font-medium max-w-2xl mx-auto">
-                Cole o link de um produto oculto da Hotmart para desbloquear o link de afiliação
-            </p>
+    <!-- Card Central Glassmorphism -->
+    <div class="trace-wrapper w-full max-w-4xl text-center">
+        <div class="trace-inner-glass p-8 md:p-12 relative overflow-hidden">
+            
+            <!-- Elementos de luz internos -->
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-white/20 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-black/10 rounded-full blur-3xl pointer-events-none"></div>
 
-            <!-- Input Group (Seletor + Campo + Botão) -->
-            <div class="flex flex-col md:flex-row items-center bg-gray-50 p-2 md:p-3 rounded-[2rem] md:rounded-full shadow-inner mt-10 gap-2 md:gap-0 border border-gray-100">
-                
-                <!-- Seletor de Plataforma -->
-                <div class="w-full md:w-auto relative">
-                    <select 
-                        id="platformSelect" 
-                        onchange="atualizarSubtitulo()"
-                        class="w-full md:w-auto select-arrow appearance-none bg-white text-red-700 hover:bg-red-50 focus:ring-4 focus:ring-red-100 font-extrabold text-lg px-6 py-4 md:py-5 pr-12 rounded-[1.5rem] md:rounded-full outline-none shadow-sm cursor-pointer transition-colors"
-                    >
-                        <option value="hotmart">Hotmart</option>
-                        <option value="logzz">Logzz</option>
-                    </select>
+            <div class="relative z-10">
+                <!-- Textos em Branco conforme solicitado -->
+                <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-4 drop-shadow-md">Desbloquear Produto Oculto</h1>
+                <p id="subtitle" class="text-lg md:text-xl text-red-50 font-medium max-w-2xl mx-auto mb-2 opacity-90">
+                    Cole o link de um produto oculto da Hotmart para desbloquear o link de afiliação
+                </p>
+
+                <!-- Input Group -->
+                <div class="input-trace-wrapper mt-10">
+                    <div class="input-trace-inner flex flex-col md:flex-row items-center p-2 md:p-2.5 gap-2 md:gap-0">
+                        
+                        <!-- Seletor de Plataforma -->
+                        <div class="w-full md:w-auto relative z-30">
+                            <select 
+                                id="platformSelect" 
+                                onchange="mudarPlataforma()"
+                                class="w-full md:w-auto select-arrow appearance-none bg-white text-red-700 hover:bg-red-50 font-extrabold text-base md:text-lg px-6 py-3 md:py-4 pr-12 rounded-[1.5rem] md:rounded-full border border-red-100 outline-none cursor-pointer transition-all shadow-sm"
+                            >
+                                <option value="hotmart" selected>Hotmart</option>
+                                <option value="logzz">Logzz</option>
+                            </select>
+                        </div>
+
+                        <!-- Campo de URL -->
+                        <input 
+                            type="url" 
+                            id="urlInput" 
+                            placeholder="Cole a URL https://pay.hotmart.com/.. ou https://hotmart.com/.." 
+                            class="w-full flex-1 bg-transparent px-6 py-3 md:py-4 text-base md:text-lg outline-none text-gray-900 placeholder-gray-400 font-semibold min-w-0 z-20 relative"
+                        >
+
+                        <!-- Botão Desbloquear (Design sólido para destaque no glass) -->
+                        <button 
+                            id="extractBtn" 
+                            onclick="iniciarExtracao()"
+                            class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white font-extrabold text-base md:text-lg px-8 py-3 md:py-4 rounded-[1.5rem] md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg flex items-center justify-center gap-2 z-20 relative border border-red-500/50"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
+                            <span id="btnText">Desbloquear Produto</span>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Campo de URL -->
-                <input 
-                    type="url" 
-                    id="urlInput" 
-                    placeholder="Cole a URL da página aqui..." 
-                    class="w-full flex-1 bg-transparent px-6 py-4 md:py-5 text-lg outline-none text-gray-800 placeholder-gray-400 font-semibold min-w-0"
-                >
+                <!-- Mensagens -->
+                <div id="errorBox" class="hidden mt-6 bg-white/95 border-l-4 border-red-600 text-red-900 px-6 py-4 rounded-2xl text-left font-bold text-sm shadow-xl z-20 relative"></div>
 
-                <!-- Botão de Desbloqueio -->
-                <button 
-                    id="extractBtn" 
-                    onclick="iniciarExtracao()"
-                    class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white font-extrabold text-lg px-8 py-4 md:py-5 rounded-[1.5rem] md:rounded-full shadow-lg hover:shadow-red-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] whitespace-nowrap flex items-center justify-center gap-2"
-                >
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
-                    <span id="btnText">Desbloquear Produto</span>
-                </button>
-            </div>
-
-            <!-- Caixa de Erro -->
-            <div id="errorBox" class="hidden mt-6 bg-red-50 border-l-4 border-red-600 text-red-800 px-6 py-4 rounded-2xl text-left font-semibold text-sm shadow-sm transition-all">
-                <!-- Mensagem de erro -->
-            </div>
-
-            <!-- Área de Resultado (Inicia oculta) -->
-            <div id="resultArea" class="hidden mt-10 pt-8 border-t-2 border-dashed border-gray-100 transition-all">
-                <p class="text-base text-gray-500 font-bold mb-3 uppercase tracking-wider">Link Desbloqueado com Sucesso</p>
-                <div class="bg-gray-50 p-5 rounded-3xl border-2 border-gray-200 mb-6 break-all text-center">
-                    <a id="finalUrl" href="#" target="_blank" class="text-xl md:text-2xl font-bold text-red-600 hover:text-red-800 hover:underline transition-colors"></a>
+                <!-- Resultado -->
+                <div id="resultArea" class="hidden mt-10 pt-8 border-t border-white/20 transition-all z-20 relative text-white">
+                    <p class="text-sm text-red-100 font-bold mb-3 uppercase tracking-widest">Sucesso! Link Desbloqueado:</p>
+                    <div class="bg-white/10 backdrop-blur-md p-5 rounded-3xl border border-white/20 mb-6 break-all text-center">
+                        <a id="finalUrl" href="#" target="_blank" class="text-xl md:text-2xl font-bold text-white hover:text-red-100 underline decoration-red-300 underline-offset-4 transition-colors"></a>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center justify-center gap-4">
+                        <button onclick="copiarUrl()" class="px-8 py-3 bg-white text-red-700 hover:bg-red-50 font-extrabold text-lg rounded-full transition-all shadow-md">
+                            Copiar Link
+                        </button>
+                        <button onclick="abrirUrl()" class="px-8 py-3 bg-red-900/40 border border-white/30 text-white hover:bg-red-900/60 font-extrabold text-lg rounded-full transition-all backdrop-blur-sm">
+                            Abrir Produto
+                        </button>
+                    </div>
+                    <p id="copySuccess" class="text-white font-bold text-sm mt-4 hidden animate-bounce">✓ Link copiado para a área de transferência!</p>
                 </div>
-                
-                <div class="flex flex-wrap items-center justify-center gap-4">
-                    <button 
-                        onclick="copiarUrl()"
-                        class="px-8 py-3 bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-800 font-extrabold text-lg rounded-full transition-all"
-                    >
-                        Copiar Link
-                    </button>
-                    <button 
-                        onclick="abrirUrl()"
-                        class="px-8 py-3 bg-red-100 hover:bg-red-200 text-red-800 font-extrabold text-lg rounded-full transition-all"
-                    >
-                        Abrir no Navegador
-                    </button>
-                </div>
-                <p id="copySuccess" class="text-green-600 font-bold text-sm mt-4 hidden animate-pulse">✓ Link copiado para a área de transferência!</p>
             </div>
         </div>
     </div>
 
     <script>
-        // CONFIGURAÇÃO: Coloque aqui o link base do seu servidor Render
-        // Não inclua o /api/extrair no final, apenas a URL principal.
+        // Configuração ParticlesJS corrigida para ser estática e sem erros
+        try {
+            particlesJS('particles-js', {
+              "particles": {
+                "number": { "value": 45, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#fca5a5" },
+                "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" } },
+                "opacity": { "value": 0.2, "random": false, "anim": { "enable": false } },
+                "size": { "value": 3, "random": true, "anim": { "enable": false } },
+                "line_linked": { "enable": true, "distance": 150, "color": "#fca5a5", "opacity": 0.2, "width": 1 },
+                "move": { 
+                    "enable": true, 
+                    "speed": 0.00001, 
+                    "direction": "none", 
+                    "random": false, 
+                    "straight": false, 
+                    "out_mode": "out", 
+                    "bounce": false,
+                    "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 }
+                }
+              },
+              "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false } } },
+              "retina_detect": true
+            });
+        } catch (e) { console.error("Erro ao inicializar fundo:", e); }
+
         const BASE_URL = 'https://seu-app-aqui.onrender.com';
 
-        // Atualiza o subtítulo para melhorar a UX se a pessoa mudar para Logzz
-        function atualizarSubtitulo() {
+        function mudarPlataforma() {
             const platform = document.getElementById('platformSelect').value;
-            const subtitle = document.getElementById('subtitle');
             if (platform === 'logzz') {
-                subtitle.textContent = 'Cole o link de um produto oculto da Logzz para desbloquear o link de afiliação';
-            } else {
-                subtitle.textContent = 'Cole o link de um produto oculto da Hotmart para desbloquear o link de afiliação';
+                const isPreview = window.location.protocol === 'blob:' || window.location.hostname.includes('usercontent') || window.location.hostname.includes('google');
+                if (isPreview) {
+                    mostrarErro('Simulação: No seu domínio real, o utilizador seria levado para /logzz.');
+                    document.getElementById('platformSelect').value = 'hotmart';
+                } else {
+                    window.location.href = window.location.origin + '/logzz';
+                }
             }
         }
 
@@ -153,106 +266,64 @@
             const errorBox = document.getElementById('errorBox');
             errorBox.textContent = mensagem;
             errorBox.classList.remove('hidden');
-            setTimeout(() => {
-                errorBox.classList.add('hidden');
-            }, 6000);
+            setTimeout(() => { errorBox.classList.add('hidden'); }, 6000);
         }
 
         async function iniciarExtracao() {
-            const platform = document.getElementById('platformSelect').value;
-            const input = document.getElementById('urlInput');
-            const url = input.value.trim();
+            const urlInput = document.getElementById('urlInput');
+            const url = urlInput.value.trim();
             const btnText = document.getElementById('btnText');
             const extractBtn = document.getElementById('extractBtn');
             const resultArea = document.getElementById('resultArea');
-            const errorBox = document.getElementById('errorBox');
 
-            // Esconder mensagens anteriores
-            errorBox.classList.add('hidden');
-            resultArea.classList.add('hidden');
-
-            if (!url) {
-                mostrarErro('Por favor, cole uma URL antes de continuar.');
+            if (!url) { mostrarErro('Por favor, cole uma URL.'); return; }
+            if (!url.startsWith('https://pay.hotmart.com/') && !url.startsWith('https://hotmart.com/')) {
+                mostrarErro('URL Inválida: Use apenas links oficiais da Hotmart.');
                 return;
             }
 
-            // Validação inteligente baseada na plataforma selecionada
-            if (platform === 'hotmart') {
-                if (!url.startsWith('https://pay.hotmart.com/') && !url.startsWith('https://hotmart.com/')) {
-                    mostrarErro('Inválido: Para a Hotmart, a URL deve começar com https://pay.hotmart.com/ ou https://hotmart.com/');
-                    return;
-                }
-            } else if (platform === 'logzz') {
-                if (!url.includes('logzz')) {
-                    mostrarErro('Inválido: A URL não parece ser um link da Logzz.');
-                    return;
-                }
-            }
-
-            // Alterar estado do botão
-            btnText.textContent = 'Desbloqueando...';
+            btnText.textContent = 'A Desbloquear...';
             extractBtn.disabled = true;
-            extractBtn.classList.add('opacity-75', 'cursor-wait');
-
-            // A MÁGICA ACONTECE AQUI: Muda o endpoint conforme a plataforma!
-            const endpoint = platform === 'logzz' ? '/logzz' : '/api/extrair';
-            const API_URL = BASE_URL + endpoint;
+            extractBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
             try {
-                const response = await fetch(API_URL, {
+                const response = await fetch(BASE_URL + '/api/extrair', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url: url })
                 });
-
                 const data = await response.json();
+                if (!response.ok) throw new Error(data.erro || 'Erro ao processar o produto.');
 
-                if (!response.ok) {
-                    throw new Error(data.erro || 'Erro desconhecido ao desbloquear o produto.');
-                }
-
-                // Mostrar o resultado
-                const finalUrlElement = document.getElementById('finalUrl');
-                finalUrlElement.textContent = data.urlFinal;
-                finalUrlElement.href = data.urlFinal;
+                document.getElementById('finalUrl').textContent = data.urlFinal;
+                document.getElementById('finalUrl').href = data.urlFinal;
                 resultArea.classList.remove('hidden');
-
+                
+                urlInput.value = '';
             } catch (error) {
-                mostrarErro(error.message || 'Falha ao conectar com o servidor. Verifique se o backend está online.');
+                mostrarErro(error.message);
             } finally {
-                // Restaurar botão
                 btnText.textContent = 'Desbloquear Produto';
                 extractBtn.disabled = false;
-                extractBtn.classList.remove('opacity-75', 'cursor-wait');
+                extractBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         }
 
         function copiarUrl() {
-            const finalUrl = document.getElementById('finalUrl').textContent;
-            const textarea = document.createElement('textarea');
-            textarea.value = finalUrl;
-            document.body.appendChild(textarea);
-            textarea.select();
-            
-            try {
-                document.execCommand('copy');
-                const copySuccess = document.getElementById('copySuccess');
-                copySuccess.classList.remove('hidden');
-                setTimeout(() => {
-                    copySuccess.classList.add('hidden');
-                }, 4000);
-            } catch (err) {
-                mostrarErro('Não foi possível copiar automaticamente.');
-            }
-            
-            document.body.removeChild(textarea);
+            const text = document.getElementById('finalUrl').textContent;
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            const success = document.getElementById('copySuccess');
+            success.classList.remove('hidden');
+            setTimeout(() => success.classList.add('hidden'), 3000);
         }
 
         function abrirUrl() {
-            const finalUrl = document.getElementById('finalUrl').textContent;
-            window.open(finalUrl, '_blank');
+            window.open(document.getElementById('finalUrl').textContent, '_blank');
         }
     </script>
 </body>
