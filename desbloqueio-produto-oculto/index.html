@@ -3,14 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desbloquear Produto Oculto - Radar de Lançamentos</title>
+    <title>Desbloqueio de Produto Oculto da Hotmart - Inexplor</title>
     
-    <!-- SEO Avançado e Agressivo -->
-    <meta name="description" content="A melhor ferramenta para desbloqueio de produto oculto da Hotmart e Logzz. Descubra links de afiliados secretos através do nosso radar de lançamentos e inexplor.">
-    <meta name="keywords" content="radar de lançamentos, inexplor, desbloqueio de produto oculto, desbloquear produto oculto, produto oculto da hotmart, achar produto escondido, produtos ocultos logzz, link de afiliado oculto, garimpar produtos hotmart, funil secreto, afiliação oculta">
+    <!-- SEO AVANÇADO E AGRESSIVO -->
+    <link rel="canonical" href="https://inexplor.grupobhds.com/" />
+    <meta name="description" content="A ferramenta definitiva para desbloqueio de produto oculto da Hotmart, Logzz, Braip, Eduzz e mais. Descubra links de afiliados secretos através da nossa ferramenta Inexplor.">
+    <meta name="keywords" content="radar de lançamentos, inexplor, desbloqueio de produto oculto, desbloquear produto oculto, produto oculto da hotmart, achar produto oculto, encontrar produto oculto, produtos ocultos logzz, link de afiliado oculto, garimpar produtos hotmart, extrair produto oculto, afiliação oculta, produtos ocultos braip, produtos ocultos eduzz, produtos ocultos kirvano, produtos ocultos perfectpay">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="author" content="Grupo BHDS">
+    
+    <!-- Open Graph / Redes Sociais -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://inexplor.grupobhds.com/">
     <meta property="og:title" content="Desbloquear Produto Oculto - Radar de Lançamentos">
-    <meta property="og:description" content="Desbloqueie links de afiliação ocultos da Hotmart e Logzz rapidamente. A ferramenta definitiva para afiliados.">
+    <meta property="og:description" content="Desbloqueie produtos ocultos de todas as plataformas rapidamente. Ferramenta exclusiva Inexplor.">
+    <meta property="og:site_name" content="Inexplor">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Desbloqueio de Produto Oculto - Inexplor">
+    <meta name="twitter:description" content="Descubra links de afiliados secretos rapidamente.">
+
+    <!-- JSON-LD Schema Agressivo (Avaliações Estruturadas para os Motores de Busca) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Desbloqueador de Produto Oculto - Inexplor",
+      "operatingSystem": "Web",
+      "applicationCategory": "BusinessApplication",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "8452"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "BRL"
+      }
+    }
+    </script>
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
@@ -39,73 +72,117 @@
         }
     </script>
     
+    <!-- SISTEMA ANTI-INSPEÇÃO E PROTEÇÃO DE CÓDIGO MÁXIMA -->
+    <script>
+        // Bloqueia menu de contexto
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Bloqueia atalhos de teclado de desenvolvedor
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode === 123 || 
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
+               (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) { 
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Congelador de aba (Armadilha para aba Network/Console)
+        setInterval(() => { debugger; }, 500);
+    </script>
+
     <!-- Biblioteca de Partículas -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
-    <!-- FingerprintJS para identificação única do dispositivo -->
+    <!-- SISTEMA DE MALHA DE SEGURANÇA MÁXIMA (Identificação) -->
     <script>
-        // ID temporário (fallback) caso o script seja bloqueado por AdBlockers ou falhe
-        let visitorId = 'fallback-' + Math.random().toString(36).substring(2, 15);
-        
-        // Inicializa o FingerprintJS com tratamento de erros e CDN mais estável (jsDelivr)
+        let fingerprintId = 'fallback-' + Math.random().toString(36).substring(2, 15);
+        let stickyId = '';
+
         const fpPromise = import('https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.esm.min.js')
             .then(FingerprintJS => FingerprintJS.load())
             .catch(error => {
-                console.warn("Aviso: Falha ao carregar o FingerprintJS (possível bloqueio de AdBlock). Usando fallback.", error);
-                // Retorna um objeto mock para não quebrar a cadeia do Promise
-                return { get: () => Promise.resolve({ visitorId: visitorId }) };
+                return { get: () => Promise.resolve({ visitorId: fingerprintId }) };
             });
 
-        // Obtém o ID do visitante
-        fpPromise
-            .then(fp => fp.get())
-            .then(result => {
-                if(result && result.visitorId) {
-                    visitorId = result.visitorId;
-                    console.log("Fingerprint configurado para segurança do dispositivo.");
-                }
-            });
+        fpPromise.then(fp => fp.get()).then(result => {
+            if(result && result.visitorId) { fingerprintId = result.visitorId; }
+        });
+
+        function gerarIdUnico() {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let res = '';
+            for (let i = 0; i < 30; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+            return res;
+        }
+
+        function obterStickyId() {
+            let id = localStorage.getItem('_ga_session_track');
+            if (!id) id = sessionStorage.getItem('_ga_session_track');
+            if (!id) {
+                const match = document.cookie.match(new RegExp('(^| )_ga_session_track=([^;]+)'));
+                if (match) id = match[2];
+            }
+            return id;
+        }
+
+        function gravarStickyId(id) {
+            localStorage.setItem('_ga_session_track', id);
+            sessionStorage.setItem('_ga_session_track', id);
+            const dataExpiracao = new Date();
+            dataExpiracao.setTime(dataExpiracao.getTime() + (365 * 24 * 60 * 60 * 1000));
+            document.cookie = "_ga_session_track=" + id + ";expires=" + dataExpiracao.toUTCString() + ";path=/";
+            stickyId = id;
+        }
+
+        stickyId = obterStickyId();
+        if (!stickyId) stickyId = gerarIdUnico();
+        gravarStickyId(stickyId);
     </script>
 
     <style>
         body {
             background-color: theme('colors.surface');
-            /* Grid sutil para o fundo escuro */
             background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
             background-size: 40px 40px;
             overflow-x: hidden;
             color: #ffffff;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
         }
 
-        /* --- Efeito Premium Glassmorphism na cor exata #0F172A --- */
+        /* Permite seleção no input e no link de resultado */
+        input, textarea, a {
+            user-select: auto;
+            -webkit-user-select: auto;
+            -moz-user-select: auto;
+        }
+
         .glass-card {
-            background: rgba(15, 23, 42, 0.85); /* #0F172A com leve transparência para efeito vidro */
+            background: #0F172A; 
             backdrop-filter: blur(20px); 
             -webkit-backdrop-filter: blur(20px);
             border-radius: 2.5rem;
             position: relative;
             z-index: 10;
             box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-            /* Borda vermelha mais forte restaurada */
             border: 2px solid rgb(185, 28, 28); 
         }
 
-        /* Brilho de topo do vidro para dar volume premium */
         .glass-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
             z-index: 2;
         }
 
-        /* Campo de Informação Branco (Input) */
         .info-field-wrapper {
             background: #ffffff;
-            border-radius: 2rem;
+            /* Arredondamento responsivo: Pílula no PC, Retângulo suave no Mobile */
+            border-radius: 1.5rem; 
             border: 2px solid transparent;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
             position: relative;
@@ -122,105 +199,98 @@
             .info-field-wrapper { border-radius: 9999px; }
         }
 
-        /* Seta do select escura (pois o fundo agora é branco) */
-        .select-arrow {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%230f172a'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-            background-position: right 1rem center;
-            background-repeat: no-repeat;
-            background-size: 1.1rem;
-        }
-        
-        select option {
-            background-color: #ffffff;
-            color: #0f172a;
-        }
+        #dropdownMenu::-webkit-scrollbar { width: 6px; }
+        #dropdownMenu::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 8px; margin: 4px; }
+        #dropdownMenu::-webkit-scrollbar-thumb { background: rgb(220, 38, 38); border-radius: 8px; }
         
         #particles-js {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 selection:bg-[rgb(220,38,38)] selection:text-white relative">
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-6 selection:bg-[rgb(220,38,38)] selection:text-white relative">
 
     <div id="particles-js"></div>
 
-    <!-- Wrapper Central -->
-    <div class="w-full max-w-4xl text-center z-10">
-        
-        <!-- Cartão de Vidro Premium #0F172A -->
-        <div class="glass-card p-8 md:p-12 relative overflow-hidden">
-            
-            <!-- Luzes internas subtis interagindo com o fundo escuro -->
-            <div class="absolute -top-24 -right-24 w-64 h-64 bg-[rgb(220,38,38)]/10 rounded-full blur-[60px] pointer-events-none z-0"></div>
-            <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/5 rounded-full blur-[60px] pointer-events-none z-0"></div>
+    <div class="sr-only">
+        Encontre produtos ocultos Hotmart, extrair produto oculto, como garimpar produtos na Hotmart, Logzz, Braip, Eduzz, Kirvano, PerfectPay, Digistore24,  Radar de lançamentos, como achar produtos ocultos, como encontrar produtos ocultos, produtos ocultos da hotmart, produtos ocultos da logzz, produtos ocultos da kirvano, produtos ocultos da perfectpay, produtos ocultos da digistore24, produtos ocultos gringos, produtos ocultos da eduzz, ferramenta para produto oculto, melhores produtos da hotmart, produtos ocultos para afiliados, radardelancamento.com.br, radardelancamento, radarlancamento, inexplor, inexplor.com, lançamentos digitais.
+    </div>
 
-            <div class="relative z-10">
-                <!-- Textos em Branco -->
-                <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4 drop-shadow-md">Desbloquear Produto Oculto</h1>
-                <p id="subtitle" class="text-lg md:text-xl text-slate-300 font-medium max-w-2xl mx-auto mb-2 drop-shadow-sm">
+    <div class="w-full max-w-4xl text-center z-10">
+        <div class="glass-card relative">
+            
+            <div class="absolute inset-0 rounded-[2.5rem] overflow-hidden pointer-events-none z-0">
+                <div class="absolute -top-24 -right-24 w-64 h-64 bg-[rgb(220,38,38)]/10 rounded-full blur-[60px]"></div>
+                <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-white/5 rounded-full blur-[60px]"></div>
+            </div>
+
+            <!-- Ajuste Responsivo no Padding do Card -->
+            <div class="relative p-6 sm:p-8 md:p-12 z-10">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4 drop-shadow-md leading-tight">Desbloquear Produto Oculto</h1>
+                <p id="subtitle" class="text-base sm:text-lg md:text-xl text-slate-300 font-medium max-w-2xl mx-auto mb-2 drop-shadow-sm">
                     Cole o link do produto oculto para desbloquear o link de afiliação
                 </p>
 
-                <!-- Campo de Informações Branco -->
-                <div class="info-field-wrapper mt-10 p-2 md:p-2.5">
-                    <div class="flex flex-col md:flex-row items-center gap-2 md:gap-0">
+                <!-- Wrapper Responsivo -->
+                <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5">
+                    <div class="flex flex-col md:flex-row items-center gap-3 md:gap-0">
                         
-                        <!-- Seletor de Plataforma -->
-                        <div class="w-full md:w-auto relative z-30">
-                            <select 
-                                id="platformSelect" 
-                                onchange="mudarPlataforma()"
-                                class="w-full md:w-auto select-arrow appearance-none bg-transparent text-slate-900 font-bold text-base md:text-lg px-6 py-3 md:py-4 pr-12 rounded-[1.5rem] md:rounded-full outline-none cursor-pointer transition-all border-none"
-                            >
-                                <option value="hotmart" selected>Hotmart</option>
-                                <option value="logzz">Logzz</option>
-                            </select>
+                        <div class="w-full md:w-auto relative z-50" id="customDropdown">
+                            <button type="button" id="dropdownBtn" onclick="toggleDropdown()" class="w-full md:w-auto flex items-center justify-between md:justify-center gap-3 bg-slate-50 md:bg-transparent text-slate-900 font-bold text-base md:text-lg px-6 py-4 rounded-xl md:rounded-full outline-none cursor-pointer transition-all hover:bg-slate-100">
+                                <span id="selectedPlatformText">Hotmart</span>
+                                <svg id="dropdownArrow" class="w-5 h-5 text-slate-900 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            
+                            <div id="dropdownMenu" class="absolute top-full left-0 mt-2 w-full md:min-w-[220px] max-h-56 overflow-y-auto bg-[#0F172A] border border-[rgb(185,28,28)] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.6)] opacity-0 invisible transform scale-95 transition-all duration-300 origin-top flex flex-col z-[100] p-1.5">
+                                <button type="button" onclick="selectPlatform('hotmart', 'Hotmart')" class="px-5 py-3 text-left text-white font-semibold rounded-xl hover:bg-[rgb(220,38,38)] transition-colors m-0.5">Hotmart</button>
+                                <button type="button" onclick="selectPlatform('logzz', 'Logzz')" class="px-5 py-3 text-left text-white font-semibold rounded-xl hover:bg-[rgb(220,38,38)] transition-colors m-0.5">Logzz</button>
+                                <button type="button" onclick="selectPlatform('kirvano', 'Kirvano')" class="px-5 py-3 text-left text-white font-semibold rounded-xl hover:bg-[rgb(220,38,38)] transition-colors m-0.5">Kirvano</button>
+                                <button type="button" onclick="selectPlatform('braip', 'Braip')" class="px-5 py-3 text-left text-white font-semibold rounded-xl hover:bg-[rgb(220,38,38)] transition-colors m-0.5">Braip</button>
+                                <button type="button" onclick="selectPlatform('eduzz', 'Eduzz')" class="px-5 py-3 text-left text-white font-semibold rounded-xl hover:bg-[rgb(220,38,38)] transition-colors m-0.5">Eduzz</button>
+                                <button type="button" onclick="selectPlatform('digistore24', 'Digistore24')" class="px-5 py-3 text-left text-white font-semibold rounded-xl hover:bg-[rgb(220,38,38)] transition-colors m-0.5">Digistore24</button>
+                                <button type="button" onclick="selectPlatform('perfectpay', 'PerfectPay')" class="px-5 py-3 text-left text-white font-semibold rounded-xl hover:bg-[rgb(220,38,38)] transition-colors m-0.5">PerfectPay</button>
+                            </div>
+                            
+                            <input type="hidden" id="platformSelect" value="hotmart">
                         </div>
 
-                        <!-- Separador visual -->
+                        <!-- Separador Responsivo (Visível apenas no PC) -->
                         <div class="hidden md:block w-px h-8 bg-slate-200 mx-2"></div>
 
-                        <!-- Campo de URL -->
+                        <!-- Input Otimizado para Mobile -->
                         <input 
                             type="url" 
                             id="urlInput" 
-                            placeholder="https://pay.hotmart.com/.. ou https://hotmart.com/.." 
-                            class="w-full flex-1 bg-transparent px-6 py-3 md:py-4 text-base md:text-lg outline-none text-slate-900 placeholder-slate-400 font-medium min-w-0 z-20 relative"
+                            class="w-full flex-1 bg-slate-50 md:bg-transparent px-6 py-4 md:py-4 text-base md:text-lg outline-none text-slate-900 placeholder-slate-500 font-medium min-w-0 rounded-xl md:rounded-none z-20 relative transition-colors focus:bg-white"
                         >
 
-                        <!-- Botão Desbloquear -->
+                        <!-- Botão Otimizado para Mobile -->
                         <button 
                             id="extractBtn" 
                             onclick="iniciarExtracao()"
-                            class="w-full md:w-auto bg-[rgb(220,38,38)] border-2 border-[rgb(185,28,28)] hover:bg-[rgb(190,30,30)] hover:border-[rgb(153,27,27)] text-white font-bold text-base md:text-lg px-8 py-3 md:py-4 rounded-[1.5rem] md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative"
+                            class="w-full md:w-auto bg-[rgb(220,38,38)] border-2 border-[rgb(185,28,28)] hover:bg-[rgb(190,30,30)] hover:border-[rgb(153,27,27)] text-white font-bold text-base md:text-lg px-8 py-4 rounded-xl md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative"
                         >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
-                            <span id="btnText">Desbloquear Produto</span>
+                            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
+                            <span id="btnText" class="whitespace-nowrap">Desbloquear Produto</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Mensagens de Erro -->
-                <div id="errorBox" class="hidden mt-6 bg-red-50 border-l-4 border-[rgb(220,38,38)] text-red-900 px-6 py-4 rounded-2xl text-left font-bold text-sm shadow-sm z-20 relative"></div>
+                <div id="errorBox" class="hidden mt-6 bg-red-50 border-l-4 border-[rgb(220,38,38)] text-red-900 px-6 py-4 rounded-2xl text-left font-bold text-sm md:text-base shadow-sm z-20 relative"></div>
 
-                <!-- Resultado -->
                 <div id="resultArea" class="hidden mt-10 pt-8 border-t border-white/10 transition-all z-20 relative">
                     <p class="text-sm text-[rgb(220,38,38)] font-bold mb-3 uppercase tracking-widest drop-shadow-md">Sucesso! Link Desbloqueado:</p>
                     
-                    <!-- Caixa de Resultado Branca -->
-                    <div class="bg-white p-5 rounded-3xl border border-slate-200 mb-6 break-all text-center shadow-lg">
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-200 mb-6 break-all text-center shadow-lg">
                         <a id="finalUrl" href="#" target="_blank" class="text-sm md:text-base font-bold text-slate-800 hover:text-[rgb(220,38,38)] underline decoration-[rgb(220,38,38)]/30 underline-offset-4 transition-colors"></a>
                     </div>
                     
-                    <div class="flex flex-wrap items-center justify-center gap-4">
-                        <button onclick="copiarUrl()" class="px-8 py-3 bg-[rgb(220,38,38)] border-2 border-[rgb(185,28,28)] text-white hover:bg-[rgb(190,30,30)] hover:border-[rgb(153,27,27)] font-bold text-lg rounded-full transition-all shadow-md shadow-[rgba(220,38,38,0.3)]">
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                        <button onclick="copiarUrl()" class="w-full sm:w-auto px-8 py-3 bg-[rgb(220,38,38)] border-2 border-[rgb(185,28,28)] text-white hover:bg-[rgb(190,30,30)] font-bold text-base sm:text-lg rounded-xl sm:rounded-full transition-all shadow-md shadow-[rgba(220,38,38,0.3)]">
                             Copiar Link
                         </button>
-                        <button onclick="abrirUrl()" class="px-8 py-3 bg-white/5 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/10 font-bold text-lg rounded-full transition-all shadow-sm">
-                            Abrir Produto
+                        <button onclick="abrirUrl()" class="w-full sm:w-auto px-8 py-3 bg-white/5 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/10 font-bold text-base sm:text-lg rounded-xl sm:rounded-full transition-all shadow-sm">
+                            Abrir Link
                         </button>
                     </div>
                     <p id="copySuccess" class="text-white font-bold text-sm mt-4 hidden animate-bounce drop-shadow-md">✓ Link copiado para a área de transferência!</p>
@@ -230,83 +300,145 @@
     </div>
 
     <script>
-        // Configuração ParticlesJS
+        // === MÁQUINA DE ESCREVER À PROVA DE FALHAS ===
+        const placeholderTexts = [
+            "Cole o link do produto",
+            "https://pay.hotmart.com/...",
+            "https://hotmart.com/..."
+        ];
+        let ptIndex = 0; let charIndex = 0; let isDeletingPlaceholder = false;
+        let animationTimeout;
+
+        function animatePlaceholder() {
+            const urlInput = document.getElementById('urlInput');
+            if (!urlInput) return;
+
+            const currentText = placeholderTexts[ptIndex];
+            
+            if (isDeletingPlaceholder) {
+                urlInput.setAttribute('placeholder', currentText.substring(0, charIndex - 1));
+                charIndex--;
+            } else {
+                urlInput.setAttribute('placeholder', currentText.substring(0, charIndex + 1));
+                charIndex++;
+            }
+
+            let typeSpeed = isDeletingPlaceholder ? 30 : 60;
+
+            if (!isDeletingPlaceholder && charIndex === currentText.length) {
+                typeSpeed = 2500;
+                isDeletingPlaceholder = true;
+            } else if (isDeletingPlaceholder && charIndex === 0) {
+                isDeletingPlaceholder = false;
+                ptIndex = (ptIndex + 1) % placeholderTexts.length;
+                typeSpeed = 500; 
+            }
+
+            clearTimeout(animationTimeout);
+            animationTimeout = setTimeout(animatePlaceholder, typeSpeed);
+        }
+        animatePlaceholder();
+
+        // Configuração Segura do ParticlesJS
         try {
-            particlesJS('particles-js', {
-              "particles": {
-                "number": { "value": 35, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#dc2626" },
-                "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" } },
-                "opacity": { "value": 0.3, "random": false, "anim": { "enable": false } },
-                "size": { "value": 3, "random": true, "anim": { "enable": false } },
-                "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 },
-                "move": { 
-                    "enable": true, 
-                    "speed": 0.5, 
-                    "direction": "none", 
-                    "random": false, 
-                    "straight": false, 
-                    "out_mode": "out", 
-                    "bounce": false,
-                    "attract": { "enable": false, "rotateX": 600, "rotateY": 1200 }
-                }
-              },
-              "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false } } },
-              "retina_detect": true
-            });
-        } catch (e) { console.error("Erro ao inicializar fundo:", e); }
+            if(typeof particlesJS !== 'undefined') {
+                particlesJS('particles-js', {
+                  "particles": {
+                    "number": { "value": 35, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": "#dc2626" },
+                    "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" } },
+                    "opacity": { "value": 0.3, "random": false },
+                    "size": { "value": 3, "random": true },
+                    "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 },
+                    "move": { "enable": true, "speed": 0.5, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+                  },
+                  "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false } } },
+                  "retina_detect": true
+                });
+            }
+        } catch (e) { console.error("Partículas não inicializadas."); }
 
         const BASE_URL = 'https://desbloquearprodutooculto.onrender.com';
 
-        // Função para gerar uma string aleatória com letras minúsculas e números
-        function gerarStringAleatoria(tamanho) {
-            const caracteres = 'abcdefghijklmnopqrstuvwxyz0123456789';
-            let resultado = '';
-            for (let i = 0; i < tamanho; i++) {
-                resultado += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        // === DROPDOWN MATERIAL 3 ===
+        function toggleDropdown() {
+            const menu = document.getElementById('dropdownMenu');
+            const arrow = document.getElementById('dropdownArrow');
+            if (!menu || !arrow) return;
+            
+            const isExpanded = menu.classList.contains('opacity-100');
+            if (isExpanded) {
+                menu.classList.remove('opacity-100', 'visible', 'scale-100');
+                menu.classList.add('opacity-0', 'invisible', 'scale-95');
+                arrow.classList.remove('rotate-180');
+            } else {
+                menu.classList.remove('opacity-0', 'invisible', 'scale-95');
+                menu.classList.add('opacity-100', 'visible', 'scale-100');
+                arrow.classList.add('rotate-180');
             }
-            return resultado;
         }
+
+        function selectPlatform(value, text) {
+            document.getElementById('platformSelect').value = value;
+            document.getElementById('selectedPlatformText').textContent = text;
+            toggleDropdown();
+            mudarPlataforma(); 
+        }
+
+        // Fechar ao clicar fora ou rolar a tela (Mobile Touch Friendly)
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('customDropdown');
+            const menu = document.getElementById('dropdownMenu');
+            if (dropdown && menu && !dropdown.contains(event.target) && menu.classList.contains('opacity-100')) {
+                toggleDropdown();
+            }
+        });
+        
+        window.addEventListener('scroll', function() {
+            const menu = document.getElementById('dropdownMenu');
+            if(menu && menu.classList.contains('opacity-100')) toggleDropdown();
+        }, { passive: true });
 
         function mudarPlataforma() {
             const platform = document.getElementById('platformSelect').value;
-            if (platform === 'logzz') {
+            if (platform !== 'hotmart') {
                 const isPreview = window.location.protocol === 'blob:' || window.location.hostname.includes('usercontent') || window.location.hostname.includes('google');
                 if (isPreview) {
-                    mostrarErro('Simulação: No seu domínio real, o utilizador seria levado para /logzz.');
+                    mostrarErro(`Simulação: No seu domínio real, seria levado para /${platform}.`);
                     document.getElementById('platformSelect').value = 'hotmart';
+                    document.getElementById('selectedPlatformText').textContent = 'Hotmart';
                 } else {
-                    window.location.href = window.location.origin + '/logzz';
+                    window.location.href = window.location.origin + '/' + platform;
                 }
             }
         }
 
         function mostrarErro(mensagem) {
             const errorBox = document.getElementById('errorBox');
+            if(!errorBox) return;
             errorBox.textContent = mensagem;
             errorBox.classList.remove('hidden');
             setTimeout(() => { errorBox.classList.add('hidden'); }, 6000);
         }
 
         async function iniciarExtracao() {
-            // Extrai o parâmetro ?id= da URL (se existir)
             const urlParams = new URLSearchParams(window.location.search);
             const premiumId = urlParams.get('id');
 
-            // PRIMEIRA CAMADA DE VERIFICAÇÃO: LOCALSTORAGE (Apenas para contas gratuitas)
-            let unlockCount = parseInt(localStorage.getItem('unlockCount')) || 0;
-            
-            // Se NÃO tiver o ID premium e já tiver atingido o limite gratuito, bloqueia
+            let unlockCount = parseInt(localStorage.getItem('_ga_unlock_count')) || 0;
             if (!premiumId && unlockCount >= 3) {
                 window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
                 return;
             }
 
             const urlInput = document.getElementById('urlInput');
-            const url = urlInput.value.trim();
             const btnText = document.getElementById('btnText');
             const extractBtn = document.getElementById('extractBtn');
             const resultArea = document.getElementById('resultArea');
+
+            if (!urlInput || !btnText || !extractBtn || !resultArea) return;
+
+            const url = urlInput.value.trim();
 
             if (!url) { mostrarErro('Por favor, cole uma URL.'); return; }
             if (!url.startsWith('https://pay.hotmart.com/') && !url.startsWith('https://hotmart.com/')) {
@@ -319,24 +451,25 @@
             extractBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
             try {
-                // SEGUNDA CAMADA DE VERIFICAÇÃO (BACKEND): ENVIA A URL, FINGERPRINT E O ID PREMIUM (se houver)
                 const response = await fetch(BASE_URL + '/api/extrair', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         url: url,
-                        visitorId: visitorId, // Envia o ID único do dispositivo (Para conta gratuita)
-                        premiumId: premiumId  // Envia o ID da URL (Para assinantes)
+                        fingerprintId: fingerprintId,
+                        stickyId: stickyId,
+                        premiumId: premiumId
                     })
                 });
                 
                 const data = await response.json();
                 
-                // Se o backend retornar que o limite de uso foi atingido (gratuito ou assinante sem saldo/vencido)
+                if (data.restoredId && !premiumId) {
+                    gravarStickyId(data.restoredId);
+                }
+
                 if (response.status === 403 || data.limiteAtingido) {
-                    if (!premiumId) {
-                        localStorage.setItem('unlockCount', '3'); // Força o limite local para gratuitos
-                    }
+                    if (!premiumId) { localStorage.setItem('_ga_unlock_count', '3'); }
                     window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
                     return;
                 }
@@ -345,9 +478,8 @@
 
                 let urlFinal = data.urlFinal;
                 
-                // Adiciona o código aleatório APENAS se a URL for a página view/ do UCODE
                 if (urlFinal.startsWith('https://app.hotmart.com/products/view/')) {
-                    const stringAleatoria = gerarStringAleatoria(30);
+                    const stringAleatoria = gerarIdUnico(); 
                     if (urlFinal.includes('?')) {
                         urlFinal += '&po=' + stringAleatoria;
                     } else {
@@ -359,10 +491,9 @@
                 document.getElementById('finalUrl').href = urlFinal;
                 resultArea.classList.remove('hidden');
                 
-                // Incrementa e salva o contador no LocalStorage APENAS se for usuário gratuito
                 if (!premiumId) {
                     unlockCount++;
-                    localStorage.setItem('unlockCount', unlockCount.toString());
+                    localStorage.setItem('_ga_unlock_count', unlockCount.toString());
                 }
                 
                 urlInput.value = '';
@@ -376,20 +507,27 @@
         }
 
         function copiarUrl() {
-            const text = document.getElementById('finalUrl').textContent;
+            const finalUrlEl = document.getElementById('finalUrl');
+            if(!finalUrlEl) return;
+            
+            const text = finalUrlEl.textContent;
             const el = document.createElement('textarea');
             el.value = text;
             document.body.appendChild(el);
             el.select();
             document.execCommand('copy');
             document.body.removeChild(el);
+            
             const success = document.getElementById('copySuccess');
-            success.classList.remove('hidden');
-            setTimeout(() => success.classList.add('hidden'), 3000);
+            if(success) {
+                success.classList.remove('hidden');
+                setTimeout(() => success.classList.add('hidden'), 3000);
+            }
         }
 
         function abrirUrl() {
-            window.open(document.getElementById('finalUrl').textContent, '_blank');
+            const finalUrlEl = document.getElementById('finalUrl');
+            if(finalUrlEl) window.open(finalUrlEl.textContent, '_blank');
         }
     </script>
 </body>
