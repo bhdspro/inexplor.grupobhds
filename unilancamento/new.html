@@ -45,6 +45,8 @@
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
+            /* Inicia sem scroll e centralizado */
+            overflow-y: hidden; 
         }
 
         /* Permite seleção no input */
@@ -126,32 +128,32 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-4 sm:p-6 selection:bg-highlight selection:text-white relative">
+<body id="mainBody" class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 selection:bg-highlight selection:text-white relative transition-all duration-500">
 
     <div id="particles-js"></div>
 
-    <!-- Header Simples -->
-    <header class="w-full max-w-4xl flex items-center justify-between mb-8 z-10 px-4">
+    <!-- Header Posicionado de forma absoluta para não afetar o centro real do card -->
+    <header class="absolute top-8 w-full max-w-4xl flex items-center justify-between z-10 px-8">
         <div class="flex items-center gap-2">
             <span class="text-xl font-bold tracking-wide text-white">Unilançamento</span>
         </div>
     </header>
 
-    <div class="w-full max-w-4xl z-10 flex flex-col items-center">
+    <div id="heroSection" class="w-full max-w-4xl z-10 flex flex-col items-center transition-all duration-500">
         <!-- Card Central Principal (Hero) -->
-        <div class="glass-card relative w-full text-center p-6 sm:p-8 md:p-12 mb-16 mx-auto">
+        <div class="glass-card relative w-full text-center p-6 sm:p-8 md:p-12 mx-auto">
             
             <div class="relative z-10">
                 <!-- Título -->
                 <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-4 drop-shadow-md leading-tight">
                     Descubra e Monitore Lançamentos
                 </h1>
-                <!-- Subtítulo COM O AJUSTE: max-w-3xl e text-balance para evitar quebra estranha -->
+                <!-- Subtítulo -->
                 <p class="text-base sm:text-lg md:text-xl text-slate-300 font-medium max-w-3xl mx-auto mb-2 drop-shadow-sm text-balance">
                     Descubra novos lançamentos de forma inteligente e fuja da concorrência
                 </p>
 
-                <!-- Campo de Busca Principal (Agora suporta Múltiplas Tags/Chips) -->
+                <!-- Campo de Busca Principal -->
                 <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 w-full mx-auto">
                     <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-0">
                         <!-- Container flexível para as Tags -->
@@ -245,7 +247,7 @@
                             </select>
                         </div>
 
-                        <!-- Campos que ocupam a largura total do bloco compacto -->
+                        <!-- Intervalo de Datas -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Intervalo de Datas</label>
                             <div class="w-full min-h-[48px] flex items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 transition-colors focus-within:border-highlight overflow-hidden">
@@ -256,6 +258,7 @@
                             </div>
                         </div>
 
+                        <!-- Outros Filtros -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Filtro de Canais</label>
                             <div id="channelContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('channelInput').focus()">
@@ -284,7 +287,7 @@
         </div>
 
         <!-- Área de Resultados (Inicia Oculta) -->
-        <div class="w-full mb-12 hidden max-w-6xl mx-auto" id="resultsContainer">
+        <div class="w-full mt-16 mb-12 hidden max-w-6xl mx-auto" id="resultsContainer">
             <div class="flex items-center justify-between mb-6 px-2">
                 <h2 class="text-2xl font-bold text-white flex items-center gap-2 drop-shadow-md">
                     Lançamentos Encontrados
@@ -305,11 +308,30 @@
     </div>
 
     <script>
-        // === LÓGICA DO ACORDEÃO DOS FILTROS (Efeito Sanfona) ===
+        // === LÓGICA DO ACORDEÃO E SCROLL ===
         const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
         const filtersWrapper = document.getElementById('filtersWrapper');
         const filtersArrow = document.getElementById('filtersArrow');
+        const mainBody = document.getElementById('mainBody');
+        const resultsContainer = document.getElementById('resultsContainer');
+        
         let isFiltersOpen = false;
+
+        function updateScrollState() {
+            // Habilita scroll se filtros estiverem abertos OU resultados estiverem visíveis
+            const isResultsVisible = !resultsContainer.classList.contains('hidden');
+            
+            if (isFiltersOpen || isResultsVisible) {
+                mainBody.style.overflowY = 'auto';
+                mainBody.classList.remove('justify-center');
+                mainBody.classList.add('pt-32'); // Dá espaço para o header absoluto no topo
+            } else {
+                mainBody.style.overflowY = 'hidden';
+                mainBody.classList.add('justify-center');
+                mainBody.classList.remove('pt-32');
+                window.scrollTo(0, 0);
+            }
+        }
 
         toggleFiltersBtn.addEventListener('click', () => {
             isFiltersOpen = !isFiltersOpen;
@@ -322,16 +344,16 @@
                 filtersWrapper.classList.remove('max-h-[2000px]', 'opacity-100');
                 filtersArrow.classList.remove('rotate-180');
             }
+            updateScrollState();
         });
 
-        // === FUNÇÃO DA MÁQUINA DE ESCREVER COM OCULTAÇÃO INTELIGENTE ===
+        // === MÁQUINA DE ESCREVER ===
         function setupTypewriter(inputId, prefix, texts, isChipContainer = false) {
             let ptIndex = 0; 
             let charIndex = 0; 
             let isDeleting = false;
             let animationTimeout;
             const inputEl = document.getElementById(inputId);
-
             if (!inputEl) return;
 
             function shouldHidePlaceholder() {
@@ -349,9 +371,7 @@
                     clearTimeout(animationTimeout);
                     return;
                 }
-
                 const currentText = texts[ptIndex];
-                
                 if (isDeleting) {
                     inputEl.setAttribute('placeholder', prefix + currentText.substring(0, charIndex - 1));
                     charIndex--;
@@ -359,9 +379,7 @@
                     inputEl.setAttribute('placeholder', prefix + currentText.substring(0, charIndex + 1));
                     charIndex++;
                 }
-
                 let typeSpeed = isDeleting ? 30 : 60;
-
                 if (!isDeleting && charIndex === currentText.length) {
                     typeSpeed = 2500;
                     isDeleting = true;
@@ -370,228 +388,90 @@
                     ptIndex = (ptIndex + 1) % texts.length;
                     typeSpeed = 500; 
                 }
-
                 clearTimeout(animationTimeout);
                 animationTimeout = setTimeout(type, typeSpeed);
             }
-
             inputEl.addEventListener('input', () => {
                 if (shouldHidePlaceholder()) {
                     inputEl.setAttribute('placeholder', '');
                     clearTimeout(animationTimeout);
                 } else {
-                    charIndex = 0;
-                    isDeleting = false;
-                    clearTimeout(animationTimeout);
-                    type();
+                    charIndex = 0; isDeleting = false;
+                    clearTimeout(animationTimeout); type();
                 }
             });
-
             if (isChipContainer) {
                 const observer = new MutationObserver(() => {
                     if (shouldHidePlaceholder()) {
                         inputEl.setAttribute('placeholder', '');
                         clearTimeout(animationTimeout);
                     } else if (inputEl.value.length === 0) {
-                        charIndex = 0;
-                        isDeleting = false;
-                        clearTimeout(animationTimeout);
-                        type();
+                        charIndex = 0; isDeleting = false;
+                        clearTimeout(animationTimeout); type();
                     }
                 });
                 observer.observe(inputEl.parentElement, { childList: true });
             }
-            
             type();
         }
 
-        // Inicializar Máquinas de Escrever
-        setupTypewriter('urlInput', '', [
-            "Digite sua palavra-chave...",
-            "Ex: evento",
-            "Ex: aula",
-            "Ex: imersão",
-            "Ex: masterclass",
-            "Ex: maratona",
-            "Ex: workshop",
-            "Ex: jornada",
-            "Ex: intensivo",
-            "Ex: intensivão"
-        ], true);
+        setupTypewriter('urlInput', '', ["Digite sua palavra-chave...", "Ex: masterclass", "Ex: workshop"], true);
+        setupTypewriter('channelInput', '', ["Ex: @inexploroficial"], true);
+        setupTypewriter('descInput', '', ["Ex: Hotmart"], true);
+        setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
 
-        setupTypewriter('channelInput', '', [
-            "Ex: @caiocalderaro",
-            "Ex: @inexploroficial",
-            "Ex: UCyFbTJjYi6tpWgdcS7",
-            "Ex: https://youtube.com/@inexploroficial"
-        ], true);
-
-        setupTypewriter('descInput', '', [
-            "Ex: https://go.hotmart.com",
-            "Ex: WhatsApp",
-            "Ex: Aula 2",
-            "Ex: Entre no Grupo"
-        ], true);
-
-        setupTypewriter('negativeInput', '', [
-            "Ex: minicurso",
-            "Ex: webinar",
-            "Ex: playlist",
-            "Ex: vagas encerradas"
-        ], true);
-
-        // === SISTEMA DE CHIPS (Tags) PARA OS FILTROS ===
+        // === CHIPS ===
         function setupChipSystem(inputId, containerId) {
             const input = document.getElementById(inputId);
             const container = document.getElementById(containerId);
-
             if (!input || !container) return;
-
             input.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ',') {
                     e.preventDefault();
                     let value = input.value.trim().replace(/,$/, ''); 
-                    if (value) {
-                        createChip(value, container, input);
-                        input.value = ''; 
-                    }
+                    if (value) { createChip(value, container, input); input.value = ''; }
                 } else if (e.key === 'Backspace' && input.value === '') {
                     const chips = container.querySelectorAll('.chip');
-                    if (chips.length > 0) {
-                        chips[chips.length - 1].remove();
-                    }
+                    if (chips.length > 0) chips[chips.length - 1].remove();
                 }
             });
-
             input.addEventListener('blur', function() {
                 let value = input.value.trim().replace(/,$/, '');
-                if (value) {
-                    createChip(value, container, input);
-                    input.value = '';
-                }
+                if (value) { createChip(value, container, input); input.value = ''; }
             });
         }
-
         function createChip(text, container, input) {
             const chip = document.createElement('span');
             chip.className = 'chip bg-highlight text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm whitespace-nowrap';
-            chip.innerHTML = `
-                ${text} 
-                <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors" onclick="this.parentElement.remove()">close</span>
-            `;
+            chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors" onclick="this.parentElement.remove()">close</span>`;
             container.insertBefore(chip, input);
         }
-
-        // Ativar o sistema de chips em todos os 4 campos
         setupChipSystem('urlInput', 'mainInputContainer');
         setupChipSystem('channelInput', 'channelContainer');
         setupChipSystem('descInput', 'descContainer');
         setupChipSystem('negativeInput', 'negativeContainer');
 
-
-        // === CONFIGURAÇÃO PARTICLES.JS ===
+        // === PARTICULAS ===
         try {
-            if(typeof particlesJS !== 'undefined') {
-                particlesJS('particles-js', {
-                  "particles": {
+            particlesJS('particles-js', {
+                "particles": {
                     "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
                     "color": { "value": "#dc2626" },
                     "shape": { "type": "circle" },
-                    "opacity": { "value": 0.4, "random": false },
+                    "opacity": { "value": 0.4 },
                     "size": { "value": 3, "random": true },
                     "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 },
-                    "move": { "enable": true, "speed": 1, "direction": "none", "random": true, "out_mode": "out" }
-                  },
-                  "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false } }, "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } } } },
-                  "retina_detect": true
-                });
-            }
-        } catch (e) { console.error("Partículas não inicializadas."); }
+                    "move": { "enable": true, "speed": 1 }
+                },
+                "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" } } },
+                "retina_detect": true
+            });
+        } catch (e) {}
 
-        // === DADOS MOCK E RENDERIZAÇÃO DE CARDS ===
-        const mockVideos = [
-            {
-                title: "AULA 01: O Segredo do Marketing Digital em 2026",
-                channel: "Especialista em Vendas",
-                thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                status: "Ao Vivo",
-                viewers: "1.2k assistindo",
-                date: "Agora"
-            },
-            {
-                title: "Lançamento Oficial: Mentoria Código de Riqueza",
-                channel: "Thiago Finanças",
-                thumbnail: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                status: "Agendado",
-                viewers: "Agendado para 20:00",
-                date: "Hoje"
-            },
-            {
-                title: "Como criar automações com Google Apps Script",
-                channel: "Dev Na Prática",
-                thumbnail: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                status: "Finalizado",
-                viewers: "45 mil views",
-                date: "Há 2 dias"
-            }
-        ];
-
-        const resultsContainer = document.getElementById('resultsContainer');
-        const resultsGrid = document.getElementById('resultsGrid');
+        // === BUSCA MOCK ===
         const searchBtn = document.getElementById('searchBtn');
+        const resultsGrid = document.getElementById('resultsGrid');
         const loadingIndicator = document.getElementById('loadingIndicator');
-
-        function createCard(video) {
-            let statusStyle = "bg-slate-800 text-white border-slate-600";
-            let statusIcon = "play_circle";
-            let pulseClass = "";
-            
-            if (video.status === "Ao Vivo") {
-                statusStyle = "bg-highlight/20 text-highlight border-highlight backdrop-blur-md";
-                statusIcon = "sensors";
-                pulseClass = "animate-pulse";
-            } else if (video.status === "Agendado") {
-                statusStyle = "bg-amber-500/20 text-amber-400 border-amber-500/50 backdrop-blur-md";
-                statusIcon = "schedule";
-            } else if (video.status === "Finalizado") {
-                statusStyle = "bg-green-500/20 text-green-400 border-green-500/50 backdrop-blur-md";
-                statusIcon = "task_alt";
-            }
-
-            return `
-                <article class="video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl">
-                    <div class="relative aspect-video overflow-hidden">
-                        <img src="${video.thumbnail}" alt="Thumbnail" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
-                        
-                        <!-- Badge de Status -->
-                        <div class="absolute top-4 left-4 ${statusStyle} border px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg ${pulseClass}">
-                            <span class="material-symbols-rounded text-[16px]">${statusIcon}</span>
-                            ${video.status}
-                        </div>
-                    </div>
-
-                    <div class="p-6 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
-                        <h3 class="text-lg font-bold leading-tight mb-3 text-white line-clamp-2">${video.title}</h3>
-                        
-                        <div class="flex items-center gap-2 text-slate-400 mb-4">
-                            <span class="material-symbols-rounded text-[18px]">account_circle</span>
-                            <span class="text-sm font-semibold">${video.channel}</span>
-                        </div>
-                        
-                        <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
-                            <div class="flex flex-col">
-                                <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">${video.date}</span>
-                                <span class="text-sm text-slate-300 font-medium">${video.viewers}</span>
-                            </div>
-                            
-                            <button class="w-10 h-10 rounded-full bg-white/5 hover:bg-highlight hover:text-white transition-colors flex items-center justify-center border border-white/10 hover:border-transparent">
-                                <span class="material-symbols-rounded text-[20px]">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </article>
-            `;
-        }
 
         searchBtn.addEventListener('click', () => {
             resultsContainer.classList.remove('hidden');
@@ -599,14 +479,39 @@
             loadingIndicator.classList.remove('hidden');
             loadingIndicator.classList.add('flex');
             
+            updateScrollState(); // Habilita o scroll pois resultados apareceram
+
             setTimeout(() => {
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
-                const shuffled = [...mockVideos].sort(() => 0.5 - Math.random());
-                resultsGrid.innerHTML = shuffled.map(createCard).join('');
+                resultsGrid.innerHTML = `
+                    <article class="video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl">
+                        <div class="relative aspect-video overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover">
+                            <div class="absolute top-4 left-4 bg-highlight/20 text-highlight border border-highlight backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg animate-pulse">
+                                <span class="material-symbols-rounded text-[16px]">sensors</span> Ao Vivo
+                            </div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
+                            <h3 class="text-lg font-bold leading-tight mb-3 text-white">AULA 01: O Segredo do Marketing Digital em 2026</h3>
+                            <div class="flex items-center gap-2 text-slate-400 mb-4">
+                                <span class="material-symbols-rounded text-[18px]">account_circle</span>
+                                <span class="text-sm font-semibold">Especialista em Vendas</span>
+                            </div>
+                            <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                                <div class="flex flex-col">
+                                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Agora</span>
+                                    <span class="text-sm text-slate-300 font-medium">1.2k assistindo</span>
+                                </div>
+                                <button class="w-10 h-10 rounded-full bg-white/5 hover:bg-highlight hover:text-white transition-colors flex items-center justify-center border border-white/10">
+                                    <span class="material-symbols-rounded text-[20px]">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                `;
             }, 1500);
         });
-
     </script>
 </body>
 </html>
