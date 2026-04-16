@@ -225,7 +225,6 @@
                                 <option value="BR" class="bg-surface">Brasil</option>
                                 <option value="US" class="bg-surface">Estados Unidos</option>
                                 <option value="PT" class="bg-surface">Portugal</option>
-                                <!-- Lista global adicionada -->
                                 <option value="AF" class="bg-surface">Afeganistão</option>
                                 <option value="ZA" class="bg-surface">África do Sul</option>
                                 <option value="DE" class="bg-surface">Alemanha</option>
@@ -365,7 +364,7 @@
             <!-- Loading Indicator -->
             <div id="loadingIndicator" class="hidden flex-col items-center justify-center py-20 w-full col-span-full">
                 <div class="w-12 h-12 border-4 border-white/10 border-t-highlight rounded-full animate-spin mb-4"></div>
-                <p class="text-slate-400 font-bold">Processando filtros avançados e buscas E/OU...</p>
+                <p class="text-slate-400 font-bold">A processar filtros avançados e pesquisas E/OU...</p>
             </div>
         </div>
     </div>
@@ -374,8 +373,6 @@
         // ==========================================
         // CONFIGURAÇÃO CLOUDFLARE WORKER (BACKEND)
         // ==========================================
-        // IMPORTANTE: Insira aqui a URL real que o Cloudflare te forneceu 
-        // (Sem a barra / no final).
         const CF_WORKER_URL = "https://unilancamento.grupo-bhds.workers.dev"; 
 
         // === LÓGICA DO ACORDEÃO E SCROLL ===
@@ -510,10 +507,28 @@
             type();
         }
 
-        setupTypewriter('urlInput', '', ["Digite sua palavra-chave...", "Ex: masterclass", "Ex: workshop"], true);
-        setupTypewriter('channelInput', '', ["Ex: inexploroficial (nome)", "Ex: UC123456... (id)"], true);
+        setupTypewriter('urlInput', '', ["Digite a sua palavra-chave...", "Ex: masterclass", "Ex: workshop"], true);
+        setupTypewriter('channelInput', '', ["Ex: inexploroficial", "Ex: https://youtube.com/@Canal"], true);
         setupTypewriter('descInput', '', ["Ex: Hotmart"], true);
         setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
+
+        // === LIMPADOR DE URLS DE CANAIS ===
+        // Transforma URLs complexas ou '@' em nomes limpos. Ex: youtube.com/c/Marrara -> Marrara
+        function cleanChannelInput(val) {
+            let v = val.trim();
+            try {
+                if (v.includes('youtube.com') || v.includes('youtu.be')) {
+                    const urlObj = new URL(v.startsWith('http') ? v : 'https://' + v);
+                    const pathParts = urlObj.pathname.split('/').filter(Boolean);
+                    v = pathParts[pathParts.length - 1]; 
+                }
+            } catch(e) {} 
+            
+            if (v.startsWith('@')) {
+                v = v.substring(1);
+            }
+            return v;
+        }
 
         // === NOVO CHIPS SYSTEM (Com lógica E/OU embutida entre as palavras) ===
         function setupChipSystem(inputId, containerId) {
@@ -526,11 +541,13 @@
                     e.preventDefault(); 
                     let value = input.value.trim().replace(/,$/, ''); 
                     if (value) { 
+                        if (containerId === 'channelContainer') {
+                            value = cleanChannelInput(value);
+                        }
                         createChipAndOp(value, container, input); 
                         input.value = ''; 
                     }
                 } else if (e.key === 'Backspace' && input.value === '') {
-                    // Lógica para apagar o último chip junto com o operador dele
                     const chips = container.querySelectorAll('.chip');
                     if (chips.length > 0) {
                         const lastChip = chips[chips.length - 1];
@@ -545,6 +562,9 @@
             input.addEventListener('blur', function() {
                 let value = input.value.trim().replace(/,$/, '');
                 if (value) { 
+                    if (containerId === 'channelContainer') {
+                        value = cleanChannelInput(value);
+                    }
                     createChipAndOp(value, container, input); 
                     input.value = ''; 
                 }
@@ -552,46 +572,47 @@
         }
 
         function createChipAndOp(text, container, input) {
-            // Se já existem chips, insere um botão de operador (E/OU) ANTES de inserir o novo chip
             if (container.querySelectorAll('.chip').length > 0) {
+                const isMain = container.id === 'mainInputContainer';
                 const op = document.createElement('span');
-                op.className = 'chip-op text-[10px] bg-white/10 border border-white/20 text-slate-300 rounded px-2 py-0.5 cursor-pointer hover:bg-white/20 hover:text-white transition-colors select-none font-bold mx-0.5 flex items-center justify-center';
-                op.setAttribute('data-op', 'AND'); // Padrão é E
+                
+                const baseClasses = 'chip-op text-[10px] rounded px-2 py-0.5 cursor-pointer transition-colors select-none font-bold mx-0.5 flex items-center justify-center border';
+                const andClasses = isMain 
+                    ? 'bg-slate-200 border-slate-300 text-slate-600 hover:bg-slate-300 hover:text-slate-800' 
+                    : 'bg-white/10 border-white/20 text-slate-300 hover:bg-white/20 hover:text-white';
+                const orClasses = isMain
+                    ? 'bg-red-100 border-highlight/40 text-highlight hover:bg-red-200'
+                    : 'bg-highlight/20 border-highlight/50 text-highlight hover:bg-highlight/30';
+
+                op.className = `${baseClasses} ${andClasses}`;
+                op.setAttribute('data-op', 'AND'); 
                 op.innerText = 'E';
                 
-                // Toggle para mudar entre E e OU ao clicar
                 op.onclick = function(e) {
                     e.stopPropagation();
                     if (this.getAttribute('data-op') === 'AND') {
                         this.setAttribute('data-op', 'OR');
                         this.innerText = 'OU';
-                        this.classList.replace('bg-white/10', 'bg-highlight/20');
-                        this.classList.replace('border-white/20', 'border-highlight/50');
-                        this.classList.replace('text-slate-300', 'text-highlight');
+                        this.className = `${baseClasses} ${orClasses}`;
                     } else {
                         this.setAttribute('data-op', 'AND');
                         this.innerText = 'E';
-                        this.classList.replace('bg-highlight/20', 'bg-white/10');
-                        this.classList.replace('border-highlight/50', 'border-white/20');
-                        this.classList.replace('text-highlight', 'text-slate-300');
+                        this.className = `${baseClasses} ${andClasses}`;
                     }
                 };
                 container.insertBefore(op, input);
             }
 
-            // Cria o Chip normal com a palavra
             const chip = document.createElement('span');
             chip.className = 'chip bg-highlight text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm whitespace-nowrap';
             chip.setAttribute('data-value', text); 
             chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors">close</span>`;
             
-            // Lógica de exclusão clicando no X (Remove o chip e reconecta os operadores para não quebrar a lógica)
             chip.querySelector('span').addEventListener('click', function(e) {
                 e.stopPropagation();
                 const prevNode = chip.previousElementSibling;
                 const nextNode = chip.nextElementSibling;
                 
-                // Tenta remover o operador antes dele. Se for a primeira palavra, remove o operador depois dele.
                 if (prevNode && prevNode.classList.contains('chip-op')) {
                     prevNode.remove();
                 } else if (nextNode && nextNode.classList.contains('chip-op')) {
@@ -604,7 +625,6 @@
             container.insertBefore(chip, input);
         }
 
-        // Função para extrair os "Tokens" em ordem (Ex: palavra, operador, palavra) para não haver confusão
         function getLogicTokens(containerId) {
             const container = document.getElementById(containerId);
             const tokens = [];
@@ -612,13 +632,12 @@
                 if (node.classList && node.classList.contains('chip')) {
                     tokens.push({ type: 'word', value: node.getAttribute('data-value').trim() });
                 } else if (node.classList && node.classList.contains('chip-op')) {
-                    tokens.push({ type: 'op', value: node.getAttribute('data-op') }); // Retorna 'AND' ou 'OR'
+                    tokens.push({ type: 'op', value: node.getAttribute('data-op') });
                 }
             });
             return tokens;
         }
 
-        // Inicializar o novo sistema nos containers
         setupChipSystem('urlInput', 'mainInputContainer');
         setupChipSystem('channelInput', 'channelContainer');
         setupChipSystem('descInput', 'descContainer');
@@ -632,22 +651,18 @@
         } catch (e) {}
 
         // === AVALIADOR LÓGICO INTELIGENTE ===
-        // Transforma o array [palavra, OU, palavra, E, palavra] em um resultado Booleano final (true/false)
         function evaluateLogicCustom(tokens, matchFn) {
-            if (tokens.length === 0) return true; // Se não tem filtro, passa livre
+            if (tokens.length === 0) return true;
             
-            // 1. Traduz as palavras em True ou False testando pelo matchFn
             let expr = tokens.map(t => t.type === 'word' ? matchFn(t.value) : t.value);
             
-            // 2. Resolve primeiro as multiplicações (Operador E / AND) - Ordem de precedência matemática
             for (let i = 0; i < expr.length; i++) {
                 if (expr[i] === 'AND') {
                     expr.splice(i - 1, 3, expr[i-1] && expr[i+1]);
-                    i--; // Compensa a array que encolheu
+                    i--;
                 }
             }
             
-            // 3. Resolve depois as somas (Operador OU / OR)
             for (let i = 0; i < expr.length; i++) {
                 if (expr[i] === 'OR') {
                     expr.splice(i - 1, 3, expr[i-1] || expr[i+1]);
@@ -655,7 +670,7 @@
                 }
             }
             
-            return expr[0]; // Retorna a avaliação final
+            return expr[0];
         }
 
         // === MOTOR DE BUSCA RIGOROSA YOUTUBE API ===
@@ -669,12 +684,11 @@
             return `${dateStr}T${time}`;
         }
 
-        // Monta a string leve de busca (Google Dorks) para não quebrar a API do Youtube, usando os tokens.
         function buildQueryString(tokens, prefix = '') {
              if(tokens.length === 0) return '';
              return tokens.map(t => {
                  if(t.type === 'word') return prefix ? `${prefix}:"${t.value}"` : `"${t.value}"`;
-                 return t.value === 'OR' ? '|' : ''; // YouTube aceita | para OU e espaço para E
+                 return t.value === 'OR' ? '|' : ''; 
              }).join(' ').replace(/\s+/g, ' ').trim();
         }
 
@@ -687,7 +701,7 @@
             loadingIndicator.classList.add('flex');
             updateScrollState();
 
-            // 1. Coleta os Tokens Lógicos de todos os containers
+            // 1. Coleta os Tokens
             const mainTokens = getLogicTokens('mainInputContainer');
             const descTokens = getLogicTokens('descContainer');
             const negativeTokens = getLogicTokens('negativeContainer');
@@ -700,13 +714,19 @@
             const dateStart = document.getElementById('dateStart').value;
             const dateEnd = document.getElementById('dateEnd').value;
 
-            // 2. Construção da Query usando os Tokens
+            // 2. Construção da Query HÍBRIDA (API + Google Dorks)
             let queryParts = [];
             
             if (mainTokens.length > 0) queryParts.push(`(${buildQueryString(mainTokens, 'intitle')})`);
             if (descTokens.length > 0) queryParts.push(`(${buildQueryString(descTokens)})`);
+            if (channelTokens.length > 0) queryParts.push(`(${buildQueryString(channelTokens)})`);
             
-            // Negativas não enviamos no Dork composto para não confundir a API. O validador JS fará esse pente-fino cirúrgico.
+            const hasAndInNegatives = negativeTokens.some(t => t.value === 'AND');
+            if (negativeTokens.length > 0 && !hasAndInNegatives) {
+                const negWords = negativeTokens.filter(t => t.type === 'word').map(t => `-"${t.value}"`).join(' ');
+                if (negWords) queryParts.push(negWords);
+            }
+
             const q = queryParts.join(' ');
 
             let searchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
@@ -725,36 +745,41 @@
 
                 let items = searchData.items || [];
 
-                // 4. PÓS-FILTRO JAVASCRIPT RIGOROSO E MATEMÁTICO
+                // 4. PÓS-FILTRO JAVASCRIPT RIGOROSO
                 items = items.filter(item => {
                     const title = (item.snippet.title || '').toLowerCase();
                     const desc = (item.snippet.description || '').toLowerCase();
                     const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
                     const channelId = item.snippet.channelId;
 
-                    // --- Regra 1: Palavras Principais no Título ---
+                    // Regra 1: Título
                     const titlePass = evaluateLogicCustom(mainTokens, (kw) => title.includes(kw.toLowerCase()));
                     if (!titlePass) return false;
 
-                    // --- Regra 2: Descrição Exclusiva ---
+                    // Regra 2: Descrição
                     const descPass = evaluateLogicCustom(descTokens, (kw) => desc.includes(kw.toLowerCase()));
                     if (!descPass) return false;
 
-                    // --- Regra 3: Palavras Negativas ---
-                    // Avaliamos a linha negativa. Se ela der TRUE (significa que tem o termo pra bloquear), nós reprovamos o vídeo (!).
+                    // Regra 3: Negativas
                     if (negativeTokens.length > 0) {
                         const hasNegative = evaluateLogicCustom(negativeTokens, (kw) => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()));
                         if (hasNegative) return false;
                     }
 
-                    // --- Regra 4: Filtro de Canal Inteligente ---
+                    // Regra 4: Canal
                     const channelPass = evaluateLogicCustom(channelTokens, (kw) => {
                         const lowKw = kw.toLowerCase();
-                        return channelId === kw || channelTitle.includes(lowKw) || lowKw.includes(channelId.toLowerCase());
+                        const cTitleNoSpace = channelTitle.replace(/\s+/g, '');
+                        const kwNoSpace = lowKw.replace(/\s+/g, '');
+                        
+                        return channelId === kw || 
+                               channelTitle.includes(lowKw) || 
+                               cTitleNoSpace.includes(kwNoSpace) || 
+                               kwNoSpace.includes(cTitleNoSpace);
                     });
                     if (!channelPass) return false;
 
-                    return true; // Passou na peneira fina!
+                    return true;
                 });
 
                 // 5. FILTRO DE INSCRITOS
@@ -804,7 +829,7 @@
                 document.getElementById('resultsCount').textContent = items.length;
 
                 if (items.length === 0) {
-                    resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">Nenhum lançamento encontrado que atenda a todas as regras E/OU estipuladas.</div>`;
+                    resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">Nenhum lançamento encontrado que atenda a todas as regras estipuladas.</div>`;
                     return;
                 }
 
@@ -827,45 +852,46 @@
 
                     const parser = new DOMParser();
                     const decodedTitle = parser.parseFromString(snippet.title, 'text/html').body.textContent;
-                    const pubDate = new Date(snippet.publishedAt).toLocaleDateString('pt-BR');
-                    const formattedComments = commentCount.toLocaleString('pt-BR');
+                    const pubDate = new Date(snippet.publishedAt).toLocaleDateString('pt-PT');
+                    const formattedComments = commentCount.toLocaleString('pt-PT');
 
                     const card = document.createElement('article');
                     card.className = "video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl cursor-pointer group";
                     card.onclick = () => window.open(videoUrl, '_blank');
                     
+                    // Ajuste de layout aplicado aqui
                     card.innerHTML = `
                         <div class="relative aspect-video overflow-hidden bg-slate-900">
                             <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             ${statusBadge}
                         </div>
-                        <div class="p-5 sm:p-6 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
-                            <h3 class="text-base sm:text-lg font-bold leading-tight mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
-                            <div class="flex items-center gap-2 text-slate-400 mb-4">
-                                <span class="material-symbols-rounded text-[16px] sm:text-[18px]">account_circle</span>
-                                <span class="text-xs sm:text-sm font-semibold truncate">${snippet.channelTitle}</span>
+                        <div class="p-6 sm:p-7 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
+                            <h3 class="text-base sm:text-lg md:text-xl font-bold leading-snug mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
+                            <div class="flex items-center gap-2 text-slate-400 mb-6">
+                                <span class="material-symbols-rounded text-[18px]">account_circle</span>
+                                <span class="text-sm font-semibold truncate">${snippet.channelTitle}</span>
                             </div>
                             
-                            <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
-                                <div class="flex items-center gap-4 sm:gap-6">
-                                    <div class="flex flex-col">
-                                        <span class="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-wider">Publicação</span>
-                                        <span class="text-xs sm:text-sm text-slate-300 font-medium">${pubDate}</span>
+                            <div class="mt-auto flex flex-row items-end justify-between border-t border-white/10 pt-5 gap-3">
+                                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 flex-grow overflow-hidden">
+                                    <div class="flex flex-col flex-shrink-0">
+                                        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Publicação</span>
+                                        <span class="text-sm text-slate-300 font-medium">${pubDate}</span>
                                     </div>
-                                    <div class="flex flex-col">
-                                        <span class="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-wider">Comentários</span>
-                                        <span class="text-xs sm:text-sm text-slate-300 font-medium flex items-center gap-1.5">
+                                    <div class="flex flex-col flex-shrink-0">
+                                        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Comentários</span>
+                                        <span class="text-sm text-slate-300 font-medium flex items-center gap-1.5">
                                             <span class="material-symbols-rounded text-[14px]">chat_bubble</span>
                                             ${formattedComments}
                                         </span>
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-2 relative z-20">
-                                    <button onclick="copyVideoUrl(event, '${videoUrl}')" title="Copiar URL" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 flex-shrink-0">
-                                        <span class="material-symbols-rounded text-[16px] sm:text-[18px]">content_copy</span>
+                                <div class="flex items-center gap-2 relative z-20 flex-shrink-0">
+                                    <button onclick="copyVideoUrl(event, '${videoUrl}')" title="Copiar URL" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                                        <span class="material-symbols-rounded text-[18px]">content_copy</span>
                                     </button>
-                                    <button class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/5 group-hover:bg-highlight group-hover:text-white transition-colors flex items-center justify-center border border-white/10 flex-shrink-0">
-                                        <span class="material-symbols-rounded text-[18px] sm:text-[20px]">arrow_forward</span>
+                                    <button class="w-10 h-10 rounded-full bg-white/5 group-hover:bg-highlight group-hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                                        <span class="material-symbols-rounded text-[20px]">arrow_forward</span>
                                     </button>
                                 </div>
                             </div>
