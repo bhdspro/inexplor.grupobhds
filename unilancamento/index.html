@@ -151,10 +151,12 @@
         .group\/channel:hover .channel-hover-effect {
             max-width: 400px;
             background-color: #0F172A;
-            padding-right: 8px;
+            padding-right: 12px;
+            padding-bottom: 4px;
             z-index: 50;
             overflow: visible;
             box-shadow: 10px 0 15px -5px rgba(15, 23, 42, 0.9);
+            border-radius: 4px;
         }
 
         .custom-select-menu {
@@ -194,7 +196,6 @@
 
                 <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 w-full mx-auto">
                     <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-0">
-                        <!-- Ajustado justify-start, flex-nowrap puro e input sem margin para aniquilar espaços fantasmas -->
                         <div id="mainInputContainer" class="w-full flex-1 flex flex-nowrap items-center justify-start bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px] overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide" onclick="document.getElementById('urlInput').focus()">
                             <svg class="w-6 h-6 text-slate-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input type="text" id="urlInput" class="flex-grow bg-transparent text-base md:text-lg outline-none text-slate-900 placeholder-slate-500 font-bold min-w-[10px] w-auto text-left m-0 p-0">
                         </div>
@@ -208,12 +209,12 @@
                     </div>
                 </div>
 
-                <!-- BARRA DE CONTROLES CENTRALIZADA E RESPONSIVA -->
+                <!-- BARRA DE CONTROLES CENTRALIZADA E RESPONSIVA COM EFEITO HOVER VERMELHO (#DC2626) -->
                 <div class="mt-6 w-full max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-4 relative z-20">
                     
                     <!-- Botão Combinações -->
                     <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
-                        <button id="comboToggleBtn" onclick="toggleMenu('comboDropdown', event)" class="bg-[#0F172A] border border-white/10 hover:border-white/50 rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold w-full h-full shadow-md">
+                        <button id="comboToggleBtn" onclick="toggleMenu('comboDropdown', event)" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
                             <span class="material-symbols-rounded text-[20px]">auto_awesome</span>
                             Combinações
                         </button>
@@ -233,7 +234,7 @@
 
                     <!-- Botão Filtros Avançados -->
                     <div class="w-full sm:w-auto flex-1 sm:flex-none">
-                        <button id="toggleFiltersBtn" class="bg-[#0F172A] border border-white/10 hover:border-white/50 rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold group w-full h-full shadow-md">
+                        <button id="toggleFiltersBtn" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold group w-full h-full shadow-md">
                             <span class="material-symbols-rounded text-[20px]">tune</span>
                             <span>Filtros Avançados</span>
                             <span id="filtersArrow" class="material-symbols-rounded text-[20px] transition-transform duration-300">expand_more</span>
@@ -242,7 +243,7 @@
 
                     <!-- Botão Organizar -->
                     <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
-                        <button onclick="toggleMenu('sortDropdown', event)" class="bg-[#0F172A] border border-white/10 hover:border-white/50 rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold w-full h-full shadow-md">
+                        <button onclick="toggleMenu('sortDropdown', event)" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
                             <span class="material-symbols-rounded text-[20px]">sort</span>
                             <span id="sortActiveText">Data Mais Recente</span>
                         </button>
@@ -255,9 +256,9 @@
                         <input type="hidden" id="sortFilter" value="recent">
                     </div>
                     
-                    <!-- Botão Limpar Tudo (Efeito Hover Corrigido) -->
+                    <!-- Botão Limpar Tudo -->
                     <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
-                        <button onclick="clearAllFilters()" class="bg-[#0F172A] border border-white/10 hover:border-white/50 rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold w-full h-full shadow-md">
+                        <button onclick="clearAllFilters()" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
                             <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
                             <span>Limpar Tudo</span>
                         </button>
@@ -398,7 +399,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-6 px-2">
-                <!-- Títulos em Destaque Absoluto com Quebra Inteligente -->
+                <!-- Contador Real de Resultados (Sempre começando em 0 limpo) -->
                 <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#DC2626] flex flex-wrap items-center gap-2 sm:gap-3 drop-shadow-md leading-tight w-full">
                     <span>Lançamentos Encontrados</span>
                     <span id="resultsCount" class="text-sm sm:text-base bg-[#DC2626] text-white py-1 px-4 rounded-full shadow-lg whitespace-nowrap">0</span>
@@ -413,7 +414,6 @@
                 <p class="text-slate-400 font-bold text-center px-4 mt-2">Beba um café! Encontrando seus lançamentos milionários...</p>
             </div>
 
-            <!-- Botão Carregar Mais - Redesenhado -->
             <div id="loadMoreContainer" class="w-full flex justify-center mt-10 hidden">
                 <button id="loadMoreBtn" class="bg-[#DC2626] hover:bg-[rgb(190,30,30)] border border-[#B91C1C] text-white font-bold text-sm px-8 py-3 rounded-full transition-all flex items-center gap-2 shadow-lg">
                     <span class="material-symbols-rounded">refresh</span>
@@ -431,9 +431,8 @@
 
         let globalNextPageToken = '';
         let globalAccumulatedItems = [];
-        let globalTotalResultsAPI = 0; 
 
-        // === LOCAL STORAGE (As datas foram removidas para prevenir bugs temporais) ===
+        // === LOCAL STORAGE (Datas Removidas) ===
         function saveState() {
             const state = {
                 main: getLogicTokens('mainInputContainer'),
@@ -465,7 +464,6 @@
                         document.getElementById('sortFilter').value = state.sort;
                         document.getElementById('sortActiveText').textContent = getCustomOptionText('sort', state.sort);
                     } else {
-                        // Default caso não tenha no cache
                         document.getElementById('sortFilter').value = 'recent';
                         document.getElementById('sortActiveText').textContent = 'Data Mais Recente';
                     }
@@ -502,7 +500,6 @@
                     
                 } catch(e) {}
             } else {
-                // Estado Inicial do Sort caso não exista LocalStorage
                 document.getElementById('sortFilter').value = 'recent';
                 document.getElementById('sortActiveText').textContent = 'Data Mais Recente';
             }
@@ -1029,7 +1026,6 @@
 
         function buildApiQueryString(tokens) {
              if(tokens.length === 0) return '';
-             // Remove Dorks complexos e negativas da API para não quebrar o motor do Google. O Filtro JS é o Rei.
              return tokens.filter(t => t.type === 'word').map(t => `"${t.value}"`).join(' | ');
         }
 
@@ -1055,11 +1051,13 @@
             if(isFiltersOpen) {
                 document.getElementById('toggleFiltersBtn').click();
             }
+            
+            // PREPARAÇÃO LIMPA PARA NOVA BUSCA
             globalNextPageToken = '';
             globalAccumulatedItems = [];
-            globalTotalResultsAPI = 0;
             resultsGrid.innerHTML = '';
             document.getElementById('resultsCount').textContent = '0';
+            
             performSearch(false);
         });
 
@@ -1070,6 +1068,7 @@
         async function performSearch(isLoadMore) {
             hideAlert();
             resultsContainer.classList.remove('hidden');
+            loadMoreContainer.classList.add('hidden');
             
             if (!isLoadMore) {
                 loadingIndicator.classList.remove('hidden');
@@ -1080,7 +1079,6 @@
             }
             
             updateScrollState();
-            loadMoreContainer.classList.add('hidden');
 
             const mainTokens = getLogicTokens('mainInputContainer');
             const descTokens = getLogicTokens('descContainer');
@@ -1100,23 +1098,19 @@
             if (descTokens.length > 0) queryParts.push(`(${buildApiQueryString(descTokens)})`);
             if (channelTokens.length > 0) queryParts.push(`(${buildApiQueryString(channelTokens)})`);
             
-            // Negativas OMITIDAS da API intencionalmente para evitar falhas do Google Dorks. O JS limpa o lixo.
             const q = queryParts.join(' ');
 
             let baseSearchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
             if (lang) baseSearchUrl += `&relevanceLanguage=${lang}`;
             if (country) baseSearchUrl += `&regionCode=${country}`;
             
-            // As datas foram removidas da URL da API para não quebrar os "Agendados" que ficam fantasmas no Youtube.
-            // O JavaScript abaixo fará a cruza matemática com a Timezone local para garantir precisão absoluta!
-
             try {
-                // Auto-Suga: Avança até 8 páginas (400 vídeos) para vasculhar tudo que bater com o JS
                 let loopCount = 0;
-                let finalItems = [];
+                let newItemsFound = [];
                 let currentNextPageToken = isLoadMore ? globalNextPageToken : '';
 
-                while (loopCount < 8 && finalItems.length === 0) {
+                // O LOOP SÓ PARA SE ENCONTRAR PELO MENOS 20 VÍDEOS OU ESGOTAR AS 8 PÁGINAS (400 vídeos varridos)
+                while (loopCount < 8 && newItemsFound.length < 20) {
                     let searchUrl = baseSearchUrl;
                     if (currentNextPageToken) searchUrl += `&pageToken=${currentNextPageToken}`;
 
@@ -1125,17 +1119,21 @@
 
                     if (searchData.error) throw new Error(searchData.error.message);
 
-                    if (!isLoadMore && loopCount === 0) {
-                        globalTotalResultsAPI = searchData.pageInfo?.totalResults || 0;
-                    }
-
                     currentNextPageToken = searchData.nextPageToken || '';
                     let items = searchData.items || [];
 
-                    if(items.length === 0) break;
+                    if(items.length === 0 && !currentNextPageToken) break;
+                    if(items.length === 0) {
+                        loopCount++;
+                        continue;
+                    }
 
-                    // PÓS-FILTRO JAVASCRIPT RIGOROSO (Case Insensitive Automático)
+                    // PÓS-FILTRO JAVASCRIPT RIGOROSO
                     items = items.filter(item => {
+                        // BLOQUEIO DE DUPLICAÇÕES (O JavaScript varre o histórico para aniquilar clones)
+                        if (globalAccumulatedItems.some(existing => existing.id.videoId === item.id.videoId)) return false;
+                        if (newItemsFound.some(existing => existing.id.videoId === item.id.videoId)) return false;
+
                         const title = (item.snippet.title || '').toLowerCase();
                         const desc = (item.snippet.description || '').toLowerCase();
                         const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
@@ -1216,12 +1214,11 @@
                         });
                     }
 
-                    // FILTRO DE SHORTS, STATUS E DATAS (Com Fuso Horário Local Preciso)
+                    // FILTRO DE SHORTS, STATUS E DATAS
                     items = items.filter(item => {
                         const now = new Date();
                         const liveContent = item.snippet.liveBroadcastContent; 
                         
-                        // Anti-Shorts Implacável
                         if (item.durationSecs > 0 && item.durationSecs <= 61 && liveContent === 'none') {
                             return false; 
                         }
@@ -1233,11 +1230,10 @@
                         const targetDateForFilter = scheduledStart || actualEnd || publishedAt;
                         item.targetDateForFilter = targetDateForFilter; 
 
-                        // Fuso horário local forçado trocando os hifens por barras
                         if (dateStart || dateEnd) {
                             const dStart = dateStart ? new Date(dateStart.replace(/-/g, '\/')) : null;
                             const dEnd = dateEnd ? new Date(dateEnd.replace(/-/g, '\/')) : null;
-                            if (dEnd) dEnd.setHours(23, 59, 59, 999); // Vai até o fim do dia selecionado
+                            if (dEnd) dEnd.setHours(23, 59, 59, 999); 
                             
                             if (dStart && targetDateForFilter < dStart) return false;
                             if (dEnd && targetDateForFilter > dEnd) return false;
@@ -1257,14 +1253,14 @@
                         return true;
                     });
 
-                    finalItems = items;
+                    newItemsFound = newItemsFound.concat(items);
                     loopCount++;
                     
-                    if (!currentNextPageToken) break; // Sai se o YouTube disser que esgotou os vídeos globais
+                    if (!currentNextPageToken) break; 
                 }
 
                 globalNextPageToken = currentNextPageToken;
-                globalAccumulatedItems = globalAccumulatedItems.concat(finalItems);
+                globalAccumulatedItems = globalAccumulatedItems.concat(newItemsFound);
 
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
@@ -1272,9 +1268,10 @@
                 loadMoreBtn.innerHTML = `<span class="material-symbols-rounded">refresh</span> Carregar Mais Lançamentos`;
                 loadMoreBtn.classList.remove('opacity-50', 'pointer-events-none');
 
-                if (globalAccumulatedItems.length === 0 && !globalNextPageToken) {
+                if (globalAccumulatedItems.length === 0) {
                     resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-medium bg-white/5 rounded-2xl">Nenhum lançamento encontrado que atenda a todas as regras estipuladas nesta busca.</div>`;
                     document.getElementById('resultsCount').textContent = '0';
+                    loadMoreContainer.classList.add('hidden'); // Oculta o botão se falhar / não tiver nada
                     return;
                 }
 
@@ -1283,14 +1280,13 @@
                 if (globalNextPageToken) {
                     loadMoreContainer.classList.remove('hidden');
                 } else {
-                    loadMoreContainer.classList.add('hidden');
+                    loadMoreContainer.classList.add('hidden'); // Se acabaram as páginas da API, ele esconde o botão
                 }
 
             } catch (error) {
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
-                loadMoreBtn.innerHTML = `<span class="material-symbols-rounded">refresh</span> Tentar Novamente`;
-                loadMoreBtn.classList.remove('opacity-50', 'pointer-events-none');
+                loadMoreContainer.classList.add('hidden'); // Falhou: Esconde o botão e evita o utilizador clicar
                 
                 let errorMsg = error.message;
                 if (error.name === 'AbortError') errorMsg = "A ligação demorou muito a responder. A pesquisa foi interrompida (Timeout) para não bloquear o seu ecrã. Tente novamente.";
@@ -1313,13 +1309,8 @@
                 itemsToRender.sort((a, b) => b.targetDateForFilter.getTime() - a.targetDateForFilter.getTime());
             }
 
-            if(itemsToRender.length === 0) {
-                document.getElementById('resultsCount').textContent = '0';
-            } else {
-                const displayTotal = globalTotalResultsAPI > 0 ? ` de ${globalTotalResultsAPI.toLocaleString('pt-PT')}` : '';
-                document.getElementById('resultsCount').textContent = `${itemsToRender.length}${displayTotal}`;
-            }
-            
+            // Exibição do contador estritamente real e verificado pelo Javascript
+            document.getElementById('resultsCount').textContent = itemsToRender.length.toString();
             resultsGrid.innerHTML = '';
 
             itemsToRender.forEach(item => {
@@ -1355,7 +1346,7 @@
                 const pubDate = item.targetDateForFilter.toLocaleDateString('pt-PT');
                 const formattedComments = commentCount.toLocaleString('pt-PT');
 
-                // AFILIADO HOTMART E REDES SOCIAIS (Regex Inteligente na Descrição)
+                // REDES SOCIAIS E AFILIADO
                 const descRaw = snippet.description;
                 const hotmartRegex = /(https?:\/\/(?:go\.|pay\.|www\.)?hotmart\.com\/[^\s]+)/i;
                 const igRegex = /https?:\/\/(?:www\.)?instagram\.com\/[^\s\n"']+/i;
@@ -1392,6 +1383,7 @@
                 
                 const subsFormatted = formatSubs(item.subscriberCount);
                 
+                // INSCRITOS ABAIXO DO NOME DO CANAL (Design Refinado)
                 card.innerHTML = `
                     <div class="relative aspect-video overflow-hidden bg-slate-900">
                         <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -1401,10 +1393,11 @@
                     <div class="p-6 sm:p-7 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
                         <h3 class="text-base sm:text-lg md:text-xl font-bold leading-snug mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
                         
-                        <div class="flex items-center gap-2 text-slate-400 mb-6 cursor-pointer w-fit group/channel relative" onclick="openChannelAndCopy(event, '${item.channelHandle}', '${snippet.channelId}', this)" title="Abrir guia do Canal e Copiar @">
-                            <span class="material-symbols-rounded text-[18px] flex-shrink-0 group-hover/channel:text-white transition-colors">account_circle</span>
-                            <div class="channel-hover-effect">
-                                <span class="text-sm font-semibold">${snippet.channelTitle} • ${subsFormatted}</span>
+                        <div class="flex items-start gap-3 text-slate-400 mb-6 cursor-pointer w-fit group/channel relative" onclick="openChannelAndCopy(event, '${item.channelHandle}', '${snippet.channelId}', this)" title="Abrir guia do Canal e Copiar @">
+                            <span class="material-symbols-rounded text-[20px] mt-0.5 flex-shrink-0 group-hover/channel:text-white transition-colors">account_circle</span>
+                            <div class="channel-hover-effect flex flex-col">
+                                <span class="text-sm font-bold text-slate-300 group-hover/channel:text-white transition-colors leading-tight">${snippet.channelTitle}</span>
+                                <span class="text-[11px] font-semibold text-slate-500 mt-0.5">${subsFormatted} inscritos</span>
                             </div>
                         </div>
                         
