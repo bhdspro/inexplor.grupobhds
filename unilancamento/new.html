@@ -45,18 +45,15 @@
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
-            /* Inicia sem scroll e centralizado */
             overflow-y: hidden; 
         }
 
-        /* Permite seleção no input */
         input, select, textarea, a {
             user-select: auto;
             -webkit-user-select: auto;
             -moz-user-select: auto;
         }
 
-        /* Estilo Card Principal com Efeito Glass e Borda (Especificações exatas) */
         .glass-card {
             background: #0F172A; 
             backdrop-filter: blur(20px); 
@@ -68,7 +65,6 @@
             border: 2px solid rgb(185, 28, 28); 
         }
 
-        /* Reflexo superior do card */
         .glass-card::before {
             content: '';
             position: absolute;
@@ -78,7 +74,6 @@
             z-index: 2;
         }
 
-        /* Wrapper do Input Principal */
         .info-field-wrapper {
             background: #ffffff;
             border-radius: 1.5rem; 
@@ -98,7 +93,6 @@
             .info-field-wrapper { border-radius: 9999px; }
         }
 
-        /* Estilização scrollbars e ícone de calendário */
         ::-webkit-calendar-picker-indicator {
             filter: invert(1);
             cursor: pointer;
@@ -108,7 +102,6 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         }
 
-        /* Hover dos Cards de Vídeo */
         .video-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
@@ -118,13 +111,23 @@
             border-color: theme('colors.highlight');
         }
 
-        /* Estilo das Tags/Chips */
         .chip {
             animation: popIn 0.2s ease-out forwards;
+        }
+        .chip-op {
+            animation: popIn 0.15s ease-out forwards;
         }
         @keyframes popIn {
             0% { transform: scale(0.8); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
+        }
+
+        .custom-alert {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        @keyframes slideDown {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
         }
     </style>
 </head>
@@ -132,7 +135,6 @@
 
     <div id="particles-js"></div>
 
-    <!-- Header Posicionado de forma absoluta para não afetar o centro real do card -->
     <header class="absolute top-8 w-full max-w-4xl flex items-center justify-between z-10 px-8">
         <div class="flex items-center gap-2">
             <span class="text-xl font-bold tracking-wide text-white">Unilançamento</span>
@@ -140,23 +142,17 @@
     </header>
 
     <div id="heroSection" class="w-full max-w-4xl z-10 flex flex-col items-center transition-all duration-500">
-        <!-- Card Central Principal (Hero) -->
         <div class="glass-card relative w-full text-center p-6 sm:p-8 md:p-12 mx-auto">
-            
             <div class="relative z-10">
-                <!-- Título -->
                 <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-4 drop-shadow-md leading-tight">
                     Descubra e Monitore Lançamentos
                 </h1>
-                <!-- Subtítulo -->
                 <p class="text-base sm:text-lg md:text-xl text-slate-300 font-medium max-w-3xl mx-auto mb-2 drop-shadow-sm text-balance">
                     Descubra novos lançamentos de forma inteligente e fuja da concorrência
                 </p>
 
-                <!-- Campo de Busca Principal -->
                 <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 w-full mx-auto">
                     <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-0">
-                        <!-- Container flexível para as Tags -->
                         <div id="mainInputContainer" class="w-full flex-1 flex flex-wrap items-center bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px]" onclick="document.getElementById('urlInput').focus()">
                             <svg class="w-6 h-6 text-slate-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             <input 
@@ -165,7 +161,6 @@
                                 class="flex-grow bg-transparent text-base md:text-lg outline-none text-slate-900 placeholder-slate-500 font-bold min-w-[200px]"
                             >
                         </div>
-                        <!-- Botão Buscar -->
                         <button 
                             id="searchBtn" 
                             class="w-full md:w-auto bg-[rgb(220,38,38)] border border-[rgb(185,28,28)] hover:bg-[rgb(190,30,30)] text-white font-bold text-base md:text-lg px-8 py-4 rounded-xl md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative whitespace-nowrap"
@@ -176,22 +171,53 @@
                     </div>
                 </div>
 
-                <!-- Botão para Abrir/Fechar Filtros -->
-                <button id="toggleFiltersBtn" class="mt-6 mx-auto flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold relative z-20 group">
-                    <span class="material-symbols-rounded text-[20px] group-hover:text-highlight transition-colors">tune</span>
-                    <span>Filtros Avançados</span>
-                    <span id="filtersArrow" class="material-symbols-rounded text-[20px] transition-transform duration-300">expand_more</span>
-                </button>
+                <!-- BARRA DE CONTROLES (Combinações, Filtros, Ordenação) -->
+                <div class="mt-6 w-full mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-4 relative z-20">
+                    
+                    <!-- Botão Combinações -->
+                    <div class="relative group">
+                        <button class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold">
+                            <span class="material-symbols-rounded text-[20px]">auto_awesome</span>
+                            Combinações
+                        </button>
+                        <!-- Menu Dropdown -->
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-72 bg-[#080B14] border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50">
+                            <button onclick="applySmartCombo1()" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">
+                                <span class="font-bold text-highlight block mb-1 text-sm">Lançamento Padrão</span>
+                                "Aula 1" <span class="text-orange-400 font-bold">OU</span> "Evento" <span class="text-orange-400 font-bold">OU</span> "Workshop" <span class="text-blue-400 font-bold">E</span> Gratuito <span class="text-blue-400 font-bold">E</span> Online <br>
+                                Negativas: minicurso <span class="text-orange-400 font-bold">OU</span> mini-curso
+                            </button>
+                        </div>
+                    </div>
 
-                <!-- === ÁREA DE FILTROS ULTRA COMPACTA (Efeito Sanfona) === -->
+                    <!-- Botão Filtros Avançados -->
+                    <button id="toggleFiltersBtn" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold group">
+                        <span class="material-symbols-rounded text-[20px]">tune</span>
+                        <span>Filtros Avançados</span>
+                        <span id="filtersArrow" class="material-symbols-rounded text-[20px] transition-transform duration-300">expand_more</span>
+                    </button>
+
+                    <!-- Botão Organizar -->
+                    <div class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold relative group">
+                        <span class="material-symbols-rounded text-[20px]">sort</span>
+                        <select id="sortFilter" class="bg-transparent border-none outline-none cursor-pointer appearance-none font-bold text-inherit">
+                            <option value="views" class="bg-[#080B14] text-slate-300">Organizar</option>
+                            <option value="comments" class="bg-[#080B14] text-slate-300">Nº de Comentários</option>
+                            <option value="subs" class="bg-[#080B14] text-slate-300">Nº de Inscritos</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- ÁREA DE FILTROS -->
                 <div id="filtersWrapper" class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out w-full max-w-md mx-auto">
                     <div class="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full text-left">
                         
                         <!-- Coluna 1: Idioma -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Idioma</label>
-                            <select class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
-                                <option value="" class="bg-surface">Todos os Idiomas</option>
+                            <select id="langFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
+                                <option value="" class="bg-surface">Qualquer Idioma</option>
                                 <option value="pt" class="bg-surface">Português</option>
                                 <option value="en" class="bg-surface">Inglês</option>
                                 <option value="es" class="bg-surface">Espanhol</option>
@@ -200,46 +226,101 @@
                                 <option value="it" class="bg-surface">Italiano</option>
                                 <option value="ja" class="bg-surface">Japonês</option>
                                 <option value="ko" class="bg-surface">Coreano</option>
-                                <option value="zh" class="bg-surface">Chinês</option>
-                                <option value="hi" class="bg-surface">Hindi</option>
+                                <option value="zh-Hans" class="bg-surface">Chinês (Simplificado)</option>
+                                <option value="zh-Hant" class="bg-surface">Chinês (Tradicional)</option>
                                 <option value="ru" class="bg-surface">Russo</option>
+                                <option value="ar" class="bg-surface">Árabe</option>
+                                <option value="hi" class="bg-surface">Hindi</option>
+                                <option value="bn" class="bg-surface">Bengali</option>
+                                <option value="tr" class="bg-surface">Turco</option>
+                                <option value="vi" class="bg-surface">Vietnamita</option>
+                                <option value="th" class="bg-surface">Tailandês</option>
+                                <option value="nl" class="bg-surface">Holandês</option>
+                                <option value="pl" class="bg-surface">Polonês</option>
+                                <option value="id" class="bg-surface">Indonésio</option>
+                                <option value="sv" class="bg-surface">Sueco</option>
+                                <option value="no" class="bg-surface">Norueguês</option>
+                                <option value="da" class="bg-surface">Dinamarquês</option>
+                                <option value="fi" class="bg-surface">Finlandês</option>
+                                <option value="el" class="bg-surface">Grego</option>
+                                <option value="he" class="bg-surface">Hebraico</option>
+                                <option value="ur" class="bg-surface">Urdu</option>
+                                <option value="fa" class="bg-surface">Persa</option>
                             </select>
                         </div>
-
+                        
                         <!-- Coluna 2: País -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">País</label>
-                            <select class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
-                                <option value="" class="bg-surface">Todos os Países</option>
+                            <select id="countryFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
+                                <option value="" class="bg-surface">Qualquer País</option>
                                 <option value="BR" class="bg-surface">Brasil</option>
                                 <option value="US" class="bg-surface">Estados Unidos</option>
                                 <option value="PT" class="bg-surface">Portugal</option>
-                                <option value="GB" class="bg-surface">Reino Unido</option>
-                                <option value="CA" class="bg-surface">Canadá</option>
-                                <option value="AU" class="bg-surface">Austrália</option>
+                                <option value="AF" class="bg-surface">Afeganistão</option>
+                                <option value="ZA" class="bg-surface">África do Sul</option>
                                 <option value="DE" class="bg-surface">Alemanha</option>
-                                <option value="FR" class="bg-surface">França</option>
-                                <option value="IT" class="bg-surface">Itália</option>
+                                <option value="AO" class="bg-surface">Angola</option>
+                                <option value="AR" class="bg-surface">Argentina</option>
+                                <option value="AU" class="bg-surface">Austrália</option>
+                                <option value="BE" class="bg-surface">Bélgica</option>
+                                <option value="BO" class="bg-surface">Bolívia</option>
+                                <option value="CA" class="bg-surface">Canadá</option>
+                                <option value="CL" class="bg-surface">Chile</option>
+                                <option value="CN" class="bg-surface">China</option>
+                                <option value="CO" class="bg-surface">Colômbia</option>
+                                <option value="KR" class="bg-surface">Coreia do Sul</option>
+                                <option value="CU" class="bg-surface">Cuba</option>
+                                <option value="EG" class="bg-surface">Egito</option>
+                                <option value="SV" class="bg-surface">El Salvador</option>
+                                <option value="AE" class="bg-surface">Emirados Árabes</option>
+                                <option value="EC" class="bg-surface">Equador</option>
                                 <option value="ES" class="bg-surface">Espanha</option>
+                                <option value="FR" class="bg-surface">França</option>
+                                <option value="GR" class="bg-surface">Grecia</option>
+                                <option value="GT" class="bg-surface">Guatemala</option>
+                                <option value="HT" class="bg-surface">Haiti</option>
+                                <option value="HN" class="bg-surface">Honduras</option>
+                                <option value="IN" class="bg-surface">Índia</option>
+                                <option value="ID" class="bg-surface">Indonésia</option>
+                                <option value="IE" class="bg-surface">Irlanda</option>
+                                <option value="IL" class="bg-surface">Israel</option>
+                                <option value="IT" class="bg-surface">Itália</option>
+                                <option value="JM" class="bg-surface">Jamaica</option>
                                 <option value="JP" class="bg-surface">Japão</option>
+                                <option value="MX" class="bg-surface">México</option>
+                                <option value="MZ" class="bg-surface">Moçambique</option>
+                                <option value="NI" class="bg-surface">Nicarágua</option>
+                                <option value="NG" class="bg-surface">Nigéria</option>
+                                <option value="NZ" class="bg-surface">Nova Zelândia</option>
+                                <option value="PA" class="bg-surface">Panamá</option>
+                                <option value="PY" class="bg-surface">Paraguai</option>
+                                <option value="PE" class="bg-surface">Peru</option>
+                                <option value="PR" class="bg-surface">Porto Rico</option>
+                                <option value="GB" class="bg-surface">Reino Unido</option>
+                                <option value="DO" class="bg-surface">República Dominicana</option>
+                                <option value="RU" class="bg-surface">Rússia</option>
+                                <option value="CH" class="bg-surface">Suíça</option>
+                                <option value="UY" class="bg-surface">Uruguai</option>
+                                <option value="VE" class="bg-surface">Venezuela</option>
                             </select>
                         </div>
 
                         <!-- Coluna 1: Status -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Status</label>
-                            <select class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="statusFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
                                 <option value="all" class="bg-surface">Todos os Status</option>
                                 <option value="live" class="bg-surface">Ao Vivo</option>
                                 <option value="upcoming" class="bg-surface">Agendado</option>
                                 <option value="completed" class="bg-surface">Finalizado</option>
                             </select>
                         </div>
-
+                        
                         <!-- Coluna 2: Tamanho Canal -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Inscritos</label>
-                            <select class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="subsFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
                                 <option value="all" class="bg-surface">Todos os Tamanhos</option>
                                 <option value="small" class="bg-surface">Até 10 mil Inscritos</option>
                                 <option value="medium" class="bg-surface">De 10 mil a 100 mil Inscritos</option>
@@ -252,29 +333,37 @@
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Intervalo de Datas</label>
                             <div class="w-full min-h-[48px] flex items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 transition-colors focus-within:border-highlight overflow-hidden">
                                 <span class="text-slate-400 text-xs font-semibold whitespace-nowrap">De:</span>
-                                <input type="date" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                                <input type="date" id="dateStart" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
                                 <span class="text-slate-400 text-xs font-semibold whitespace-nowrap ml-1">Até:</span>
-                                <input type="date" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                                <input type="date" id="dateEnd" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
                             </div>
                         </div>
 
-                        <!-- Outros Filtros -->
+                        <!-- Filtro de Canais com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Filtro de Canais</label>
+                            <div class="flex items-center justify-between ml-1">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Filtro de Canais</label>
+                            </div>
                             <div id="channelContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('channelInput').focus()">
                                 <input type="text" id="channelInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
 
+                        <!-- Filtro de Descrição com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Palavras-chave na Descrição</label>
+                            <div class="flex items-center justify-between ml-1">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave na Descrição</label>
+                            </div>
                             <div id="descContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('descInput').focus()">
                                 <input type="text" id="descInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
 
+                        <!-- Filtro de Negativas com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Palavras-chave Negativas</label>
+                            <div class="flex items-center justify-between ml-1">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave Negativas</label>
+                            </div>
                             <div id="negativeContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('negativeInput').focus()">
                                 <input type="text" id="negativeInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
@@ -286,45 +375,55 @@
             </div>
         </div>
 
-        <!-- Área de Resultados (Inicia Oculta) -->
+        <!-- Área de Resultados -->
         <div class="w-full mt-16 mb-12 hidden max-w-6xl mx-auto" id="resultsContainer">
+            <div id="alertBox" class="hidden custom-alert mb-6 w-full p-4 rounded-xl bg-orange-500/20 border border-orange-500 text-orange-100 flex items-center gap-3">
+                <span class="material-symbols-rounded">warning</span>
+                <span id="alertMessage" class="font-medium text-sm"></span>
+            </div>
+
             <div class="flex items-center justify-between mb-6 px-2">
                 <h2 class="text-2xl font-bold text-white flex items-center gap-2 drop-shadow-md">
-                    Lançamentos Encontrados
+                    Lançamentos Encontrados <span id="resultsCount" class="text-sm bg-white/10 text-slate-300 py-1 px-3 rounded-full ml-2">0</span>
                 </h2>
             </div>
 
             <!-- Grid de Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="resultsGrid">
-                <!-- Os cards serão injetados aqui via JS -->
+                <!-- Os cards serão injetados aqui -->
             </div>
 
             <!-- Loading Indicator -->
-            <div id="loadingIndicator" class="hidden flex-col items-center justify-center py-20">
+            <div id="loadingIndicator" class="hidden flex-col items-center justify-center py-20 w-full col-span-full">
                 <div class="w-12 h-12 border-4 border-white/10 border-t-highlight rounded-full animate-spin mb-4"></div>
-                <p class="text-slate-400 font-bold">Buscando na API do YouTube...</p>
+                <p class="text-slate-400 font-bold">A processar filtros avançados e pesquisas E/OU...</p>
             </div>
         </div>
     </div>
 
     <script>
+        // ==========================================
+        // CONFIGURAÇÃO CLOUDFLARE WORKER (BACKEND)
+        // ==========================================
+        const CF_WORKER_URL = "https://unilancamento.grupo-bhds.workers.dev"; 
+
         // === LÓGICA DO ACORDEÃO E SCROLL ===
         const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
         const filtersWrapper = document.getElementById('filtersWrapper');
         const filtersArrow = document.getElementById('filtersArrow');
         const mainBody = document.getElementById('mainBody');
         const resultsContainer = document.getElementById('resultsContainer');
+        const alertBox = document.getElementById('alertBox');
+        const alertMessage = document.getElementById('alertMessage');
         
         let isFiltersOpen = false;
 
         function updateScrollState() {
-            // Habilita scroll se filtros estiverem abertos OU resultados estiverem visíveis
             const isResultsVisible = !resultsContainer.classList.contains('hidden');
-            
             if (isFiltersOpen || isResultsVisible) {
                 mainBody.style.overflowY = 'auto';
                 mainBody.classList.remove('justify-center');
-                mainBody.classList.add('pt-32'); // Dá espaço para o header absoluto no topo
+                mainBody.classList.add('pt-32'); 
             } else {
                 mainBody.style.overflowY = 'hidden';
                 mainBody.classList.add('justify-center');
@@ -347,15 +446,52 @@
             updateScrollState();
         });
 
+        // === SISTEMA DE ALERTA ===
+        function showAlert(msg, isError = false) {
+            alertBox.classList.remove('hidden');
+            alertMessage.textContent = msg;
+            if(isError) {
+                alertBox.className = "custom-alert mb-6 w-full p-4 rounded-xl bg-red-500/20 border border-red-500 text-red-100 flex items-center gap-3";
+                alertBox.innerHTML = `<span class="material-symbols-rounded">error</span> <span class="font-medium text-sm">${msg}</span>`;
+            } else {
+                alertBox.className = "custom-alert mb-6 w-full p-4 rounded-xl bg-orange-500/20 border border-orange-500 text-orange-100 flex items-center gap-3";
+                alertBox.innerHTML = `<span class="material-symbols-rounded">warning</span> <span class="font-medium text-sm">${msg}</span>`;
+            }
+            // Auto hide success alerts
+            if (!isError) setTimeout(hideAlert, 4000);
+        }
+        function hideAlert() { alertBox.classList.add('hidden'); }
+
+        // === FUNÇÃO PARA COPIAR URL DO VÍDEO ===
+        window.copyVideoUrl = function(event, url) {
+            event.stopPropagation();
+            const tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            const btn = event.currentTarget;
+            const icon = btn.querySelector('.material-symbols-rounded');
+            const originalText = icon.textContent;
+            
+            icon.textContent = 'check';
+            btn.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500');
+            btn.classList.remove('border-white/10', 'text-slate-300');
+            
+            setTimeout(() => {
+                icon.textContent = originalText;
+                btn.classList.remove('bg-green-500/20', 'text-green-400', 'border-green-500');
+                btn.classList.add('border-white/10', 'text-slate-300');
+            }, 2000);
+        };
+
         // === MÁQUINA DE ESCREVER ===
         function setupTypewriter(inputId, prefix, texts, isChipContainer = false) {
-            let ptIndex = 0; 
-            let charIndex = 0; 
-            let isDeleting = false;
-            let animationTimeout;
+            let ptIndex = 0; let charIndex = 0; let isDeleting = false; let animationTimeout;
             const inputEl = document.getElementById(inputId);
             if (!inputEl) return;
-
             function shouldHidePlaceholder() {
                 if (inputEl.value.length > 0) return true;
                 if (isChipContainer) {
@@ -364,12 +500,10 @@
                 }
                 return false;
             }
-
             function type() {
                 if (shouldHidePlaceholder()) {
                     inputEl.setAttribute('placeholder', '');
-                    clearTimeout(animationTimeout);
-                    return;
+                    clearTimeout(animationTimeout); return;
                 }
                 const currentText = texts[ptIndex];
                 if (isDeleting) {
@@ -381,33 +515,25 @@
                 }
                 let typeSpeed = isDeleting ? 30 : 60;
                 if (!isDeleting && charIndex === currentText.length) {
-                    typeSpeed = 2500;
-                    isDeleting = true;
+                    typeSpeed = 2500; isDeleting = true;
                 } else if (isDeleting && charIndex === 0) {
-                    isDeleting = false;
-                    ptIndex = (ptIndex + 1) % texts.length;
-                    typeSpeed = 500; 
+                    isDeleting = false; ptIndex = (ptIndex + 1) % texts.length; typeSpeed = 500; 
                 }
-                clearTimeout(animationTimeout);
-                animationTimeout = setTimeout(type, typeSpeed);
+                clearTimeout(animationTimeout); animationTimeout = setTimeout(type, typeSpeed);
             }
             inputEl.addEventListener('input', () => {
                 if (shouldHidePlaceholder()) {
-                    inputEl.setAttribute('placeholder', '');
-                    clearTimeout(animationTimeout);
+                    inputEl.setAttribute('placeholder', ''); clearTimeout(animationTimeout);
                 } else {
-                    charIndex = 0; isDeleting = false;
-                    clearTimeout(animationTimeout); type();
+                    charIndex = 0; isDeleting = false; clearTimeout(animationTimeout); type();
                 }
             });
             if (isChipContainer) {
                 const observer = new MutationObserver(() => {
                     if (shouldHidePlaceholder()) {
-                        inputEl.setAttribute('placeholder', '');
-                        clearTimeout(animationTimeout);
+                        inputEl.setAttribute('placeholder', ''); clearTimeout(animationTimeout);
                     } else if (inputEl.value.length === 0) {
-                        charIndex = 0; isDeleting = false;
-                        clearTimeout(animationTimeout); type();
+                        charIndex = 0; isDeleting = false; clearTimeout(animationTimeout); type();
                     }
                 });
                 observer.observe(inputEl.parentElement, { childList: true });
@@ -415,37 +541,167 @@
             type();
         }
 
-        setupTypewriter('urlInput', '', ["Digite sua palavra-chave...", "Ex: masterclass", "Ex: workshop"], true);
-        setupTypewriter('channelInput', '', ["Ex: @inexploroficial"], true);
+        setupTypewriter('urlInput', '', ["Digite a sua palavra-chave...", "Ex: masterclass", "Ex: workshop"], true);
+        setupTypewriter('channelInput', '', ["Ex: inexploroficial", "Ex: https://youtube.com/@Canal"], true);
         setupTypewriter('descInput', '', ["Ex: Hotmart"], true);
         setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
 
-        // === CHIPS ===
+        // === LIMPADOR DE URLS DE CANAIS ===
+        function cleanChannelInput(val) {
+            let v = val.trim();
+            try {
+                if (v.includes('youtube.com') || v.includes('youtu.be')) {
+                    const urlObj = new URL(v.startsWith('http') ? v : 'https://' + v);
+                    const pathParts = urlObj.pathname.split('/').filter(Boolean);
+                    v = pathParts[pathParts.length - 1]; 
+                }
+            } catch(e) {} 
+            if (v.startsWith('@')) v = v.substring(1);
+            return v;
+        }
+
+        // === NOVO CHIPS SYSTEM (Com lógica E/OU embutida entre as palavras) ===
         function setupChipSystem(inputId, containerId) {
-            const input = document.getElementById(inputId);
+            const input = document.getElementById(inputId); 
             const container = document.getElementById(containerId);
             if (!input || !container) return;
+            
             input.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ',') {
-                    e.preventDefault();
+                    e.preventDefault(); 
                     let value = input.value.trim().replace(/,$/, ''); 
-                    if (value) { createChip(value, container, input); input.value = ''; }
+                    if (value) { 
+                        if (containerId === 'channelContainer') value = cleanChannelInput(value);
+                        createChipAndOp(value, container, input); 
+                        input.value = ''; 
+                    }
                 } else if (e.key === 'Backspace' && input.value === '') {
                     const chips = container.querySelectorAll('.chip');
-                    if (chips.length > 0) chips[chips.length - 1].remove();
+                    if (chips.length > 0) {
+                        const lastChip = chips[chips.length - 1];
+                        const prevNode = lastChip.previousElementSibling;
+                        if (prevNode && prevNode.classList.contains('chip-op')) prevNode.remove();
+                        lastChip.remove();
+                    }
                 }
             });
             input.addEventListener('blur', function() {
                 let value = input.value.trim().replace(/,$/, '');
-                if (value) { createChip(value, container, input); input.value = ''; }
+                if (value) { 
+                    if (containerId === 'channelContainer') value = cleanChannelInput(value);
+                    createChipAndOp(value, container, input); 
+                    input.value = ''; 
+                }
             });
         }
-        function createChip(text, container, input) {
+
+        function createChipAndOp(text, container, input) {
+            if (container.querySelectorAll('.chip').length > 0) {
+                const isMain = container.id === 'mainInputContainer';
+                const op = document.createElement('span');
+                
+                const baseClasses = 'chip-op text-[10px] rounded px-2 py-0.5 cursor-pointer transition-colors select-none font-bold mx-0.5 flex items-center justify-center border';
+                const andClasses = isMain 
+                    ? 'bg-slate-200 border-slate-300 text-slate-600 hover:bg-slate-300 hover:text-slate-800' 
+                    : 'bg-white/10 border-white/20 text-slate-300 hover:bg-white/20 hover:text-white';
+                const orClasses = isMain
+                    ? 'bg-red-100 border-highlight/40 text-highlight hover:bg-red-200'
+                    : 'bg-highlight/20 border-highlight/50 text-highlight hover:bg-highlight/30';
+
+                op.className = `${baseClasses} ${andClasses}`;
+                op.setAttribute('data-op', 'AND'); 
+                op.innerText = 'E';
+                
+                op.onclick = function(e) {
+                    e.stopPropagation();
+                    if (this.getAttribute('data-op') === 'AND') {
+                        this.setAttribute('data-op', 'OR');
+                        this.innerText = 'OU';
+                        this.className = `${baseClasses} ${orClasses}`;
+                    } else {
+                        this.setAttribute('data-op', 'AND');
+                        this.innerText = 'E';
+                        this.className = `${baseClasses} ${andClasses}`;
+                    }
+                };
+                container.insertBefore(op, input);
+            }
+
             const chip = document.createElement('span');
             chip.className = 'chip bg-highlight text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm whitespace-nowrap';
-            chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors" onclick="this.parentElement.remove()">close</span>`;
+            chip.setAttribute('data-value', text); 
+            chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors">close</span>`;
+            
+            chip.querySelector('span').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const prevNode = chip.previousElementSibling;
+                const nextNode = chip.nextElementSibling;
+                
+                if (prevNode && prevNode.classList.contains('chip-op')) prevNode.remove();
+                else if (nextNode && nextNode.classList.contains('chip-op')) nextNode.remove();
+                
+                chip.remove();
+                document.getElementById('urlInput').focus();
+            });
+
             container.insertBefore(chip, input);
         }
+
+        // Função auxiliar para injetar chips via Javascript (Usado pelo Smart Combos)
+        function addChipWithOp(containerId, text, opBefore = 'AND') {
+            const input = document.getElementById(containerId.replace('Container', 'Input'));
+            const container = document.getElementById(containerId);
+            createChipAndOp(text, container, input);
+            
+            const ops = container.querySelectorAll('.chip-op');
+            if (ops.length > 0) {
+                const lastOp = ops[ops.length - 1];
+                if (opBefore === 'OR' && lastOp.getAttribute('data-op') === 'AND') {
+                    lastOp.click();
+                } else if (opBefore === 'AND' && lastOp.getAttribute('data-op') === 'OR') {
+                    lastOp.click();
+                }
+            }
+        }
+
+        function clearChips(containerId) {
+            const container = document.getElementById(containerId);
+            const chips = container.querySelectorAll('.chip, .chip-op');
+            chips.forEach(c => c.remove());
+        }
+
+        // === COMBINAÇÕES INTELIGENTES ===
+        window.applySmartCombo1 = function() {
+            clearChips('mainInputContainer');
+            clearChips('negativeContainer');
+
+            // "Aula 1" [OU] "Evento" [OU] "Workshop" [E] Gratuito [E] Online
+            addChipWithOp('mainInputContainer', 'Aula 1'); 
+            addChipWithOp('mainInputContainer', 'Evento', 'OR');
+            addChipWithOp('mainInputContainer', 'Workshop', 'OR');
+            addChipWithOp('mainInputContainer', 'Gratuito', 'AND');
+            addChipWithOp('mainInputContainer', 'Online', 'AND');
+
+            // -minicurso [OU] -mini-curso (Como é o campo negativo, adicionamos as palavras normalmente com OU)
+            addChipWithOp('negativeContainer', 'minicurso');
+            addChipWithOp('negativeContainer', 'mini-curso', 'OR');
+            
+            showAlert("Combinação 'Lançamento Padrão' aplicada com sucesso!", false);
+        };
+
+        function getLogicTokens(containerId) {
+            const container = document.getElementById(containerId);
+            const tokens = [];
+            container.childNodes.forEach(node => {
+                if (node.classList && node.classList.contains('chip')) {
+                    tokens.push({ type: 'word', value: node.getAttribute('data-value').trim() });
+                } else if (node.classList && node.classList.contains('chip-op')) {
+                    tokens.push({ type: 'op', value: node.getAttribute('data-op') });
+                }
+            });
+            return tokens;
+        }
+
         setupChipSystem('urlInput', 'mainInputContainer');
         setupChipSystem('channelInput', 'channelContainer');
         setupChipSystem('descInput', 'descContainer');
@@ -454,63 +710,327 @@
         // === PARTICULAS ===
         try {
             particlesJS('particles-js', {
-                "particles": {
-                    "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
-                    "color": { "value": "#dc2626" },
-                    "shape": { "type": "circle" },
-                    "opacity": { "value": 0.4 },
-                    "size": { "value": 3, "random": true },
-                    "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 },
-                    "move": { "enable": true, "speed": 1 }
-                },
-                "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" } } },
-                "retina_detect": true
+                "particles": { "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#dc2626" }, "shape": { "type": "circle" }, "opacity": { "value": 0.4 }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 1 } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" } } }, "retina_detect": true
             });
         } catch (e) {}
 
-        // === BUSCA MOCK ===
+        // === AVALIADOR LÓGICO INTELIGENTE ===
+        function evaluateLogicCustom(tokens, matchFn) {
+            if (tokens.length === 0) return true;
+            
+            let expr = tokens.map(t => t.type === 'word' ? matchFn(t.value) : t.value);
+            
+            for (let i = 0; i < expr.length; i++) {
+                if (expr[i] === 'AND') {
+                    expr.splice(i - 1, 3, expr[i-1] && expr[i+1]);
+                    i--;
+                }
+            }
+            
+            for (let i = 0; i < expr.length; i++) {
+                if (expr[i] === 'OR') {
+                    expr.splice(i - 1, 3, expr[i-1] || expr[i+1]);
+                    i--;
+                }
+            }
+            
+            return expr[0];
+        }
+
+        // === MOTOR DE BUSCA RIGOROSA YOUTUBE API ===
         const searchBtn = document.getElementById('searchBtn');
         const resultsGrid = document.getElementById('resultsGrid');
         const loadingIndicator = document.getElementById('loadingIndicator');
 
-        searchBtn.addEventListener('click', () => {
+        function formatYTDate(dateStr, isEnd) {
+            if(!dateStr) return null;
+            const time = isEnd ? "23:59:59Z" : "00:00:00Z";
+            return `${dateStr}T${time}`;
+        }
+
+        function buildQueryString(tokens, prefix = '') {
+             if(tokens.length === 0) return '';
+             return tokens.map(t => {
+                 if(t.type === 'word') return prefix ? `${prefix}:"${t.value}"` : `"${t.value}"`;
+                 return t.value === 'OR' ? '|' : ''; 
+             }).join(' ').replace(/\s+/g, ' ').trim();
+        }
+
+        searchBtn.addEventListener('click', async () => {
+            hideAlert();
             resultsContainer.classList.remove('hidden');
             resultsGrid.innerHTML = '';
+            document.getElementById('resultsCount').textContent = '0';
             loadingIndicator.classList.remove('hidden');
             loadingIndicator.classList.add('flex');
-            
-            updateScrollState(); // Habilita o scroll pois resultados apareceram
+            updateScrollState();
 
-            setTimeout(() => {
+            // 1. Coleta os Tokens
+            const mainTokens = getLogicTokens('mainInputContainer');
+            const descTokens = getLogicTokens('descContainer');
+            const negativeTokens = getLogicTokens('negativeContainer');
+            const channelTokens = getLogicTokens('channelContainer');
+            
+            const lang = document.getElementById('langFilter').value;
+            const country = document.getElementById('countryFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const subsSize = document.getElementById('subsFilter').value;
+            const dateStart = document.getElementById('dateStart').value;
+            const dateEnd = document.getElementById('dateEnd').value;
+            const sortFilter = document.getElementById('sortFilter').value;
+
+            // 2. Construção da Query HÍBRIDA (API + Google Dorks)
+            let queryParts = [];
+            
+            if (mainTokens.length > 0) queryParts.push(`(${buildQueryString(mainTokens, 'intitle')})`);
+            if (descTokens.length > 0) queryParts.push(`(${buildQueryString(descTokens)})`);
+            if (channelTokens.length > 0) queryParts.push(`(${buildQueryString(channelTokens)})`);
+            
+            const hasAndInNegatives = negativeTokens.some(t => t.value === 'AND');
+            if (negativeTokens.length > 0 && !hasAndInNegatives) {
+                const negWords = negativeTokens.filter(t => t.type === 'word').map(t => `-"${t.value}"`).join(' ');
+                if (negWords) queryParts.push(negWords);
+            }
+
+            const q = queryParts.join(' ');
+
+            let searchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
+            
+            if (lang) searchUrl += `&relevanceLanguage=${lang}`;
+            if (country) searchUrl += `&regionCode=${country}`;
+            if (status !== 'all') searchUrl += `&eventType=${status}`;
+            if (dateStart) searchUrl += `&publishedAfter=${encodeURIComponent(formatYTDate(dateStart, false))}`;
+            if (dateEnd) searchUrl += `&publishedBefore=${encodeURIComponent(formatYTDate(dateEnd, true))}`;
+
+            try {
+                // ETAPA 1: Busca Inicial na Search API
+                const searchResponse = await fetch(searchUrl);
+                const searchData = await searchResponse.json();
+
+                if (searchData.error) throw new Error(searchData.error.message);
+
+                let items = searchData.items || [];
+
+                // ETAPA 2: PÓS-FILTRO JAVASCRIPT RIGOROSO (Palavras-Chave E/OU)
+                items = items.filter(item => {
+                    const title = (item.snippet.title || '').toLowerCase();
+                    const desc = (item.snippet.description || '').toLowerCase();
+                    const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
+                    const channelId = item.snippet.channelId;
+
+                    const titlePass = evaluateLogicCustom(mainTokens, (kw) => title.includes(kw.toLowerCase()));
+                    if (!titlePass) return false;
+
+                    const descPass = evaluateLogicCustom(descTokens, (kw) => desc.includes(kw.toLowerCase()));
+                    if (!descPass) return false;
+
+                    if (negativeTokens.length > 0) {
+                        const hasNegative = evaluateLogicCustom(negativeTokens, (kw) => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()));
+                        if (hasNegative) return false;
+                    }
+
+                    const channelPass = evaluateLogicCustom(channelTokens, (kw) => {
+                        const lowKw = kw.toLowerCase();
+                        const cTitleNoSpace = channelTitle.replace(/\s+/g, '');
+                        const kwNoSpace = lowKw.replace(/\s+/g, '');
+                        return channelId === kw || channelTitle.includes(lowKw) || cTitleNoSpace.includes(kwNoSpace) || kwNoSpace.includes(cTitleNoSpace);
+                    });
+                    if (!channelPass) return false;
+
+                    return true;
+                });
+
+                // ETAPA 3: FILTRO DE INSCRITOS (Channels API)
+                const subsMap = {};
+                if (items.length > 0) {
+                    const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
+                    const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics&id=${uniqueChannelIds.join(',')}`;
+                    const channelsResponse = await fetch(channelsUrl);
+                    const channelsData = await channelsResponse.json();
+                    
+                    if(channelsData.items) {
+                        channelsData.items.forEach(ch => { subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); });
+                    }
+
+                    if(subsSize !== 'all') {
+                        items = items.filter(item => {
+                            const count = subsMap[item.snippet.channelId] || 0;
+                            if (subsSize === 'small') return count <= 10000;
+                            if (subsSize === 'medium') return count > 10000 && count <= 100000;
+                            if (subsSize === 'large') return count > 100000;
+                            return true;
+                        });
+                    }
+                }
+
+                // ETAPA 4: BUSCA DE ESTATÍSTICAS E DETALHES DE LIVE (Videos API)
+                if (items.length > 0) {
+                    const videoIds = items.map(item => item.id.videoId).join(',');
+                    // A parte 'liveStreamingDetails' permite saber a data exata do agendamento
+                    const videosUrl = `${CF_WORKER_URL}/videos?part=statistics,liveStreamingDetails&id=${videoIds}`;
+                    const videosResponse = await fetch(videosUrl);
+                    const videosData = await videosResponse.json();
+
+                    const statsMap = {};
+                    const liveDetailsMap = {};
+                    
+                    if(videosData.items) {
+                        videosData.items.forEach(v => {
+                            statsMap[v.id] = v.statistics || {};
+                            liveDetailsMap[v.id] = v.liveStreamingDetails || null;
+                        });
+                    }
+
+                    items.forEach(item => {
+                        const stats = statsMap[item.id.videoId] || {};
+                        item.commentCount = parseInt(stats.commentCount || 0, 10);
+                        item.viewCount = parseInt(stats.viewCount || 0, 10); // Resgatando Views para poder ordenar depois
+                        item.subscriberCount = subsMap[item.snippet.channelId] || 0; 
+                        item.liveDetails = liveDetailsMap[item.id.videoId];
+                    });
+                }
+
+                // ETAPA 5: FILTRO DE STATUS 100% RIGOROSO E MATEMÁTICO
+                items = items.filter(item => {
+                    const now = new Date();
+                    const liveContent = item.snippet.liveBroadcastContent; // 'none', 'live', 'upcoming'
+                    const publishedAt = new Date(item.snippet.publishedAt);
+                    const scheduledStart = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : null;
+
+                    if (status !== 'all') {
+                        if (status === 'live' && liveContent !== 'live') {
+                            return false; // Deve estar em transmissão AGORA
+                        }
+                        
+                        if (status === 'upcoming') {
+                            if (liveContent !== 'upcoming') return false;
+                            // Se a live travou na API mas a data de agendamento já passou da data de hoje/agora, ele remove!
+                            if (scheduledStart && scheduledStart <= now) return false;
+                        }
+
+                        if (status === 'completed') {
+                            // Não pode ser nem live e nem agendado.
+                            if (liveContent === 'live' || liveContent === 'upcoming') return false;
+                            // A data do vídeo não pode ser no futuro.
+                            if (publishedAt > now) return false;
+                        }
+                    }
+                    return true;
+                });
+
+                // ETAPA 6: ORDENAR OS VÍDEOS (Organizar por...)
+                if (sortFilter === 'views') {
+                    items.sort((a, b) => b.viewCount - a.viewCount);
+                } else if (sortFilter === 'comments') {
+                    items.sort((a, b) => b.commentCount - a.commentCount);
+                } else if (sortFilter === 'subs') {
+                    items.sort((a, b) => b.subscriberCount - a.subscriberCount);
+                }
+
+                // ETAPA 7: RENDERIZAÇÃO E BOTÃO HOTMART
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
-                resultsGrid.innerHTML = `
-                    <article class="video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl">
-                        <div class="relative aspect-video overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover">
-                            <div class="absolute top-4 left-4 bg-highlight/20 text-highlight border border-highlight backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg animate-pulse">
-                                <span class="material-symbols-rounded text-[16px]">sensors</span> Ao Vivo
-                            </div>
+
+                document.getElementById('resultsCount').textContent = items.length;
+
+                if (items.length === 0) {
+                    resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-medium bg-white/5 rounded-2xl">Nenhum lançamento encontrado que atenda a todas as regras estipuladas nesta busca.</div>`;
+                    return;
+                }
+
+                items.forEach(item => {
+                    const videoId = item.id.videoId;
+                    const snippet = item.snippet;
+                    const commentCount = item.commentCount || 0;
+                    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                    
+                    let statusBadge = '';
+                    if(snippet.liveBroadcastContent === 'live') {
+                        statusBadge = `<div class="absolute top-4 left-4 bg-highlight/20 text-highlight border border-highlight backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg animate-pulse">
+                                          <span class="material-symbols-rounded text-[14px] sm:text-[16px]">sensors</span> Ao Vivo
+                                       </div>`;
+                    } else if (snippet.liveBroadcastContent === 'upcoming') {
+                        statusBadge = `<div class="absolute top-4 left-4 bg-blue-500/20 text-blue-400 border border-blue-500 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg">
+                                          <span class="material-symbols-rounded text-[14px] sm:text-[16px]">schedule</span> Agendado
+                                       </div>`;
+                    }
+
+                    const parser = new DOMParser();
+                    const decodedTitle = parser.parseFromString(snippet.title, 'text/html').body.textContent;
+                    
+                    // Exibir a data exata em que o vídeo foi publicado ou está agendado
+                    const targetDate = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : new Date(snippet.publishedAt);
+                    const pubDate = targetDate.toLocaleDateString('pt-PT');
+                    
+                    const formattedComments = commentCount.toLocaleString('pt-PT');
+
+                    // REGRA DE AFILIADO HOTMART
+                    const hotmartRegex = /(https?:\/\/(?:go\.|pay\.|www\.)?hotmart\.com\/[^\s]+)/i;
+                    const hotmartMatch = snippet.description.match(hotmartRegex);
+                    let afiliarBtn = '';
+                    
+                    if (hotmartMatch && hotmartMatch[1]) {
+                        const hotmartUrl = hotmartMatch[1];
+                        const inexplorUrl = `https://inexplor.grupobhds.com/desbloqueio-produto-oculto/hotmart?po=${encodeURIComponent(hotmartUrl)}`;
+                        
+                        afiliarBtn = `
+                            <button onclick="window.open('${inexplorUrl}', '_blank'); event.stopPropagation();" title="Afiliar-se a este produto" class="h-10 px-4 rounded-full bg-orange-500/20 text-orange-400 hover:bg-orange-500 hover:text-white transition-colors flex items-center justify-center border border-orange-500/50 shadow-sm flex-shrink-0 text-sm font-bold gap-2">
+                                <span class="material-symbols-rounded text-[18px]">storefront</span>
+                                <span class="hidden sm:inline">Afiliar</span>
+                            </button>
+                        `;
+                    }
+
+                    const card = document.createElement('article');
+                    card.className = "video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl cursor-pointer group";
+                    card.onclick = () => window.open(videoUrl, '_blank');
+                    
+                    card.innerHTML = `
+                        <div class="relative aspect-video overflow-hidden bg-slate-900">
+                            <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            ${statusBadge}
                         </div>
-                        <div class="p-6 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
-                            <h3 class="text-lg font-bold leading-tight mb-3 text-white">AULA 01: O Segredo do Marketing Digital em 2026</h3>
-                            <div class="flex items-center gap-2 text-slate-400 mb-4">
+                        <div class="p-6 sm:p-7 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
+                            <h3 class="text-base sm:text-lg md:text-xl font-bold leading-snug mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
+                            <div class="flex items-center gap-2 text-slate-400 mb-6">
                                 <span class="material-symbols-rounded text-[18px]">account_circle</span>
-                                <span class="text-sm font-semibold">Especialista em Vendas</span>
+                                <span class="text-sm font-semibold truncate">${snippet.channelTitle}</span>
                             </div>
-                            <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
-                                <div class="flex flex-col">
-                                    <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Agora</span>
-                                    <span class="text-sm text-slate-300 font-medium">1.2k assistindo</span>
+                            
+                            <div class="mt-auto flex flex-row items-end justify-between border-t border-white/10 pt-5 gap-3">
+                                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 flex-grow overflow-hidden">
+                                    <div class="flex flex-col flex-shrink-0">
+                                        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Data</span>
+                                        <span class="text-sm text-slate-300 font-medium">${pubDate}</span>
+                                    </div>
+                                    <div class="flex flex-col flex-shrink-0">
+                                        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Comentários</span>
+                                        <span class="text-sm text-slate-300 font-medium flex items-center gap-1.5">
+                                            <span class="material-symbols-rounded text-[14px]">chat_bubble</span>
+                                            ${formattedComments}
+                                        </span>
+                                    </div>
                                 </div>
-                                <button class="w-10 h-10 rounded-full bg-white/5 hover:bg-highlight hover:text-white transition-colors flex items-center justify-center border border-white/10">
-                                    <span class="material-symbols-rounded text-[20px]">arrow_forward</span>
-                                </button>
+                                <div class="flex items-center gap-2 relative z-20 flex-shrink-0">
+                                    ${afiliarBtn}
+                                    <button onclick="copyVideoUrl(event, '${videoUrl}')" title="Copiar URL" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                                        <span class="material-symbols-rounded text-[18px]">content_copy</span>
+                                    </button>
+                                    <button class="w-10 h-10 rounded-full bg-white/5 group-hover:bg-highlight group-hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                                        <span class="material-symbols-rounded text-[20px]">arrow_forward</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </article>
-                `;
-            }, 1500);
+                    `;
+                    resultsGrid.appendChild(card);
+                });
+
+            } catch (error) {
+                loadingIndicator.classList.add('hidden');
+                loadingIndicator.classList.remove('flex');
+                showAlert(`Erro na busca: Verifique o console ou a URL do backend. (${error.message})`, true);
+            }
         });
     </script>
 </body>
