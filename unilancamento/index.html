@@ -114,6 +114,9 @@
         .chip {
             animation: popIn 0.2s ease-out forwards;
         }
+        .chip-op {
+            animation: popIn 0.15s ease-out forwards;
+        }
         @keyframes popIn {
             0% { transform: scale(0.8); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
@@ -148,14 +151,7 @@
                     Descubra novos lançamentos de forma inteligente e fuja da concorrência
                 </p>
 
-                <!-- Wrapper para os botões de controle de Modo E/OU Principal -->
-                <div class="w-full max-w-lg mx-auto mt-6 flex justify-end px-2 hidden" id="mainModeWrapper">
-                    <button id="mainModeBtn" class="text-[11px] px-3 py-1 rounded-full border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all font-bold tracking-wider cursor-pointer z-30 relative" data-mode="AND" onclick="toggleLogicMode(this)">
-                        Modo: E (Obrigatório Ambos)
-                    </button>
-                </div>
-
-                <div class="info-field-wrapper mt-2 p-2 md:p-2.5 w-full mx-auto">
+                <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 w-full mx-auto">
                     <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-0">
                         <div id="mainInputContainer" class="w-full flex-1 flex flex-wrap items-center bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px]" onclick="document.getElementById('urlInput').focus()">
                             <svg class="w-6 h-6 text-slate-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -312,33 +308,30 @@
                             </div>
                         </div>
 
-                        <!-- Filtro de Canais com Toggle -->
+                        <!-- Filtro de Canais com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Filtro de Canais</label>
-                                <button id="channelModeBtn" class="hidden text-[9px] px-2 py-0.5 rounded border border-white/20 bg-white/10 text-white transition-all uppercase font-bold tracking-wider cursor-pointer" data-mode="AND" onclick="toggleLogicMode(this)">Modo: E</button>
                             </div>
                             <div id="channelContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('channelInput').focus()">
                                 <input type="text" id="channelInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
 
-                        <!-- Filtro de Descrição com Toggle -->
+                        <!-- Filtro de Descrição com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave na Descrição</label>
-                                <button id="descModeBtn" class="hidden text-[9px] px-2 py-0.5 rounded border border-white/20 bg-white/10 text-white transition-all uppercase font-bold tracking-wider cursor-pointer" data-mode="AND" onclick="toggleLogicMode(this)">Modo: E</button>
                             </div>
                             <div id="descContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('descInput').focus()">
                                 <input type="text" id="descInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
 
-                        <!-- Filtro de Negativas com Toggle -->
+                        <!-- Filtro de Negativas com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave Negativas</label>
-                                <button id="negativeModeBtn" class="hidden text-[9px] px-2 py-0.5 rounded border border-white/20 bg-white/10 text-white transition-all uppercase font-bold tracking-wider cursor-pointer" data-mode="AND" onclick="toggleLogicMode(this)">Modo: E</button>
                             </div>
                             <div id="negativeContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('negativeInput').focus()">
                                 <input type="text" id="negativeInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
@@ -438,43 +431,6 @@
         }
         function hideAlert() { alertBox.classList.add('hidden'); }
 
-        // === BOTÕES DE TOGGLE: MODO "E" ou "OU" ===
-        window.toggleLogicMode = function(btn) {
-            if(btn.dataset.mode === 'AND') {
-                btn.dataset.mode = 'OR';
-                btn.innerText = 'Modo: OU';
-                btn.classList.replace('bg-white/10', 'bg-highlight/20');
-                btn.classList.replace('border-white/20', 'border-highlight/50');
-                btn.classList.add('text-highlight');
-                btn.classList.remove('text-white');
-            } else {
-                btn.dataset.mode = 'AND';
-                btn.innerText = 'Modo: E';
-                btn.classList.replace('bg-highlight/20', 'bg-white/10');
-                btn.classList.replace('border-highlight/50', 'border-white/20');
-                btn.classList.remove('text-highlight');
-                btn.classList.add('text-white');
-            }
-        };
-
-        // Função que detecta se há chips suficientes (2 ou mais) para mostrar o botão E/OU
-        function updateToggleVisibility(containerId, toggleBtnId, wrapperId = null) {
-            const chips = document.getElementById(containerId).querySelectorAll('.chip');
-            const toggleBtn = document.getElementById(toggleBtnId);
-            const wrapper = wrapperId ? document.getElementById(wrapperId) : null;
-            
-            if (chips.length >= 2) {
-                if(wrapper) wrapper.classList.remove('hidden');
-                else if(toggleBtn) toggleBtn.classList.remove('hidden');
-            } else {
-                if(wrapper) wrapper.classList.add('hidden');
-                else if(toggleBtn) toggleBtn.classList.add('hidden');
-                
-                // Opcional: Se sumir, reseta para "AND" (E)
-                if (toggleBtn && toggleBtn.dataset.mode === 'OR') toggleLogicMode(toggleBtn);
-            }
-        }
-
         // === FUNÇÃO PARA COPIAR URL DO VÍDEO ===
         window.copyVideoUrl = function(event, url) {
             event.stopPropagation();
@@ -559,65 +515,114 @@
         setupTypewriter('descInput', '', ["Ex: Hotmart"], true);
         setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
 
-        // === CHIPS SYSTEM ===
-        function setupChipSystem(inputId, containerId, toggleBtnId, wrapperId = null) {
-            const input = document.getElementById(inputId); const container = document.getElementById(containerId);
+        // === NOVO CHIPS SYSTEM (Com lógica E/OU embutida entre as palavras) ===
+        function setupChipSystem(inputId, containerId) {
+            const input = document.getElementById(inputId); 
+            const container = document.getElementById(containerId);
             if (!input || !container) return;
+            
             input.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ',') {
-                    e.preventDefault(); let value = input.value.trim().replace(/,$/, ''); 
+                    e.preventDefault(); 
+                    let value = input.value.trim().replace(/,$/, ''); 
                     if (value) { 
-                        createChip(value, container, input); 
+                        createChipAndOp(value, container, input); 
                         input.value = ''; 
-                        updateToggleVisibility(containerId, toggleBtnId, wrapperId);
                     }
                 } else if (e.key === 'Backspace' && input.value === '') {
+                    // Lógica para apagar o último chip junto com o operador dele
                     const chips = container.querySelectorAll('.chip');
                     if (chips.length > 0) {
-                        chips[chips.length - 1].remove();
-                        updateToggleVisibility(containerId, toggleBtnId, wrapperId);
+                        const lastChip = chips[chips.length - 1];
+                        const prevNode = lastChip.previousElementSibling;
+                        if (prevNode && prevNode.classList.contains('chip-op')) {
+                            prevNode.remove();
+                        }
+                        lastChip.remove();
                     }
                 }
             });
             input.addEventListener('blur', function() {
                 let value = input.value.trim().replace(/,$/, '');
                 if (value) { 
-                    createChip(value, container, input); 
+                    createChipAndOp(value, container, input); 
                     input.value = ''; 
-                    updateToggleVisibility(containerId, toggleBtnId, wrapperId);
                 }
             });
         }
-        function createChip(text, container, input) {
+
+        function createChipAndOp(text, container, input) {
+            // Se já existem chips, insere um botão de operador (E/OU) ANTES de inserir o novo chip
+            if (container.querySelectorAll('.chip').length > 0) {
+                const op = document.createElement('span');
+                op.className = 'chip-op text-[10px] bg-white/10 border border-white/20 text-slate-300 rounded px-2 py-0.5 cursor-pointer hover:bg-white/20 hover:text-white transition-colors select-none font-bold mx-0.5 flex items-center justify-center';
+                op.setAttribute('data-op', 'AND'); // Padrão é E
+                op.innerText = 'E';
+                
+                // Toggle para mudar entre E e OU ao clicar
+                op.onclick = function(e) {
+                    e.stopPropagation();
+                    if (this.getAttribute('data-op') === 'AND') {
+                        this.setAttribute('data-op', 'OR');
+                        this.innerText = 'OU';
+                        this.classList.replace('bg-white/10', 'bg-highlight/20');
+                        this.classList.replace('border-white/20', 'border-highlight/50');
+                        this.classList.replace('text-slate-300', 'text-highlight');
+                    } else {
+                        this.setAttribute('data-op', 'AND');
+                        this.innerText = 'E';
+                        this.classList.replace('bg-highlight/20', 'bg-white/10');
+                        this.classList.replace('border-highlight/50', 'border-white/20');
+                        this.classList.replace('text-highlight', 'text-slate-300');
+                    }
+                };
+                container.insertBefore(op, input);
+            }
+
+            // Cria o Chip normal com a palavra
             const chip = document.createElement('span');
             chip.className = 'chip bg-highlight text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm whitespace-nowrap';
             chip.setAttribute('data-value', text); 
-            chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors" onclick="this.parentElement.remove(); document.getElementById('urlInput').focus();">close</span>`;
+            chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors">close</span>`;
             
-            // Adiciona listener para a remoção manual do chip também atualizar a UI do toggle
-            chip.querySelector('span').addEventListener('click', () => {
-                setTimeout(() => {
-                    const containerId = container.id;
-                    let toggleBtnId, wrapperId;
-                    if(containerId === 'mainInputContainer') { toggleBtnId = 'mainModeBtn'; wrapperId = 'mainModeWrapper'; }
-                    if(containerId === 'descContainer') toggleBtnId = 'descModeBtn';
-                    if(containerId === 'channelContainer') toggleBtnId = 'channelModeBtn';
-                    if(containerId === 'negativeContainer') toggleBtnId = 'negativeModeBtn';
-                    updateToggleVisibility(containerId, toggleBtnId, wrapperId);
-                }, 10);
+            // Lógica de exclusão clicando no X (Remove o chip e reconecta os operadores para não quebrar a lógica)
+            chip.querySelector('span').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const prevNode = chip.previousElementSibling;
+                const nextNode = chip.nextElementSibling;
+                
+                // Tenta remover o operador antes dele. Se for a primeira palavra, remove o operador depois dele.
+                if (prevNode && prevNode.classList.contains('chip-op')) {
+                    prevNode.remove();
+                } else if (nextNode && nextNode.classList.contains('chip-op')) {
+                    nextNode.remove();
+                }
+                chip.remove();
+                document.getElementById('urlInput').focus();
             });
 
             container.insertBefore(chip, input);
         }
-        function getChipsData(containerId) {
-            return Array.from(document.getElementById(containerId).querySelectorAll('.chip')).map(chip => chip.getAttribute('data-value').trim());
+
+        // Função para extrair os "Tokens" em ordem (Ex: palavra, operador, palavra) para não haver confusão
+        function getLogicTokens(containerId) {
+            const container = document.getElementById(containerId);
+            const tokens = [];
+            container.childNodes.forEach(node => {
+                if (node.classList && node.classList.contains('chip')) {
+                    tokens.push({ type: 'word', value: node.getAttribute('data-value').trim() });
+                } else if (node.classList && node.classList.contains('chip-op')) {
+                    tokens.push({ type: 'op', value: node.getAttribute('data-op') }); // Retorna 'AND' ou 'OR'
+                }
+            });
+            return tokens;
         }
 
-        // Setup Chips mapeados com seus respectivos botões de Modo E/OU
-        setupChipSystem('urlInput', 'mainInputContainer', 'mainModeBtn', 'mainModeWrapper');
-        setupChipSystem('channelInput', 'channelContainer', 'channelModeBtn');
-        setupChipSystem('descInput', 'descContainer', 'descModeBtn');
-        setupChipSystem('negativeInput', 'negativeContainer', 'negativeModeBtn');
+        // Inicializar o novo sistema nos containers
+        setupChipSystem('urlInput', 'mainInputContainer');
+        setupChipSystem('channelInput', 'channelContainer');
+        setupChipSystem('descInput', 'descContainer');
+        setupChipSystem('negativeInput', 'negativeContainer');
 
         // === PARTICULAS ===
         try {
@@ -625,6 +630,33 @@
                 "particles": { "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#dc2626" }, "shape": { "type": "circle" }, "opacity": { "value": 0.4 }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 1 } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" } } }, "retina_detect": true
             });
         } catch (e) {}
+
+        // === AVALIADOR LÓGICO INTELIGENTE ===
+        // Transforma o array [palavra, OU, palavra, E, palavra] em um resultado Booleano final (true/false)
+        function evaluateLogicCustom(tokens, matchFn) {
+            if (tokens.length === 0) return true; // Se não tem filtro, passa livre
+            
+            // 1. Traduz as palavras em True ou False testando pelo matchFn
+            let expr = tokens.map(t => t.type === 'word' ? matchFn(t.value) : t.value);
+            
+            // 2. Resolve primeiro as multiplicações (Operador E / AND) - Ordem de precedência matemática
+            for (let i = 0; i < expr.length; i++) {
+                if (expr[i] === 'AND') {
+                    expr.splice(i - 1, 3, expr[i-1] && expr[i+1]);
+                    i--; // Compensa a array que encolheu
+                }
+            }
+            
+            // 3. Resolve depois as somas (Operador OU / OR)
+            for (let i = 0; i < expr.length; i++) {
+                if (expr[i] === 'OR') {
+                    expr.splice(i - 1, 3, expr[i-1] || expr[i+1]);
+                    i--;
+                }
+            }
+            
+            return expr[0]; // Retorna a avaliação final
+        }
 
         // === MOTOR DE BUSCA RIGOROSA YOUTUBE API ===
         const searchBtn = document.getElementById('searchBtn');
@@ -637,6 +669,15 @@
             return `${dateStr}T${time}`;
         }
 
+        // Monta a string leve de busca (Google Dorks) para não quebrar a API do Youtube, usando os tokens.
+        function buildQueryString(tokens, prefix = '') {
+             if(tokens.length === 0) return '';
+             return tokens.map(t => {
+                 if(t.type === 'word') return prefix ? `${prefix}:"${t.value}"` : `"${t.value}"`;
+                 return t.value === 'OR' ? '|' : ''; // YouTube aceita | para OU e espaço para E
+             }).join(' ').replace(/\s+/g, ' ').trim();
+        }
+
         searchBtn.addEventListener('click', async () => {
             hideAlert();
             resultsContainer.classList.remove('hidden');
@@ -646,16 +687,11 @@
             loadingIndicator.classList.add('flex');
             updateScrollState();
 
-            // 1. Coleta de Dados das Palavras e os "Modos E/OU" de cada uma
-            const mainKws = getChipsData('mainInputContainer');
-            const descKws = getChipsData('descContainer');
-            const negativeKws = getChipsData('negativeContainer');
-            const channelKws = getChipsData('channelContainer');
-
-            const mainMode = document.getElementById('mainModeBtn').getAttribute('data-mode'); // 'AND' ou 'OR'
-            const descMode = document.getElementById('descModeBtn').getAttribute('data-mode');
-            const negativeMode = document.getElementById('negativeModeBtn').getAttribute('data-mode');
-            const channelMode = document.getElementById('channelModeBtn').getAttribute('data-mode');
+            // 1. Coleta os Tokens Lógicos de todos os containers
+            const mainTokens = getLogicTokens('mainInputContainer');
+            const descTokens = getLogicTokens('descContainer');
+            const negativeTokens = getLogicTokens('negativeContainer');
+            const channelTokens = getLogicTokens('channelContainer');
             
             const lang = document.getElementById('langFilter').value;
             const country = document.getElementById('countryFilter').value;
@@ -664,37 +700,13 @@
             const dateStart = document.getElementById('dateStart').value;
             const dateEnd = document.getElementById('dateEnd').value;
 
-            // 2. Construção da Query usando Dorks do YouTube, agora sensível a E/OU
+            // 2. Construção da Query usando os Tokens
             let queryParts = [];
             
-            // Palavras Principais
-            if (mainKws.length > 0) {
-                if(mainMode === 'OR') {
-                    queryParts.push(`(${mainKws.map(kw => `intitle:"${kw}"`).join(' OR ')})`);
-                } else { // AND
-                    queryParts.push(mainKws.map(kw => `intitle:"${kw}"`).join(' '));
-                }
-            }
+            if (mainTokens.length > 0) queryParts.push(`(${buildQueryString(mainTokens, 'intitle')})`);
+            if (descTokens.length > 0) queryParts.push(`(${buildQueryString(descTokens)})`);
             
-            // Descrição
-            if (descKws.length > 0) {
-                if(descMode === 'OR') {
-                    queryParts.push(`(${descKws.map(kw => `"${kw}"`).join(' OR ')})`);
-                } else { // AND
-                    queryParts.push(descKws.map(kw => `"${kw}"`).join(' '));
-                }
-            }
-
-            // Negativas (Tanto no E ou OU, o Dork usa - no Youtube, ajustamos no filtro JS também)
-            if (negativeKws.length > 0) {
-                if(negativeMode === 'OR') {
-                    // Pelo menos 1 ausente
-                    queryParts.push(negativeKws.map(kw => `-"${kw}"`).join(' '));
-                } else { // AND (Excluir apenas se tiver todas as palavras juntas. O Youtube nativamente só suporta subtrair unitariamente, deixamos a precisão grossa pro JS)
-                    // Se for AND, evitamos colocar no Dork para não quebrar e deixamos o JS resolver a precisão.
-                }
-            }
-            
+            // Negativas não enviamos no Dork composto para não confundir a API. O validador JS fará esse pente-fino cirúrgico.
             const q = queryParts.join(' ');
 
             let searchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
@@ -713,55 +725,36 @@
 
                 let items = searchData.items || [];
 
-                // 4. PÓS-FILTRO JAVASCRIPT RIGOROSO (Agora respeitando os modos E/OU e regras absolutas)
+                // 4. PÓS-FILTRO JAVASCRIPT RIGOROSO E MATEMÁTICO
                 items = items.filter(item => {
                     const title = (item.snippet.title || '').toLowerCase();
                     const desc = (item.snippet.description || '').toLowerCase();
                     const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
                     const channelId = item.snippet.channelId;
 
-                    // --- Regra 1: Palavras Principais no Título (E/OU) ---
-                    const titlePass = mainKws.length === 0 || (
-                        mainMode === 'AND' ? mainKws.every(kw => title.includes(kw.toLowerCase()))
-                                           : mainKws.some(kw => title.includes(kw.toLowerCase()))
-                    );
+                    // --- Regra 1: Palavras Principais no Título ---
+                    const titlePass = evaluateLogicCustom(mainTokens, (kw) => title.includes(kw.toLowerCase()));
                     if (!titlePass) return false;
 
-                    // --- Regra 2: Descrição (E/OU). (Se estiver no título também, não importa, a regra é estar na descrição) ---
-                    const descPass = descKws.length === 0 || (
-                        descMode === 'AND' ? descKws.every(kw => desc.includes(kw.toLowerCase()))
-                                           : descKws.some(kw => desc.includes(kw.toLowerCase()))
-                    );
+                    // --- Regra 2: Descrição Exclusiva ---
+                    const descPass = evaluateLogicCustom(descTokens, (kw) => desc.includes(kw.toLowerCase()));
                     if (!descPass) return false;
 
-                    // --- Regra 3: Negativas (E/OU) ---
-                    let negativePass = true;
-                    if (negativeKws.length > 0) {
-                        if (negativeMode === 'AND') {
-                            // Se MODO AND: o vídeo só é reprovado se conter TODAS as palavras negativas juntas.
-                            const hasAllNegatives = negativeKws.every(kw => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()));
-                            negativePass = !hasAllNegatives;
-                        } else {
-                            // Se MODO OR (Padrão Negativo): o vídeo é reprovado se conter QUALQUER UMA palavra negativa.
-                            const hasAnyNegative = negativeKws.some(kw => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()));
-                            negativePass = !hasAnyNegative;
-                        }
+                    // --- Regra 3: Palavras Negativas ---
+                    // Avaliamos a linha negativa. Se ela der TRUE (significa que tem o termo pra bloquear), nós reprovamos o vídeo (!).
+                    if (negativeTokens.length > 0) {
+                        const hasNegative = evaluateLogicCustom(negativeTokens, (kw) => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()));
+                        if (hasNegative) return false;
                     }
-                    if (!negativePass) return false;
 
-                    // --- Regra 4: Canal (E/OU) ---
-                    const channelPass = channelKws.length === 0 || (
-                        channelMode === 'AND' ? channelKws.every(kw => {
-                            const lowKw = kw.toLowerCase();
-                            return channelId === kw || channelTitle.includes(lowKw) || lowKw.includes(channelId.toLowerCase());
-                        }) : channelKws.some(kw => {
-                            const lowKw = kw.toLowerCase();
-                            return channelId === kw || channelTitle.includes(lowKw) || lowKw.includes(channelId.toLowerCase());
-                        })
-                    );
+                    // --- Regra 4: Filtro de Canal Inteligente ---
+                    const channelPass = evaluateLogicCustom(channelTokens, (kw) => {
+                        const lowKw = kw.toLowerCase();
+                        return channelId === kw || channelTitle.includes(lowKw) || lowKw.includes(channelId.toLowerCase());
+                    });
                     if (!channelPass) return false;
 
-                    return true;
+                    return true; // Passou na peneira fina!
                 });
 
                 // 5. FILTRO DE INSCRITOS
