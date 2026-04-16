@@ -214,7 +214,7 @@
                     </div>
                 </div>
 
-                <!-- BARRA DE CONTROLES CENTRALIZADA E RESPONSIVA -->
+                <!-- BARRA DE CONTROLES CENTRALIZADA E RESPONSIVA COM EFEITO HOVER VERMELHO (#DC2626) -->
                 <div class="mt-6 w-full max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-4 relative z-20">
                     
                     <!-- Botão Combinações -->
@@ -396,6 +396,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-6 px-2">
+                <!-- Contador Real de Resultados -->
                 <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#DC2626] flex flex-wrap items-center gap-2 sm:gap-3 drop-shadow-md leading-tight w-full">
                     <span>Lançamentos Encontrados</span>
                     <span id="resultsCount" class="text-sm sm:text-base bg-[#DC2626] text-white py-1 px-4 rounded-full shadow-lg whitespace-nowrap">0</span>
@@ -427,7 +428,6 @@
 
         let globalNextPageToken = '';
         let globalAccumulatedItems = [];
-        let globalTotalResultsAPI = 0; 
 
         // === LOCAL STORAGE (Datas Removidas) ===
         function saveState() {
@@ -997,7 +997,19 @@
             return `<img src="https://flagcdn.com/w40/${finalCode}.png" alt="${name}" onerror="this.outerHTML='<span class=\\'material-symbols-rounded text-white\\'>public</span>'" class="w-6 h-auto object-contain rounded-sm shadow-sm">`;
         }
 
-        // === AVALIADOR LÓGICO INTELIGENTE ===
+        // === AVALIADOR LÓGICO INTELIGENTE COM SUPORTE A CURINGA (*) ===
+        function matchWildcard(text, kw) {
+            const lowerText = (text || '').toLowerCase();
+            const lowerKw = (kw || '').toLowerCase();
+            if (lowerKw.includes('*')) {
+                const escapeRegex = (s) => s.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+                const regexStr = lowerKw.split('*').map(escapeRegex).join('.*');
+                const regex = new RegExp(regexStr, 'i');
+                return regex.test(lowerText);
+            }
+            return lowerText.includes(lowerKw);
+        }
+
         function evaluateLogicCustom(tokens, matchFn) {
             if (tokens.length === 0) return true;
             let expr = tokens.map(t => t.type === 'word' ? matchFn(t.value) : t.value);
@@ -1051,7 +1063,6 @@
             
             globalNextPageToken = '';
             globalAccumulatedItems = [];
-            globalTotalResultsAPI = 0;
             resultsGrid.innerHTML = '';
             document.getElementById('resultsCount').textContent = '0';
             
@@ -1102,6 +1113,11 @@
             if (lang) baseSearchUrl += `&relevanceLanguage=${lang}`;
             if (country) baseSearchUrl += `&regionCode=${country}`;
             
+            // INJEÇÃO DA API PARA 'Ao Vivo' e 'Agendado'
+            if (status === 'live' || status === 'upcoming') {
+                baseSearchUrl += `&eventType=${status}`;
+            }
+
             if (sortFilterVal === 'recent') {
                 baseSearchUrl += `&order=date`;
             }
@@ -1135,20 +1151,24 @@
                         if (globalAccumulatedItems.some(existing => existing.id.videoId === item.id.videoId)) return false;
                         if (newItemsFound.some(existing => existing.id.videoId === item.id.videoId)) return false;
 
-                        const title = (item.snippet.title || '').toLowerCase();
-                        const desc = (item.snippet.description || '').toLowerCase();
-                        const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
+                        const title = (item.snippet.title || '');
+                        const desc = (item.snippet.description || '');
+                        const channelTitle = (item.snippet.channelTitle || '');
                         const channelId = item.snippet.channelId;
 
-                        if (!evaluateLogicCustom(mainTokens, (kw) => title.includes(kw.toLowerCase()))) return false;
-                        if (!evaluateLogicCustom(descTokens, (kw) => desc.includes(kw.toLowerCase()))) return false;
-                        if (negativeTokens.length > 0 && evaluateLogicCustom(negativeTokens, (kw) => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()))) return false;
+                        if (!evaluateLogicCustom(mainTokens, (kw) => matchWildcard(title, kw))) return false;
+                        if (!evaluateLogicCustom(descTokens, (kw) => matchWildcard(desc, kw))) return false;
+                        if (negativeTokens.length > 0 && evaluateLogicCustom(negativeTokens, (kw) => matchWildcard(title, kw) || matchWildcard(desc, kw))) return false;
 
                         if (!evaluateLogicCustom(channelTokens, (kw) => {
                             const lowKw = kw.toLowerCase();
-                            const cTitleNoSpace = channelTitle.replace(/\s+/g, '');
+                            const cTitleNoSpace = channelTitle.toLowerCase().replace(/\s+/g, '');
                             const kwNoSpace = lowKw.replace(/\s+/g, '');
-                            return channelId === kw || channelTitle.includes(lowKw) || cTitleNoSpace.includes(kwNoSpace) || kwNoSpace.includes(cTitleNoSpace);
+                            
+                            if (lowKw.includes('*')) {
+                                return matchWildcard(channelId, kw) || matchWildcard(channelTitle, kw) || matchWildcard(cTitleNoSpace, kwNoSpace);
+                            }
+                            return channelId.toLowerCase() === lowKw || channelTitle.toLowerCase().includes(lowKw) || cTitleNoSpace.includes(kwNoSpace) || kwNoSpace.includes(cTitleNoSpace);
                         })) return false;
 
                         return true;
@@ -1215,7 +1235,7 @@
                         });
                     }
 
-                    // FILTRO DE SHORTS, STATUS E DATAS
+                    // FILTRO DE SHORTS E STATUS
                     items = items.filter(item => {
                         const now = new Date();
                         const liveContent = item.snippet.liveBroadcastContent; 
@@ -1240,7 +1260,6 @@
                             if (dEnd && targetDateForFilter > dEnd) return false;
                         }
 
-                        // LÓGICA DE STATUS ABSOLUTA
                         const liveDetails = item.liveDetails;
                         let isLive = liveContent === 'live';
                         let isUpcoming = liveContent === 'upcoming';
@@ -1260,7 +1279,7 @@
                             if (status === 'live' && !isLive) return false; 
                             if (status === 'upcoming') {
                                 if (!isUpcoming) return false;
-                                if (scheduledStart && scheduledStart <= now) return false; // Exclui agendados atrasados do filtro
+                                if (scheduledStart && scheduledStart <= now) return false;
                             }
                             if (status === 'completed') {
                                 if (isLive || isUpcoming) return false;
