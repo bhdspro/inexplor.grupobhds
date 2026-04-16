@@ -24,7 +24,7 @@
                     },
                     colors: {
                         surface: '#0F172A',
-                        highlight: 'rgb(220, 38, 38)',
+                        highlight: '#DC2626',
                         borderStrong: 'rgb(185, 28, 28)'
                     }
                 }
@@ -129,6 +129,37 @@
             0% { transform: translateY(-20px); opacity: 0; }
             100% { transform: translateY(0); opacity: 1; }
         }
+
+        /* Esconder barra de rolagem e impedir estiramento no container de chips */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Esconder a setinha padrão do select e centralizar texto */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            text-align: center;
+            text-align-last: center;
+        }
+        
+        /* Efeito elegante de hover para nome do canal */
+        .channel-hover-effect {
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .group\/channel:hover .channel-hover-effect {
+            max-width: 400px;
+            background-color: #0F172A;
+            padding-right: 8px;
+            z-index: 50;
+            overflow: visible;
+            box-shadow: 10px 0 15px -5px rgba(15, 23, 42, 0.9);
+        }
     </style>
 </head>
 <body id="mainBody" class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 selection:bg-highlight selection:text-white relative transition-all duration-500">
@@ -153,17 +184,18 @@
 
                 <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 w-full mx-auto">
                     <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-0">
-                        <div id="mainInputContainer" class="w-full flex-1 flex flex-wrap items-center bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px]" onclick="document.getElementById('urlInput').focus()">
+                        <div id="mainInputContainer" class="w-full flex-1 flex flex-nowrap items-center bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px] overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide" onclick="document.getElementById('urlInput').focus()">
                             <svg class="w-6 h-6 text-slate-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <!-- Chips -->
                             <input 
                                 type="text" 
                                 id="urlInput" 
-                                class="flex-grow bg-transparent text-base md:text-lg outline-none text-slate-900 placeholder-slate-500 font-bold min-w-[200px]"
+                                class="flex-grow bg-transparent text-base md:text-lg outline-none text-slate-900 placeholder-slate-500 font-bold min-w-[100px]"
                             >
                         </div>
                         <button 
                             id="searchBtn" 
-                            class="w-full md:w-auto bg-[rgb(220,38,38)] border border-[rgb(185,28,28)] hover:bg-[rgb(190,30,30)] text-white font-bold text-base md:text-lg px-8 py-4 rounded-xl md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative whitespace-nowrap"
+                            class="w-full md:w-auto bg-[#DC2626] border border-borderStrong hover:bg-[rgb(190,30,30)] text-white font-bold text-base md:text-lg px-8 py-4 rounded-xl md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative whitespace-nowrap flex-shrink-0"
                         >
                             <span class="material-symbols-rounded">manage_search</span>
                             <span>Buscar Lançamento</span>
@@ -171,20 +203,65 @@
                     </div>
                 </div>
 
-                <button id="toggleFiltersBtn" class="mt-6 mx-auto flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold relative z-20 group">
-                    <span class="material-symbols-rounded text-[20px] group-hover:text-highlight transition-colors">tune</span>
-                    <span>Filtros Avançados</span>
-                    <span id="filtersArrow" class="material-symbols-rounded text-[20px] transition-transform duration-300">expand_more</span>
-                </button>
+                <!-- BARRA DE CONTROLES CENTRALIZADA E RESPONSIVA -->
+                <div class="mt-6 w-full max-w-3xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 relative z-20">
+                    
+                    <!-- Botão Combinações (Menu Customizado) -->
+                    <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
+                        <button id="comboToggleBtn" onclick="toggleComboMenu(event)" class="bg-[#0F172A] border border-white/10 hover:border-highlight/50 rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold w-full h-full shadow-md">
+                            <span class="material-symbols-rounded text-[20px]">auto_awesome</span>
+                            Combinações
+                        </button>
+                        <!-- Dropdown Combinações -->
+                        <div id="comboDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-[calc(100vw-3rem)] sm:w-80 bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50 max-h-[300px] overflow-y-auto">
+                            <!-- Combo 1 -->
+                            <button onclick="applySmartCombo1(); toggleComboMenu(event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">
+                                "Aula 1" <span class="text-orange-400 font-bold">OU</span> "Evento" <span class="text-orange-400 font-bold">OU</span> "Workshop" <span class="text-blue-400 font-bold">E</span> Gratuito <span class="text-blue-400 font-bold">E</span> Online <br><br>
+                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas:</span>
+                                minicurso <span class="text-orange-400 font-bold">OU</span> mini-curso
+                            </button>
+                            <!-- Combo 2 -->
+                            <button onclick="applySmartCombo2(); toggleComboMenu(event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">
+                                "aula" <span class="text-orange-400 font-bold">OU</span> "evento" <span class="text-orange-400 font-bold">OU</span> "semana do" <span class="text-orange-400 font-bold">OU</span> "semana da" <span class="text-orange-400 font-bold">OU</span> "semana de" <span class="text-blue-400 font-bold">E</span> "grátis" <span class="text-orange-400 font-bold">OU</span> "gratis" <span class="text-orange-400 font-bold">OU</span> "gratuito" <span class="text-orange-400 font-bold">OU</span> "gratuita" <span class="text-blue-400 font-bold">E</span> "100% online" <span class="text-orange-400 font-bold">OU</span> "online" <br><br>
+                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas:</span>
+                                "lista de espera" <span class="text-orange-400 font-bold">OU</span> "encerrado" <span class="text-orange-400 font-bold">OU</span> "encerrada"
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Botão Filtros Avançados -->
+                    <div class="w-full sm:w-auto flex-1 sm:flex-none">
+                        <button id="toggleFiltersBtn" class="bg-[#0F172A] border border-white/10 hover:border-highlight/50 rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold group w-full h-full shadow-md">
+                            <span class="material-symbols-rounded text-[20px]">tune</span>
+                            <span>Filtros Avançados</span>
+                            <span id="filtersArrow" class="material-symbols-rounded text-[20px] transition-transform duration-300">expand_more</span>
+                        </button>
+                    </div>
+
+                    <!-- Botão Organizar (Customizado e Moderno) -->
+                    <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
+                        <button id="sortToggleBtn" onclick="toggleSortMenu(event)" class="bg-[#0F172A] border border-white/10 hover:border-highlight/50 rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold w-full h-full shadow-md">
+                            <span class="material-symbols-rounded text-[20px]">sort</span>
+                            <span id="sortActiveText">Nº de Visualizações</span>
+                        </button>
+                        <!-- Dropdown Organizar -->
+                        <div id="sortDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-[calc(100vw-3rem)] sm:w-56 bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50 overflow-hidden">
+                            <button onclick="selectSortOption('views', 'Nº de Visualizações', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Nº de Visualizações</button>
+                            <button onclick="selectSortOption('comments', 'Nº de Comentários', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Nº de Comentários</button>
+                            <button onclick="selectSortOption('subs', 'Nº de Inscritos', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">Nº de Inscritos</button>
+                        </div>
+                        <input type="hidden" id="sortFilter" value="views">
+                    </div>
+
+                </div>
 
                 <!-- ÁREA DE FILTROS -->
                 <div id="filtersWrapper" class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out w-full max-w-md mx-auto">
                     <div class="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full text-left">
                         
-                        <!-- Coluna 1: Idioma -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Idioma</label>
-                            <select id="langFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
+                            <select id="langFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto" style="text-align-last: left;">
                                 <option value="" class="bg-surface">Qualquer Idioma</option>
                                 <option value="pt" class="bg-surface">Português</option>
                                 <option value="en" class="bg-surface">Inglês</option>
@@ -217,10 +294,9 @@
                             </select>
                         </div>
                         
-                        <!-- Coluna 2: País -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">País</label>
-                            <select id="countryFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
+                            <select id="countryFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto" style="text-align-last: left;">
                                 <option value="" class="bg-surface">Qualquer País</option>
                                 <option value="BR" class="bg-surface">Brasil</option>
                                 <option value="US" class="bg-surface">Estados Unidos</option>
@@ -274,10 +350,9 @@
                             </select>
                         </div>
 
-                        <!-- Coluna 1: Status -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Status</label>
-                            <select id="statusFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="statusFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold" style="text-align-last: left;">
                                 <option value="all" class="bg-surface">Todos os Status</option>
                                 <option value="live" class="bg-surface">Ao Vivo</option>
                                 <option value="upcoming" class="bg-surface">Agendado</option>
@@ -285,10 +360,9 @@
                             </select>
                         </div>
                         
-                        <!-- Coluna 2: Tamanho Canal -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Inscritos</label>
-                            <select id="subsFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="subsFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold" style="text-align-last: left;">
                                 <option value="all" class="bg-surface">Todos os Tamanhos</option>
                                 <option value="small" class="bg-surface">Até 10 mil Inscritos</option>
                                 <option value="medium" class="bg-surface">De 10 mil a 100 mil Inscritos</option>
@@ -296,43 +370,39 @@
                             </select>
                         </div>
 
-                        <!-- Intervalo de Datas -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Intervalo de Datas</label>
                             <div class="w-full min-h-[48px] flex items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 transition-colors focus-within:border-highlight overflow-hidden">
                                 <span class="text-slate-400 text-xs font-semibold whitespace-nowrap">De:</span>
-                                <input type="date" id="dateStart" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                                <input type="date" id="dateStart" onchange="saveState()" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
                                 <span class="text-slate-400 text-xs font-semibold whitespace-nowrap ml-1">Até:</span>
-                                <input type="date" id="dateEnd" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                                <input type="date" id="dateEnd" onchange="saveState()" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
                             </div>
                         </div>
 
-                        <!-- Filtro de Canais com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Filtro de Canais</label>
                             </div>
-                            <div id="channelContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('channelInput').focus()">
+                            <div id="channelContainer" class="w-full min-h-[48px] relative flex flex-nowrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text overflow-x-auto scrollbar-hide" onclick="document.getElementById('channelInput').focus()">
                                 <input type="text" id="channelInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
 
-                        <!-- Filtro de Descrição com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave na Descrição</label>
                             </div>
-                            <div id="descContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('descInput').focus()">
+                            <div id="descContainer" class="w-full min-h-[48px] relative flex flex-nowrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text overflow-x-auto scrollbar-hide" onclick="document.getElementById('descInput').focus()">
                                 <input type="text" id="descInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
 
-                        <!-- Filtro de Negativas com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave Negativas</label>
                             </div>
-                            <div id="negativeContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('negativeInput').focus()">
+                            <div id="negativeContainer" class="w-full min-h-[48px] relative flex flex-nowrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text overflow-x-auto scrollbar-hide" onclick="document.getElementById('negativeInput').focus()">
                                 <input type="text" id="negativeInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
@@ -351,20 +421,30 @@
             </div>
 
             <div class="flex items-center justify-between mb-6 px-2">
-                <h2 class="text-2xl font-bold text-white flex items-center gap-2 drop-shadow-md">
-                    Lançamentos Encontrados <span id="resultsCount" class="text-sm bg-white/10 text-slate-300 py-1 px-3 rounded-full ml-2">0</span>
+                <!-- Títulos em Destaque Absoluto com Quebra Inteligente -->
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#DC2626] flex flex-wrap items-center gap-2 sm:gap-3 drop-shadow-md leading-tight w-full">
+                    <span>Lançamentos Encontrados</span>
+                    <span id="resultsCount" class="text-sm sm:text-base bg-[#DC2626] text-white py-1 px-4 rounded-full shadow-lg whitespace-nowrap">0</span>
                 </h2>
             </div>
 
             <!-- Grid de Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="resultsGrid">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4" id="resultsGrid">
                 <!-- Os cards serão injetados aqui -->
             </div>
 
             <!-- Loading Indicator -->
             <div id="loadingIndicator" class="hidden flex-col items-center justify-center py-20 w-full col-span-full">
-                <div class="w-12 h-12 border-4 border-white/10 border-t-highlight rounded-full animate-spin mb-4"></div>
-                <p class="text-slate-400 font-bold">A processar filtros avançados e pesquisas E/OU...</p>
+                <div class="w-12 h-12 border-4 border-white/10 border-t-[#DC2626] rounded-full animate-spin mb-4"></div>
+                <p class="text-slate-400 font-bold text-center px-4 mt-2">Beba um café! Encontrando seus lançamentos milionários...</p>
+            </div>
+
+            <!-- Botão Carregar Mais (Paginação Infinita) -->
+            <div id="loadMoreContainer" class="w-full flex justify-center mt-10 hidden">
+                <button id="loadMoreBtn" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm px-8 py-3 rounded-full transition-all flex items-center gap-2 shadow-lg">
+                    <span class="material-symbols-rounded">refresh</span>
+                    Carregar Mais Lançamentos
+                </button>
             </div>
         </div>
     </div>
@@ -375,7 +455,91 @@
         // ==========================================
         const CF_WORKER_URL = "https://unilancamento.grupo-bhds.workers.dev"; 
 
-        // === LÓGICA DO ACORDEÃO E SCROLL ===
+        // Variáveis Globais de Paginação e Resultados
+        let globalNextPageToken = '';
+        let globalAccumulatedItems = [];
+        let globalTotalResultsAPI = 0; 
+
+        // === LOCAL STORAGE (SALVAR/CARREGAR SESSÃO) ===
+        function saveState() {
+            setTimeout(() => {
+                const state = {
+                    main: getLogicTokens('mainInputContainer'),
+                    desc: getLogicTokens('descContainer'),
+                    neg: getLogicTokens('negativeContainer'),
+                    channel: getLogicTokens('channelContainer'),
+                    lang: document.getElementById('langFilter').value,
+                    country: document.getElementById('countryFilter').value,
+                    status: document.getElementById('statusFilter').value,
+                    subs: document.getElementById('subsFilter').value,
+                    dateStart: document.getElementById('dateStart').value,
+                    dateEnd: document.getElementById('dateEnd').value,
+                    sort: document.getElementById('sortFilter').value,
+                    filtersOpen: isFiltersOpen
+                };
+                localStorage.setItem('unilancamento_state', JSON.stringify(state));
+            }, 100);
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('unilancamento_state');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    
+                    document.getElementById('langFilter').value = state.lang || '';
+                    document.getElementById('countryFilter').value = state.country || '';
+                    document.getElementById('statusFilter').value = state.status || 'all';
+                    document.getElementById('subsFilter').value = state.subs || 'all';
+                    document.getElementById('dateStart').value = state.dateStart || '';
+                    document.getElementById('dateEnd').value = state.dateEnd || '';
+                    
+                    if(state.sort) {
+                        document.getElementById('sortFilter').value = state.sort;
+                        let sortName = 'Nº de Visualizações';
+                        if(state.sort === 'comments') sortName = 'Nº de Comentários';
+                        if(state.sort === 'subs') sortName = 'Nº de Inscritos';
+                        document.getElementById('sortActiveText').textContent = sortName;
+                    }
+                    
+                    if(state.filtersOpen && !isFiltersOpen) {
+                        document.getElementById('toggleFiltersBtn').click();
+                    }
+
+                    const recreateChips = (containerId, tokens) => {
+                        const container = document.getElementById(containerId);
+                        const input = document.getElementById(containerId.replace('Container', 'Input'));
+                        if(!container || !input || !tokens) return;
+                        
+                        clearChips(containerId);
+                        tokens.forEach(t => {
+                            if(t.type === 'word') {
+                                createChipAndOp(t.value, container, input);
+                            } else if (t.type === 'op') {
+                                const ops = container.querySelectorAll('.chip-op');
+                                if(ops.length > 0) {
+                                    const lastOp = ops[ops.length - 1];
+                                    if(lastOp.getAttribute('data-op') !== t.value) {
+                                        lastOp.click();
+                                    }
+                                }
+                            }
+                        });
+                    };
+
+                    recreateChips('mainInputContainer', state.main);
+                    recreateChips('descContainer', state.desc);
+                    recreateChips('negativeContainer', state.neg);
+                    recreateChips('channelContainer', state.channel);
+                    
+                } catch(e) {
+                    console.error("Erro ao carregar sessão anterior:", e);
+                }
+            }
+        }
+        document.addEventListener("DOMContentLoaded", loadState);
+
+        // === LÓGICA DO ACORDEÃO, DROPDOWNS E SCROLL ===
         const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
         const filtersWrapper = document.getElementById('filtersWrapper');
         const filtersArrow = document.getElementById('filtersArrow');
@@ -383,12 +547,15 @@
         const resultsContainer = document.getElementById('resultsContainer');
         const alertBox = document.getElementById('alertBox');
         const alertMessage = document.getElementById('alertMessage');
+        const sortFilter = document.getElementById('sortFilter');
         
         let isFiltersOpen = false;
+        let isComboOpen = false;
+        let isSortOpen = false;
 
         function updateScrollState() {
             const isResultsVisible = !resultsContainer.classList.contains('hidden');
-            if (isFiltersOpen || isResultsVisible) {
+            if (isFiltersOpen || isResultsVisible || isComboOpen || isSortOpen) {
                 mainBody.style.overflowY = 'auto';
                 mainBody.classList.remove('justify-center');
                 mainBody.classList.add('pt-32'); 
@@ -412,7 +579,53 @@
                 filtersArrow.classList.remove('rotate-180');
             }
             updateScrollState();
+            saveState();
         });
+
+        // Controlo dos Menus Customizados (Organizar e Combinações)
+        function toggleComboMenu(e) {
+            e.stopPropagation();
+            document.getElementById('sortDropdown').classList.add('hidden');
+            isSortOpen = false;
+
+            const menu = document.getElementById('comboDropdown');
+            menu.classList.toggle('hidden');
+            isComboOpen = !menu.classList.contains('hidden');
+            updateScrollState();
+        }
+
+        function toggleSortMenu(e) {
+            e.stopPropagation();
+            document.getElementById('comboDropdown').classList.add('hidden');
+            isComboOpen = false;
+
+            const menu = document.getElementById('sortDropdown');
+            menu.classList.toggle('hidden');
+            isSortOpen = !menu.classList.contains('hidden');
+            updateScrollState();
+        }
+
+        document.addEventListener('click', () => {
+            document.getElementById('comboDropdown').classList.add('hidden');
+            document.getElementById('sortDropdown').classList.add('hidden');
+            isComboOpen = false;
+            isSortOpen = false;
+            updateScrollState();
+        });
+
+        function selectSortOption(val, text, e) {
+            e.stopPropagation();
+            document.getElementById('sortActiveText').textContent = text;
+            document.getElementById('sortFilter').value = val;
+            document.getElementById('sortDropdown').classList.add('hidden');
+            isSortOpen = false;
+            updateScrollState();
+            saveState();
+
+            if (globalAccumulatedItems.length > 0) {
+                renderGrid(globalAccumulatedItems);
+            }
+        }
 
         // === SISTEMA DE ALERTA ===
         function showAlert(msg, isError = false) {
@@ -425,32 +638,55 @@
                 alertBox.className = "custom-alert mb-6 w-full p-4 rounded-xl bg-orange-500/20 border border-orange-500 text-orange-100 flex items-center gap-3";
                 alertBox.innerHTML = `<span class="material-symbols-rounded">warning</span> <span class="font-medium text-sm">${msg}</span>`;
             }
+            if (!isError) setTimeout(hideAlert, 4000);
         }
         function hideAlert() { alertBox.classList.add('hidden'); }
 
-        // === FUNÇÃO PARA COPIAR URL DO VÍDEO ===
-        window.copyVideoUrl = function(event, url) {
+        // === FUNÇÕES PARA COPIAR E ABRIR CANAL/VÍDEO ===
+        window.copyToClipboard = function(event, text, btnElement = null) {
             event.stopPropagation();
             const tempInput = document.createElement('input');
-            tempInput.value = url;
+            tempInput.value = text;
             document.body.appendChild(tempInput);
             tempInput.select();
             document.execCommand('copy');
             document.body.removeChild(tempInput);
             
-            const btn = event.currentTarget;
-            const icon = btn.querySelector('.material-symbols-rounded');
-            const originalText = icon.textContent;
+            if(btnElement) {
+                const icon = btnElement.querySelector('.material-symbols-rounded');
+                if(icon) {
+                    const originalText = icon.textContent;
+                    icon.textContent = 'check';
+                    btnElement.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500');
+                    btnElement.classList.remove('border-white/10', 'text-slate-300', 'text-slate-400');
+                    
+                    setTimeout(() => {
+                        icon.textContent = originalText;
+                        btnElement.classList.remove('bg-green-500/20', 'text-green-400', 'border-green-500');
+                        btnElement.classList.add('border-white/10');
+                        if(btnElement.classList.contains('w-fit')) btnElement.classList.add('text-slate-400');
+                        else btnElement.classList.add('text-slate-300');
+                    }, 2000);
+                }
+            }
+        };
+
+        window.openChannelAndCopy = function(event, handle, id, element) {
+            event.stopPropagation();
+            const textToCopy = handle ? '@' + handle : snippet.channelTitle;
             
-            icon.textContent = 'check';
-            btn.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500');
-            btn.classList.remove('border-white/10', 'text-slate-300');
+            const tempInput = document.createElement('input');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
             
-            setTimeout(() => {
-                icon.textContent = originalText;
-                btn.classList.remove('bg-green-500/20', 'text-green-400', 'border-green-500');
-                btn.classList.add('border-white/10', 'text-slate-300');
-            }, 2000);
+            const url = handle ? `https://www.youtube.com/@${handle}` : `https://www.youtube.com/channel/${id}`;
+            window.open(url, '_blank');
+            
+            element.classList.add('text-green-400');
+            setTimeout(() => { element.classList.remove('text-green-400'); }, 2000);
         };
 
         // === MÁQUINA DE ESCREVER ===
@@ -513,7 +749,6 @@
         setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
 
         // === LIMPADOR DE URLS DE CANAIS ===
-        // Transforma URLs complexas ou '@' em nomes limpos. Ex: youtube.com/c/Marrara -> Marrara
         function cleanChannelInput(val) {
             let v = val.trim();
             try {
@@ -523,27 +758,37 @@
                     v = pathParts[pathParts.length - 1]; 
                 }
             } catch(e) {} 
-            
-            if (v.startsWith('@')) {
-                v = v.substring(1);
-            }
+            if (v.startsWith('@')) v = v.substring(1);
             return v;
         }
 
-        // === NOVO CHIPS SYSTEM (Com lógica E/OU embutida entre as palavras) ===
+        // === NOVO CHIPS SYSTEM INTELIGENTE ===
         function setupChipSystem(inputId, containerId) {
             const input = document.getElementById(inputId); 
             const container = document.getElementById(containerId);
             if (!input || !container) return;
             
-            input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ',') {
-                    e.preventDefault(); 
-                    let value = input.value.trim().replace(/,$/, ''); 
-                    if (value) { 
-                        if (containerId === 'channelContainer') {
-                            value = cleanChannelInput(value);
+            // Tratamento ao colar ou digitar com vírgula no Mobile/Desktop
+            input.addEventListener('input', function(e) {
+                if (this.value.includes(',')) {
+                    let parts = this.value.split(',');
+                    for(let i=0; i < parts.length - 1; i++) {
+                        let val = parts[i].trim();
+                        if (val) {
+                            if (containerId === 'channelContainer') val = cleanChannelInput(val);
+                            createChipAndOp(val, container, input);
                         }
+                    }
+                    this.value = parts[parts.length - 1].trimStart();
+                }
+            });
+
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); 
+                    let value = input.value.trim(); 
+                    if (value) { 
+                        if (containerId === 'channelContainer') value = cleanChannelInput(value);
                         createChipAndOp(value, container, input); 
                         input.value = ''; 
                     }
@@ -552,19 +797,17 @@
                     if (chips.length > 0) {
                         const lastChip = chips[chips.length - 1];
                         const prevNode = lastChip.previousElementSibling;
-                        if (prevNode && prevNode.classList.contains('chip-op')) {
-                            prevNode.remove();
-                        }
+                        if (prevNode && prevNode.classList.contains('chip-op')) prevNode.remove();
                         lastChip.remove();
+                        saveState();
                     }
                 }
             });
+            
             input.addEventListener('blur', function() {
                 let value = input.value.trim().replace(/,$/, '');
                 if (value) { 
-                    if (containerId === 'channelContainer') {
-                        value = cleanChannelInput(value);
-                    }
+                    if (containerId === 'channelContainer') value = cleanChannelInput(value);
                     createChipAndOp(value, container, input); 
                     input.value = ''; 
                 }
@@ -572,11 +815,15 @@
         }
 
         function createChipAndOp(text, container, input) {
+            // Remove espaços fantasma na UI zerando o valor e forçando o scroll para trás
+            if(input) input.value = '';
+            container.scrollLeft = 0;
+
             if (container.querySelectorAll('.chip').length > 0) {
                 const isMain = container.id === 'mainInputContainer';
                 const op = document.createElement('span');
                 
-                const baseClasses = 'chip-op text-[10px] rounded px-2 py-0.5 cursor-pointer transition-colors select-none font-bold mx-0.5 flex items-center justify-center border';
+                const baseClasses = 'chip-op text-[10px] rounded px-2 py-0.5 cursor-pointer transition-colors select-none font-bold mx-0.5 flex items-center justify-center border flex-shrink-0';
                 const andClasses = isMain 
                     ? 'bg-slate-200 border-slate-300 text-slate-600 hover:bg-slate-300 hover:text-slate-800' 
                     : 'bg-white/10 border-white/20 text-slate-300 hover:bg-white/20 hover:text-white';
@@ -599,12 +846,13 @@
                         this.innerText = 'E';
                         this.className = `${baseClasses} ${andClasses}`;
                     }
+                    saveState();
                 };
                 container.insertBefore(op, input);
             }
 
             const chip = document.createElement('span');
-            chip.className = 'chip bg-highlight text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm whitespace-nowrap';
+            chip.className = 'chip bg-highlight text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm whitespace-nowrap flex-shrink-0';
             chip.setAttribute('data-value', text); 
             chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors">close</span>`;
             
@@ -613,17 +861,84 @@
                 const prevNode = chip.previousElementSibling;
                 const nextNode = chip.nextElementSibling;
                 
-                if (prevNode && prevNode.classList.contains('chip-op')) {
-                    prevNode.remove();
-                } else if (nextNode && nextNode.classList.contains('chip-op')) {
-                    nextNode.remove();
-                }
+                if (prevNode && prevNode.classList.contains('chip-op')) prevNode.remove();
+                else if (nextNode && nextNode.classList.contains('chip-op')) nextNode.remove();
+                
                 chip.remove();
-                document.getElementById('urlInput').focus();
+                saveState();
+                if(input) input.focus();
             });
 
             container.insertBefore(chip, input);
+            if(input) input.scrollIntoView({ behavior: "smooth", inline: "start" });
+            saveState();
         }
+
+        function clearChips(containerId) {
+            const container = document.getElementById(containerId);
+            const elements = container.querySelectorAll('.chip, .chip-op');
+            elements.forEach(el => el.remove());
+            const input = document.getElementById(containerId.replace('Container', 'Input'));
+            if(input) { input.value = ''; container.scrollLeft = 0; }
+        }
+
+        function addChipWithOp(containerId, text, opBefore = 'AND') {
+            const input = document.getElementById(containerId.replace('Container', 'Input'));
+            const container = document.getElementById(containerId);
+            createChipAndOp(text, container, input);
+            
+            const ops = container.querySelectorAll('.chip-op');
+            if (ops.length > 0) {
+                const lastOp = ops[ops.length - 1];
+                if (opBefore === 'OR' && lastOp.getAttribute('data-op') === 'AND') {
+                    lastOp.click();
+                } else if (opBefore === 'AND' && lastOp.getAttribute('data-op') === 'OR') {
+                    lastOp.click();
+                }
+            }
+        }
+
+        // === COMBINAÇÕES ===
+        window.applySmartCombo1 = function() {
+            clearChips('mainInputContainer');
+            clearChips('negativeContainer');
+
+            addChipWithOp('mainInputContainer', 'Aula 1'); 
+            addChipWithOp('mainInputContainer', 'Evento', 'OR');
+            addChipWithOp('mainInputContainer', 'Workshop', 'OR');
+            addChipWithOp('mainInputContainer', 'Gratuito', 'AND');
+            addChipWithOp('mainInputContainer', 'Online', 'AND');
+
+            addChipWithOp('negativeContainer', 'minicurso');
+            addChipWithOp('negativeContainer', 'mini-curso', 'OR');
+            
+            saveState();
+            showAlert("Combinação aplicada com sucesso!", false);
+        };
+
+        window.applySmartCombo2 = function() {
+            clearChips('mainInputContainer');
+            clearChips('negativeContainer');
+
+            addChipWithOp('mainInputContainer', 'aula'); 
+            addChipWithOp('mainInputContainer', 'evento', 'OR');
+            addChipWithOp('mainInputContainer', 'semana do', 'OR');
+            addChipWithOp('mainInputContainer', 'semana da', 'OR');
+            addChipWithOp('mainInputContainer', 'semana de', 'OR');
+            addChipWithOp('mainInputContainer', 'grátis', 'AND');
+            addChipWithOp('mainInputContainer', 'gratis', 'OR');
+            addChipWithOp('mainInputContainer', 'gratuito', 'OR');
+            addChipWithOp('mainInputContainer', 'gratuita', 'OR');
+            addChipWithOp('mainInputContainer', '100% online', 'AND');
+            addChipWithOp('mainInputContainer', 'online', 'OR');
+
+            addChipWithOp('negativeContainer', 'lista de espera');
+            addChipWithOp('negativeContainer', 'encerrado', 'OR');
+            addChipWithOp('negativeContainer', 'encerrada', 'OR');
+            
+            saveState();
+            showAlert("Combinação aplicada com sucesso!", false);
+        };
 
         function getLogicTokens(containerId) {
             const container = document.getElementById(containerId);
@@ -643,65 +958,102 @@
         setupChipSystem('descInput', 'descContainer');
         setupChipSystem('negativeInput', 'negativeContainer');
 
-        // === PARTICULAS ===
-        try {
-            particlesJS('particles-js', {
-                "particles": { "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#dc2626" }, "shape": { "type": "circle" }, "opacity": { "value": 0.4 }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 1 } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" } } }, "retina_detect": true
-            });
-        } catch (e) {}
+        // Função Imagem da Bandeira por País (Dicionário de Fallbacks Inteligente)
+        const langToCountryMap = {
+            'pt': 'br', 'en': 'us', 'es': 'es', 'fr': 'fr', 'de': 'de', 'it': 'it',
+            'ja': 'jp', 'ko': 'kr', 'ru': 'ru', 'zh': 'cn', 'ar': 'sa', 'hi': 'in'
+        };
+
+        function getCountryName(code) {
+            const select = document.getElementById('countryFilter');
+            const option = select.querySelector(`option[value="${code.toUpperCase()}"]`);
+            return option ? option.innerText : code.toUpperCase();
+        }
+        
+        function getFlagImg(countryCode) {
+            let finalCode = countryCode.toLowerCase();
+            if (langToCountryMap[finalCode]) {
+                finalCode = langToCountryMap[finalCode];
+            }
+            if (!finalCode) return '';
+            
+            const name = getCountryName(finalCode);
+            // Uso de onError para não mostrar broken image, substitui por um ícone de mundo se falhar
+            return `<img src="https://flagcdn.com/w40/${finalCode}.png" alt="${name}" onerror="this.outerHTML='<span class=\\'material-symbols-rounded text-white\\'>public</span>'" class="w-6 h-auto object-contain rounded-sm shadow-sm">`;
+        }
 
         // === AVALIADOR LÓGICO INTELIGENTE ===
         function evaluateLogicCustom(tokens, matchFn) {
             if (tokens.length === 0) return true;
-            
             let expr = tokens.map(t => t.type === 'word' ? matchFn(t.value) : t.value);
-            
             for (let i = 0; i < expr.length; i++) {
-                if (expr[i] === 'AND') {
-                    expr.splice(i - 1, 3, expr[i-1] && expr[i+1]);
-                    i--;
-                }
+                if (expr[i] === 'AND') { expr.splice(i - 1, 3, expr[i-1] && expr[i+1]); i--; }
             }
-            
             for (let i = 0; i < expr.length; i++) {
-                if (expr[i] === 'OR') {
-                    expr.splice(i - 1, 3, expr[i-1] || expr[i+1]);
-                    i--;
-                }
+                if (expr[i] === 'OR') { expr.splice(i - 1, 3, expr[i-1] || expr[i+1]); i--; }
             }
-            
             return expr[0];
-        }
-
-        // === MOTOR DE BUSCA RIGOROSA YOUTUBE API ===
-        const searchBtn = document.getElementById('searchBtn');
-        const resultsGrid = document.getElementById('resultsGrid');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-
-        function formatYTDate(dateStr, isEnd) {
-            if(!dateStr) return null;
-            const time = isEnd ? "23:59:59Z" : "00:00:00Z";
-            return `${dateStr}T${time}`;
         }
 
         function buildQueryString(tokens, prefix = '') {
              if(tokens.length === 0) return '';
              return tokens.map(t => {
                  if(t.type === 'word') return prefix ? `${prefix}:"${t.value}"` : `"${t.value}"`;
-                 return t.value === 'OR' ? '|' : ''; 
+                 return t.value === 'OR' ? '' : ''; // Removido Parênteses e | que bloqueavam a API do YouTube
              }).join(' ').replace(/\s+/g, ' ').trim();
         }
 
-        searchBtn.addEventListener('click', async () => {
-            hideAlert();
-            resultsContainer.classList.remove('hidden');
+        // Fetch com Timeout Limitado a 15 segundos para evitar Load Infinito
+        async function fetchWithTimeout(resource, options = {}) {
+            const { timeout = 15000 } = options;
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            const response = await fetch(resource, { ...options, signal: controller.signal });
+            clearTimeout(id);
+            return response;
+        }
+
+        // =====================================
+        // MOTOR PRINCIPAL DE BUSCA DA API
+        // =====================================
+        const searchBtn = document.getElementById('searchBtn');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const resultsGrid = document.getElementById('resultsGrid');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+        searchBtn.addEventListener('click', () => {
+            if(isFiltersOpen) {
+                document.getElementById('toggleFiltersBtn').click();
+            }
+
+            globalNextPageToken = '';
+            globalAccumulatedItems = [];
+            globalTotalResultsAPI = 0;
             resultsGrid.innerHTML = '';
             document.getElementById('resultsCount').textContent = '0';
-            loadingIndicator.classList.remove('hidden');
-            loadingIndicator.classList.add('flex');
-            updateScrollState();
+            performSearch(false);
+        });
 
-            // 1. Coleta os Tokens
+        loadMoreBtn.addEventListener('click', () => {
+            performSearch(true);
+        });
+
+        async function performSearch(isLoadMore) {
+            hideAlert();
+            resultsContainer.classList.remove('hidden');
+            
+            if (!isLoadMore) {
+                loadingIndicator.classList.remove('hidden');
+                loadingIndicator.classList.add('flex');
+            } else {
+                loadMoreBtn.innerHTML = `<span class="material-symbols-rounded animate-spin">autorenew</span> A carregar...`;
+                loadMoreBtn.classList.add('opacity-50', 'pointer-events-none');
+            }
+            
+            updateScrollState();
+            loadMoreContainer.classList.add('hidden');
+
             const mainTokens = getLogicTokens('mainInputContainer');
             const descTokens = getLogicTokens('descContainer');
             const negativeTokens = getLogicTokens('negativeContainer');
@@ -714,12 +1066,11 @@
             const dateStart = document.getElementById('dateStart').value;
             const dateEnd = document.getElementById('dateEnd').value;
 
-            // 2. Construção da Query HÍBRIDA (API + Google Dorks)
             let queryParts = [];
-            
-            if (mainTokens.length > 0) queryParts.push(`(${buildQueryString(mainTokens, 'intitle')})`);
-            if (descTokens.length > 0) queryParts.push(`(${buildQueryString(descTokens)})`);
-            if (channelTokens.length > 0) queryParts.push(`(${buildQueryString(channelTokens)})`);
+            // O YouTube detesta parênteses e múltiplas aspas confusas. Injetamos apenas as strings cruas
+            if (mainTokens.length > 0) queryParts.push(buildQueryString(mainTokens, 'intitle'));
+            if (descTokens.length > 0) queryParts.push(buildQueryString(descTokens));
+            if (channelTokens.length > 0) queryParts.push(buildQueryString(channelTokens));
             
             const hasAndInNegatives = negativeTokens.some(t => t.value === 'AND');
             if (negativeTokens.length > 0 && !hasAndInNegatives) {
@@ -729,183 +1080,316 @@
 
             const q = queryParts.join(' ');
 
-            let searchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
+            let baseSearchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
+            if (lang) baseSearchUrl += `&relevanceLanguage=${lang}`;
+            if (country) baseSearchUrl += `&regionCode=${country}`;
             
-            if (lang) searchUrl += `&relevanceLanguage=${lang}`;
-            if (country) searchUrl += `&regionCode=${country}`;
-            if (status !== 'all') searchUrl += `&eventType=${status}`;
-            if (dateStart) searchUrl += `&publishedAfter=${encodeURIComponent(formatYTDate(dateStart, false))}`;
-            if (dateEnd) searchUrl += `&publishedBefore=${encodeURIComponent(formatYTDate(dateEnd, true))}`;
+            // Status no YouTube API (Ao Vivo/Agendado/Completed)
+            if (status !== 'all') baseSearchUrl += `&eventType=${status}`;
+            
+            // Datas na API (apenas filtra vídeos lançados nesse período, pós-filtro refina Live Details)
+            if (dateStart) baseSearchUrl += `&publishedAfter=${encodeURIComponent(formatYTDate(dateStart, false))}`;
+            if (dateEnd) baseSearchUrl += `&publishedBefore=${encodeURIComponent(formatYTDate(dateEnd, true))}`;
 
             try {
-                const searchResponse = await fetch(searchUrl);
-                const searchData = await searchResponse.json();
+                // Sistema Auto-Suga: Avança até 3 páginas internamente se o filtro JS devolver 0 resultados
+                let loopCount = 0;
+                let finalItems = [];
+                let currentNextPageToken = isLoadMore ? globalNextPageToken : '';
 
-                if (searchData.error) throw new Error(searchData.error.message);
+                while (loopCount < 3 && finalItems.length === 0) {
+                    let searchUrl = baseSearchUrl;
+                    if (currentNextPageToken) searchUrl += `&pageToken=${currentNextPageToken}`;
 
-                let items = searchData.items || [];
+                    const searchResponse = await fetchWithTimeout(searchUrl, { timeout: 15000 });
+                    const searchData = await searchResponse.json();
 
-                // 4. PÓS-FILTRO JAVASCRIPT RIGOROSO
-                items = items.filter(item => {
-                    const title = (item.snippet.title || '').toLowerCase();
-                    const desc = (item.snippet.description || '').toLowerCase();
-                    const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
-                    const channelId = item.snippet.channelId;
+                    if (searchData.error) throw new Error(searchData.error.message);
 
-                    // Regra 1: Título
-                    const titlePass = evaluateLogicCustom(mainTokens, (kw) => title.includes(kw.toLowerCase()));
-                    if (!titlePass) return false;
-
-                    // Regra 2: Descrição
-                    const descPass = evaluateLogicCustom(descTokens, (kw) => desc.includes(kw.toLowerCase()));
-                    if (!descPass) return false;
-
-                    // Regra 3: Negativas
-                    if (negativeTokens.length > 0) {
-                        const hasNegative = evaluateLogicCustom(negativeTokens, (kw) => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()));
-                        if (hasNegative) return false;
+                    if (!isLoadMore && loopCount === 0) {
+                        globalTotalResultsAPI = searchData.pageInfo?.totalResults || 0;
                     }
 
-                    // Regra 4: Canal
-                    const channelPass = evaluateLogicCustom(channelTokens, (kw) => {
-                        const lowKw = kw.toLowerCase();
-                        const cTitleNoSpace = channelTitle.replace(/\s+/g, '');
-                        const kwNoSpace = lowKw.replace(/\s+/g, '');
-                        
-                        return channelId === kw || 
-                               channelTitle.includes(lowKw) || 
-                               cTitleNoSpace.includes(kwNoSpace) || 
-                               kwNoSpace.includes(cTitleNoSpace);
-                    });
-                    if (!channelPass) return false;
+                    currentNextPageToken = searchData.nextPageToken || '';
+                    let items = searchData.items || [];
 
-                    return true;
-                });
+                    if(items.length === 0) break;
 
-                // 5. FILTRO DE INSCRITOS
-                if (subsSize !== 'all' && items.length > 0) {
-                    const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
-                    const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics&id=${uniqueChannelIds.join(',')}`;
-                    const channelsResponse = await fetch(channelsUrl);
-                    const channelsData = await channelsResponse.json();
-                    
-                    const subsMap = {};
-                    if(channelsData.items) {
-                        channelsData.items.forEach(ch => { subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); });
-                    }
-
+                    // PÓS-FILTRO JAVASCRIPT RIGOROSO (As palavras DEVEM cumprir o E/OU exato)
                     items = items.filter(item => {
-                        const count = subsMap[item.snippet.channelId] || 0;
-                        if (subsSize === 'small') return count <= 10000;
-                        if (subsSize === 'medium') return count > 10000 && count <= 100000;
-                        if (subsSize === 'large') return count > 100000;
+                        const title = (item.snippet.title || '').toLowerCase();
+                        const desc = (item.snippet.description || '').toLowerCase();
+                        const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
+                        const channelId = item.snippet.channelId;
+
+                        if (!evaluateLogicCustom(mainTokens, (kw) => title.includes(kw.toLowerCase()))) return false;
+                        if (!evaluateLogicCustom(descTokens, (kw) => desc.includes(kw.toLowerCase()))) return false;
+                        if (negativeTokens.length > 0 && evaluateLogicCustom(negativeTokens, (kw) => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()))) return false;
+
+                        if (!evaluateLogicCustom(channelTokens, (kw) => {
+                            const lowKw = kw.toLowerCase();
+                            const cTitleNoSpace = channelTitle.replace(/\s+/g, '');
+                            const kwNoSpace = lowKw.replace(/\s+/g, '');
+                            return channelId === kw || channelTitle.includes(lowKw) || cTitleNoSpace.includes(kwNoSpace) || kwNoSpace.includes(cTitleNoSpace);
+                        })) return false;
+
                         return true;
                     });
-                }
 
-                // 6. BUSCA DE QUANTIDADE DE COMENTÁRIOS
-                if (items.length > 0) {
-                    const videoIds = items.map(item => item.id.videoId).join(',');
-                    const videosUrl = `${CF_WORKER_URL}/videos?part=statistics&id=${videoIds}`;
-                    const videosResponse = await fetch(videosUrl);
-                    const videosData = await videosResponse.json();
+                    // FILTRO DE INSCRITOS (Channels API)
+                    const subsMap = {};
+                    const channelHandleMap = {};
+                    if (items.length > 0) {
+                        const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
+                        const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics,snippet&id=${uniqueChannelIds.join(',')}`;
+                        const channelsResponse = await fetchWithTimeout(channelsUrl);
+                        const channelsData = await channelsResponse.json();
+                        
+                        if(channelsData.items) {
+                            channelsData.items.forEach(ch => { 
+                                subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); 
+                                channelHandleMap[ch.id] = ch.snippet?.customUrl || '';
+                            });
+                        }
 
-                    const commentsMap = {};
-                    if(videosData.items) {
-                        videosData.items.forEach(v => {
-                            commentsMap[v.id] = parseInt(v.statistics.commentCount || 0, 10);
+                        if(subsSize !== 'all') {
+                            items = items.filter(item => {
+                                const count = subsMap[item.snippet.channelId] || 0;
+                                if (subsSize === 'small') return count <= 10000;
+                                if (subsSize === 'medium') return count > 10000 && count <= 100000;
+                                if (subsSize === 'large') return count > 100000;
+                                return true;
+                            });
+                        }
+                    }
+
+                    // BUSCA DE ESTATÍSTICAS E PAÍS DO VÍDEO (Videos API)
+                    if (items.length > 0) {
+                        const videoIds = items.map(item => item.id.videoId).join(',');
+                        const videosUrl = `${CF_WORKER_URL}/videos?part=snippet,statistics,liveStreamingDetails&id=${videoIds}`;
+                        const videosResponse = await fetchWithTimeout(videosUrl);
+                        const videosData = await videosResponse.json();
+
+                        const statsMap = {};
+                        const liveDetailsMap = {};
+                        const videoCountryMap = {};
+                        
+                        if(videosData.items) {
+                            videosData.items.forEach(v => {
+                                statsMap[v.id] = v.statistics || {};
+                                liveDetailsMap[v.id] = v.liveStreamingDetails || null;
+                                
+                                let langCode = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
+                                let countryExtracted = langCode.includes('-') ? langCode.split('-')[1] : langCode;
+                                videoCountryMap[v.id] = countryExtracted.toUpperCase();
+                            });
+                        }
+
+                        items.forEach(item => {
+                            const stats = statsMap[item.id.videoId] || {};
+                            item.commentCount = parseInt(stats.commentCount || 0, 10);
+                            item.viewCount = parseInt(stats.viewCount || 0, 10); 
+                            item.subscriberCount = subsMap[item.snippet.channelId] || 0; 
+                            item.liveDetails = liveDetailsMap[item.id.videoId];
+                            item.videoCountryCode = videoCountryMap[item.id.videoId] || ''; 
+                            item.channelHandle = channelHandleMap[item.snippet.channelId] || '';
                         });
                     }
 
-                    items.forEach(item => {
-                        item.commentCount = commentsMap[item.id.videoId] || 0;
+                    // HARMONIA MATEMÁTICA ENTRE STATUS E DATAS
+                    items = items.filter(item => {
+                        const now = new Date();
+                        const liveContent = item.snippet.liveBroadcastContent; 
+                        const scheduledStart = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : null;
+                        const actualEnd = item.liveDetails?.actualEndTime ? new Date(item.liveDetails.actualEndTime) : null;
+                        const publishedAt = new Date(item.snippet.publishedAt);
+
+                        // O Target Data real considera primeiramente a data da Live real, depois a publicação
+                        const targetDateForFilter = scheduledStart || actualEnd || publishedAt;
+
+                        // Conversa entre Status e Filtro de Datas Visual
+                        if (dateStart || dateEnd) {
+                            const dStart = dateStart ? new Date(dateStart + "T00:00:00Z") : null;
+                            const dEnd = dateEnd ? new Date(dateEnd + "T23:59:59Z") : null;
+                            if (dStart && targetDateForFilter < dStart) return false;
+                            if (dEnd && targetDateForFilter > dEnd) return false;
+                        }
+
+                        // Conversa do Status vs Tempo Real
+                        if (status !== 'all') {
+                            if (status === 'live' && liveContent !== 'live') return false; 
+                            if (status === 'upcoming') {
+                                if (liveContent !== 'upcoming') return false;
+                                if (scheduledStart && scheduledStart <= now) return false; // Se a data agendada já passou, esconde!
+                            }
+                            if (status === 'completed') {
+                                if (liveContent === 'live' || liveContent === 'upcoming') return false;
+                                if (targetDateForFilter > now) return false; // Impede vídeo agendado bugado de aparecer aqui
+                            }
+                        }
+                        return true;
                     });
+
+                    finalItems = items;
+                    loopCount++;
+                    
+                    if (finalItems.length === 0 && !currentNextPageToken) break;
                 }
 
-                // 7. RENDERIZAÇÃO
+                globalNextPageToken = currentNextPageToken;
+                globalAccumulatedItems = globalAccumulatedItems.concat(finalItems);
+
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
+                
+                loadMoreBtn.innerHTML = `<span class="material-symbols-rounded">refresh</span> Carregar Mais Lançamentos`;
+                loadMoreBtn.classList.remove('opacity-50', 'pointer-events-none');
 
-                document.getElementById('resultsCount').textContent = items.length;
-
-                if (items.length === 0) {
-                    resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">Nenhum lançamento encontrado que atenda a todas as regras estipuladas.</div>`;
+                if (globalAccumulatedItems.length === 0 && !globalNextPageToken) {
+                    resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-medium bg-white/5 rounded-2xl">Nenhum lançamento encontrado que atenda a todas as regras estipuladas nesta busca.</div>`;
                     return;
                 }
 
-                items.forEach(item => {
-                    const videoId = item.id.videoId;
-                    const snippet = item.snippet;
-                    const commentCount = item.commentCount || 0;
-                    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-                    
-                    let statusBadge = '';
-                    if(snippet.liveBroadcastContent === 'live') {
-                        statusBadge = `<div class="absolute top-4 left-4 bg-highlight/20 text-highlight border border-highlight backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg animate-pulse">
-                                          <span class="material-symbols-rounded text-[14px] sm:text-[16px]">sensors</span> Ao Vivo
-                                       </div>`;
-                    } else if (snippet.liveBroadcastContent === 'upcoming') {
-                        statusBadge = `<div class="absolute top-4 left-4 bg-blue-500/20 text-blue-400 border border-blue-500 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg">
-                                          <span class="material-symbols-rounded text-[14px] sm:text-[16px]">schedule</span> Agendado
-                                       </div>`;
-                    }
+                renderGrid(globalAccumulatedItems);
 
-                    const parser = new DOMParser();
-                    const decodedTitle = parser.parseFromString(snippet.title, 'text/html').body.textContent;
-                    const pubDate = new Date(snippet.publishedAt).toLocaleDateString('pt-PT');
-                    const formattedComments = commentCount.toLocaleString('pt-PT');
-
-                    const card = document.createElement('article');
-                    card.className = "video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl cursor-pointer group";
-                    card.onclick = () => window.open(videoUrl, '_blank');
-                    
-                    // Ajuste de layout aplicado aqui
-                    card.innerHTML = `
-                        <div class="relative aspect-video overflow-hidden bg-slate-900">
-                            <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            ${statusBadge}
-                        </div>
-                        <div class="p-6 sm:p-7 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
-                            <h3 class="text-base sm:text-lg md:text-xl font-bold leading-snug mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
-                            <div class="flex items-center gap-2 text-slate-400 mb-6">
-                                <span class="material-symbols-rounded text-[18px]">account_circle</span>
-                                <span class="text-sm font-semibold truncate">${snippet.channelTitle}</span>
-                            </div>
-                            
-                            <div class="mt-auto flex flex-row items-end justify-between border-t border-white/10 pt-5 gap-3">
-                                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 flex-grow overflow-hidden">
-                                    <div class="flex flex-col flex-shrink-0">
-                                        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Publicação</span>
-                                        <span class="text-sm text-slate-300 font-medium">${pubDate}</span>
-                                    </div>
-                                    <div class="flex flex-col flex-shrink-0">
-                                        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Comentários</span>
-                                        <span class="text-sm text-slate-300 font-medium flex items-center gap-1.5">
-                                            <span class="material-symbols-rounded text-[14px]">chat_bubble</span>
-                                            ${formattedComments}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2 relative z-20 flex-shrink-0">
-                                    <button onclick="copyVideoUrl(event, '${videoUrl}')" title="Copiar URL" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
-                                        <span class="material-symbols-rounded text-[18px]">content_copy</span>
-                                    </button>
-                                    <button class="w-10 h-10 rounded-full bg-white/5 group-hover:bg-highlight group-hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
-                                        <span class="material-symbols-rounded text-[20px]">arrow_forward</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    resultsGrid.appendChild(card);
-                });
+                if (globalNextPageToken) {
+                    loadMoreContainer.classList.remove('hidden');
+                } else {
+                    loadMoreContainer.classList.add('hidden');
+                }
 
             } catch (error) {
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
-                showAlert(`Erro na busca: Verifique o console ou a URL do backend. (${error.message})`, true);
+                loadMoreBtn.innerHTML = `<span class="material-symbols-rounded">refresh</span> Tentar Novamente`;
+                loadMoreBtn.classList.remove('opacity-50', 'pointer-events-none');
+                
+                let errorMsg = error.message;
+                if (error.name === 'AbortError') errorMsg = "A ligação demorou muito a responder. A pesquisa foi interrompida (Timeout) para não bloquear o seu ecrã. Tente novamente.";
+                showAlert(`Erro na busca: ${errorMsg}`, true);
             }
-        });
+        }
+
+        // === RENDERIZADOR ===
+        function renderGrid(itemsArray) {
+            const sortFilterVal = document.getElementById('sortFilter').value;
+            let itemsToRender = [...itemsArray];
+
+            if (sortFilterVal === 'views') {
+                itemsToRender.sort((a, b) => b.viewCount - a.viewCount);
+            } else if (sortFilterVal === 'comments') {
+                itemsToRender.sort((a, b) => b.commentCount - a.commentCount);
+            } else if (sortFilterVal === 'subs') {
+                itemsToRender.sort((a, b) => b.subscriberCount - a.subscriberCount);
+            }
+
+            // Exibe a quantidade processada no ecrã e o Total que a API encontrou
+            const displayTotal = globalTotalResultsAPI > 0 ? ` de ${globalTotalResultsAPI.toLocaleString('pt-PT')}` : '';
+            document.getElementById('resultsCount').textContent = `${itemsToRender.length}${displayTotal}`;
+            
+            resultsGrid.innerHTML = '';
+
+            itemsToRender.forEach(item => {
+                const videoId = item.id.videoId;
+                const snippet = item.snippet;
+                const commentCount = item.commentCount || 0;
+                const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                
+                // Bandeira do Vídeo em Imagem Pílula
+                const flagImg = getFlagImg(item.videoCountryCode);
+                const countryName = getCountryName(item.videoCountryCode);
+                
+                let flagPill = '';
+                if(item.videoCountryCode && flagImg) {
+                    flagPill = `<div class="absolute top-4 right-4 bg-black/50 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full drop-shadow-lg flex items-center justify-center cursor-default" title="${countryName}">
+                                    ${flagImg}
+                                </div>`;
+                }
+
+                // Pílulas com Cores Fixas Vermelhas Absolutas
+                let statusBadge = '';
+                if(snippet.liveBroadcastContent === 'live') {
+                    statusBadge = `<div class="absolute top-4 left-4 bg-[#DC2626] text-white px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg border border-[#B91C1C]">
+                                      <span class="material-symbols-rounded text-[14px] sm:text-[16px]">sensors</span> Ao Vivo
+                                   </div>`;
+                } else if (snippet.liveBroadcastContent === 'upcoming') {
+                    statusBadge = `<div class="absolute top-4 left-4 bg-[#DC2626] text-white px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg border border-[#B91C1C]">
+                                      <span class="material-symbols-rounded text-[14px] sm:text-[16px]">schedule</span> Agendado
+                                   </div>`;
+                }
+
+                const parser = new DOMParser();
+                const decodedTitle = parser.parseFromString(snippet.title, 'text/html').body.textContent;
+                
+                const targetDate = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : new Date(snippet.publishedAt);
+                const pubDate = targetDate.toLocaleDateString('pt-PT');
+                const formattedComments = commentCount.toLocaleString('pt-PT');
+
+                // AFILIADO HOTMART
+                const hotmartRegex = /(https?:\/\/(?:go\.|pay\.|www\.)?hotmart\.com\/[^\s]+)/i;
+                const hotmartMatch = snippet.description.match(hotmartRegex);
+                let afiliarBtn = '';
+                
+                if (hotmartMatch && hotmartMatch[1]) {
+                    const hotmartUrl = hotmartMatch[1];
+                    const inexplorUrl = `https://inexplor.grupobhds.com/desbloqueio-produto-oculto/hotmart?po=${encodeURIComponent(hotmartUrl)}`;
+                    
+                    afiliarBtn = `
+                        <button onclick="window.open('${inexplorUrl}', '_blank'); event.stopPropagation();" title="Afiliar-se na Hotmart" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                            <span class="material-symbols-rounded text-[18px]">attach_money</span>
+                        </button>
+                    `;
+                }
+
+                const card = document.createElement('article');
+                card.className = "video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl cursor-pointer group";
+                card.onclick = () => window.open(videoUrl, '_blank');
+                
+                card.innerHTML = `
+                    <div class="relative aspect-video overflow-hidden bg-slate-900">
+                        <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        ${statusBadge}
+                        ${flagPill}
+                    </div>
+                    <div class="p-6 sm:p-7 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold leading-snug mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
+                        
+                        <div class="flex items-center gap-2 text-slate-400 mb-6 cursor-pointer w-fit group/channel relative" onclick="openChannelAndCopy(event, '${item.channelHandle}', '${snippet.channelId}', this)" title="Abrir guia do Canal e Copiar @">
+                            <span class="material-symbols-rounded text-[18px] flex-shrink-0 group-hover/channel:text-white transition-colors">account_circle</span>
+                            <div class="channel-hover-effect">
+                                <span class="text-sm font-semibold">${snippet.channelTitle}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-auto flex flex-row items-end justify-between border-t border-white/10 pt-5 gap-3">
+                            <div class="flex flex-wrap items-center gap-x-5 gap-y-2 flex-grow overflow-hidden">
+                                <div class="flex flex-col flex-shrink-0">
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Data</span>
+                                    <span class="text-sm text-slate-300 font-medium">${pubDate}</span>
+                                </div>
+                                <div class="flex flex-col flex-shrink-0">
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Comentários</span>
+                                    <span class="text-sm text-slate-300 font-medium flex items-center gap-1.5">
+                                        <span class="material-symbols-rounded text-[14px]">chat_bubble</span>
+                                        ${formattedComments}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 relative z-20 flex-shrink-0">
+                                ${afiliarBtn}
+                                <button onclick="copyToClipboard(event, '${videoUrl}', this)" title="Copiar URL do Vídeo" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                                    <span class="material-symbols-rounded text-[18px]">content_copy</span>
+                                </button>
+                                <button class="w-10 h-10 rounded-full bg-white/5 group-hover:bg-highlight group-hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                                    <span class="material-symbols-rounded text-[20px]">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                resultsGrid.appendChild(card);
+            });
+        }
     </script>
 </body>
 </html>
