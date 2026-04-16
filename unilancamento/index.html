@@ -45,16 +45,15 @@
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
+            overflow-y: hidden; 
         }
 
-        /* Permite seleção no input */
         input, select, textarea, a {
             user-select: auto;
             -webkit-user-select: auto;
             -moz-user-select: auto;
         }
 
-        /* Estilo Card Principal */
         .glass-card {
             background: #0F172A; 
             backdrop-filter: blur(20px); 
@@ -63,10 +62,18 @@
             position: relative;
             z-index: 10;
             box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-            border: 2px solid theme('colors.borderStrong'); 
+            border: 2px solid rgb(185, 28, 28); 
         }
 
-        /* Wrapper do Input Principal */
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            z-index: 2;
+        }
+
         .info-field-wrapper {
             background: #ffffff;
             border-radius: 1.5rem; 
@@ -86,7 +93,6 @@
             .info-field-wrapper { border-radius: 9999px; }
         }
 
-        /* Estilização scrollbars e ícone de calendário */
         ::-webkit-calendar-picker-indicator {
             filter: invert(1);
             cursor: pointer;
@@ -96,7 +102,6 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         }
 
-        /* Hover dos Cards de Vídeo */
         .video-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
@@ -106,7 +111,6 @@
             border-color: theme('colors.highlight');
         }
 
-        /* Estilo das Tags/Chips */
         .chip {
             animation: popIn 0.2s ease-out forwards;
         }
@@ -114,47 +118,49 @@
             0% { transform: scale(0.8); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
+
+        .custom-alert {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        @keyframes slideDown {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-4 sm:p-6 selection:bg-highlight selection:text-white relative">
+<body id="mainBody" class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 selection:bg-highlight selection:text-white relative transition-all duration-500">
 
     <div id="particles-js"></div>
 
-    <!-- Header Simples -->
-    <header class="w-full max-w-6xl flex items-center justify-between mb-8 z-10 px-4">
+    <header class="absolute top-8 w-full max-w-4xl flex items-center justify-between z-10 px-8">
         <div class="flex items-center gap-2">
             <span class="text-xl font-bold tracking-wide text-white">Unilançamento</span>
         </div>
     </header>
 
-    <div class="w-full max-w-6xl z-10 flex flex-col items-center">
-        <!-- Card Central Principal (Hero) -->
-        <div class="glass-card relative w-full text-center p-6 sm:p-8 md:p-12 mb-16">
-            
-            <!-- Títulos - Altura e espaçamentos reduzidos para ficar igual à referência original -->
+    <div id="heroSection" class="w-full max-w-4xl z-10 flex flex-col items-center transition-all duration-500">
+        <div class="glass-card relative w-full text-center p-6 sm:p-8 md:p-12 mx-auto">
             <div class="relative z-10">
-                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-4 drop-shadow-md leading-tight">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-4 drop-shadow-md leading-tight">
                     Descubra e Monitore Lançamentos
                 </h1>
-                <p class="text-base sm:text-lg md:text-xl text-slate-300 font-medium max-w-2xl mx-auto mb-2 drop-shadow-sm">
+                <p class="text-base sm:text-lg md:text-xl text-slate-300 font-medium max-w-3xl mx-auto mb-2 drop-shadow-sm text-balance">
                     Descubra novos lançamentos de forma inteligente e fuja da concorrência
                 </p>
 
-                <!-- Campo de Busca Principal (Agora suporta Múltiplas Tags/Chips) -->
-                <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 max-w-4xl mx-auto">
+                <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 w-full mx-auto">
                     <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-0">
-                        <!-- Container flexível para as Tags -->
-                        <div id="mainInputContainer" class="w-full flex-1 flex flex-wrap items-center bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-2 relative z-20 cursor-text min-h-[60px]" onclick="document.getElementById('urlInput').focus()">
+                        <div id="mainInputContainer" class="w-full flex-1 flex flex-wrap items-center bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px]" onclick="document.getElementById('urlInput').focus()">
                             <svg class="w-6 h-6 text-slate-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             <input 
                                 type="text" 
                                 id="urlInput" 
-                                class="flex-grow bg-transparent py-2 text-base md:text-lg outline-none text-slate-900 placeholder-slate-500 font-bold min-w-[200px]"
+                                class="flex-grow bg-transparent text-base md:text-lg outline-none text-slate-900 placeholder-slate-500 font-bold min-w-[200px]"
                             >
                         </div>
                         <button 
                             id="searchBtn" 
-                            class="w-full md:w-auto bg-highlight border-2 border-borderStrong hover:bg-[rgb(190,30,30)] text-white font-bold text-base md:text-lg px-8 py-4 rounded-xl md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative whitespace-nowrap"
+                            class="w-full md:w-auto bg-[rgb(220,38,38)] border border-[rgb(185,28,28)] hover:bg-[rgb(190,30,30)] text-white font-bold text-base md:text-lg px-8 py-4 rounded-xl md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative whitespace-nowrap"
                         >
                             <span class="material-symbols-rounded">manage_search</span>
                             <span>Buscar Lançamento</span>
@@ -162,142 +168,143 @@
                     </div>
                 </div>
 
-                <!-- Botão para Abrir/Fechar Filtros -->
                 <button id="toggleFiltersBtn" class="mt-6 mx-auto flex items-center justify-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold relative z-20 group">
                     <span class="material-symbols-rounded text-[20px] group-hover:text-highlight transition-colors">tune</span>
                     <span>Filtros Avançados</span>
                     <span id="filtersArrow" class="material-symbols-rounded text-[20px] transition-transform duration-300">expand_more</span>
                 </button>
 
-                <!-- === ÁREA DE FILTROS ULTRA COMPACTA (Efeito Sanfona) === -->
+                <!-- ÁREA DE FILTROS -->
                 <div id="filtersWrapper" class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out w-full max-w-md mx-auto">
                     <div class="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full text-left">
-                        
-                        <!-- Coluna 1: Idioma -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Idioma</label>
-                            <select class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="langFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
                                 <option value="" class="bg-surface">Todos os Idiomas</option>
                                 <option value="pt" class="bg-surface">Português</option>
                                 <option value="en" class="bg-surface">Inglês</option>
                                 <option value="es" class="bg-surface">Espanhol</option>
-                                <option value="fr" class="bg-surface">Francês</option>
-                                <option value="de" class="bg-surface">Alemão</option>
-                                <option value="it" class="bg-surface">Italiano</option>
-                                <option value="ja" class="bg-surface">Japonês</option>
-                                <option value="ko" class="bg-surface">Coreano</option>
-                                <option value="zh" class="bg-surface">Chinês</option>
-                                <option value="hi" class="bg-surface">Hindi</option>
-                                <option value="ru" class="bg-surface">Russo</option>
                             </select>
                         </div>
-
-                        <!-- Coluna 2: País -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">País</label>
-                            <select class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="countryFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
                                 <option value="" class="bg-surface">Todos os Países</option>
                                 <option value="BR" class="bg-surface">Brasil</option>
                                 <option value="US" class="bg-surface">Estados Unidos</option>
                                 <option value="PT" class="bg-surface">Portugal</option>
-                                <option value="GB" class="bg-surface">Reino Unido</option>
-                                <option value="CA" class="bg-surface">Canadá</option>
-                                <option value="AU" class="bg-surface">Austrália</option>
-                                <option value="DE" class="bg-surface">Alemanha</option>
-                                <option value="FR" class="bg-surface">França</option>
-                                <option value="IT" class="bg-surface">Itália</option>
-                                <option value="ES" class="bg-surface">Espanha</option>
-                                <option value="JP" class="bg-surface">Japão</option>
                             </select>
                         </div>
-
-                        <!-- Coluna 1: Status -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Status</label>
-                            <select class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="statusFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
                                 <option value="all" class="bg-surface">Todos os Status</option>
                                 <option value="live" class="bg-surface">Ao Vivo</option>
                                 <option value="upcoming" class="bg-surface">Agendado</option>
                                 <option value="completed" class="bg-surface">Finalizado</option>
                             </select>
                         </div>
-
-                        <!-- Coluna 2: Tamanho Canal -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Inscritos</label>
-                            <select class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="subsFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
                                 <option value="all" class="bg-surface">Todos os Tamanhos</option>
                                 <option value="small" class="bg-surface">Até 10 mil Inscritos</option>
                                 <option value="medium" class="bg-surface">De 10 mil a 100 mil Inscritos</option>
                                 <option value="large" class="bg-surface">Mais de 100 mil Inscritos</option>
                             </select>
                         </div>
-
-                        <!-- Campos que ocupam a largura total do bloco compacto -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Intervalo de Datas</label>
                             <div class="w-full min-h-[48px] flex items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 transition-colors focus-within:border-highlight overflow-hidden">
                                 <span class="text-slate-400 text-xs font-semibold whitespace-nowrap">De:</span>
-                                <input type="date" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                                <input type="date" id="dateStart" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
                                 <span class="text-slate-400 text-xs font-semibold whitespace-nowrap ml-1">Até:</span>
-                                <input type="date" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                                <input type="date" id="dateEnd" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
                             </div>
                         </div>
-
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Filtro de Canais</label>
                             <div id="channelContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('channelInput').focus()">
                                 <input type="text" id="channelInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
-
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Palavras-chave na Descrição</label>
                             <div id="descContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('descInput').focus()">
                                 <input type="text" id="descInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
-
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Palavras-chave Negativas</label>
                             <div id="negativeContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('negativeInput').focus()">
                                 <input type="text" id="negativeInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
-
                     </div>
                 </div>
 
             </div>
         </div>
 
-        <!-- Área de Resultados (Inicia Oculta) -->
-        <div class="w-full mb-12 hidden" id="resultsContainer">
+        <!-- Área de Resultados -->
+        <div class="w-full mt-16 mb-12 hidden max-w-6xl mx-auto" id="resultsContainer">
+            <div id="alertBox" class="hidden custom-alert mb-6 w-full p-4 rounded-xl bg-orange-500/20 border border-orange-500 text-orange-100 flex items-center gap-3">
+                <span class="material-symbols-rounded">warning</span>
+                <span id="alertMessage" class="font-medium text-sm"></span>
+            </div>
+
             <div class="flex items-center justify-between mb-6 px-2">
                 <h2 class="text-2xl font-bold text-white flex items-center gap-2 drop-shadow-md">
-                    Lançamentos Encontrados
+                    Lançamentos Encontrados <span id="resultsCount" class="text-sm bg-white/10 text-slate-300 py-1 px-3 rounded-full ml-2">0</span>
                 </h2>
             </div>
 
             <!-- Grid de Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="resultsGrid">
-                <!-- Os cards serão injetados aqui via JS -->
+                <!-- Os cards serão injetados aqui -->
             </div>
 
             <!-- Loading Indicator -->
-            <div id="loadingIndicator" class="hidden flex-col items-center justify-center py-20">
+            <div id="loadingIndicator" class="hidden flex-col items-center justify-center py-20 w-full col-span-full">
                 <div class="w-12 h-12 border-4 border-white/10 border-t-highlight rounded-full animate-spin mb-4"></div>
-                <p class="text-slate-400 font-bold">Buscando na API do YouTube...</p>
+                <p class="text-slate-400 font-bold">Processando filtros e buscando estatísticas...</p>
             </div>
         </div>
     </div>
 
     <script>
-        // === LÓGICA DO ACORDEÃO DOS FILTROS (Efeito Sanfona) ===
+        // ==========================================
+        // CONFIGURAÇÃO CLOUDFLARE WORKER (BACKEND)
+        // ==========================================
+        // Substitua esta URL pela URL do seu Worker no Cloudflare.
+        // O seu Worker servirá como um "Proxy" para a API do YouTube, 
+        // escondendo sua API KEY do frontend.
+        const CF_WORKER_URL = "https://seu-worker-lancamento.seu-dominio.workers.dev"; 
+
+        // === LÓGICA DO ACORDEÃO E SCROLL ===
         const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
         const filtersWrapper = document.getElementById('filtersWrapper');
         const filtersArrow = document.getElementById('filtersArrow');
+        const mainBody = document.getElementById('mainBody');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const alertBox = document.getElementById('alertBox');
+        const alertMessage = document.getElementById('alertMessage');
+        
         let isFiltersOpen = false;
+
+        function updateScrollState() {
+            const isResultsVisible = !resultsContainer.classList.contains('hidden');
+            if (isFiltersOpen || isResultsVisible) {
+                mainBody.style.overflowY = 'auto';
+                mainBody.classList.remove('justify-center');
+                mainBody.classList.add('pt-32'); 
+            } else {
+                mainBody.style.overflowY = 'hidden';
+                mainBody.classList.add('justify-center');
+                mainBody.classList.remove('pt-32');
+                window.scrollTo(0, 0);
+            }
+        }
 
         toggleFiltersBtn.addEventListener('click', () => {
             isFiltersOpen = !isFiltersOpen;
@@ -310,18 +317,55 @@
                 filtersWrapper.classList.remove('max-h-[2000px]', 'opacity-100');
                 filtersArrow.classList.remove('rotate-180');
             }
+            updateScrollState();
         });
 
-        // === FUNÇÃO DA MÁQUINA DE ESCREVER COM OCULTAÇÃO INTELIGENTE ===
+        // === SISTEMA DE ALERTA ===
+        function showAlert(msg, isError = false) {
+            alertBox.classList.remove('hidden');
+            alertMessage.textContent = msg;
+            if(isError) {
+                alertBox.className = "custom-alert mb-6 w-full p-4 rounded-xl bg-red-500/20 border border-red-500 text-red-100 flex items-center gap-3";
+                alertBox.innerHTML = `<span class="material-symbols-rounded">error</span> <span class="font-medium text-sm">${msg}</span>`;
+            } else {
+                alertBox.className = "custom-alert mb-6 w-full p-4 rounded-xl bg-orange-500/20 border border-orange-500 text-orange-100 flex items-center gap-3";
+                alertBox.innerHTML = `<span class="material-symbols-rounded">warning</span> <span class="font-medium text-sm">${msg}</span>`;
+            }
+        }
+        function hideAlert() { alertBox.classList.add('hidden'); }
+
+        // === FUNÇÃO PARA COPIAR URL DO VÍDEO (CROSS-BROWSER) ===
+        window.copyVideoUrl = function(event, url) {
+            event.stopPropagation(); // Bloqueia o clique de abrir o card do vídeo inteiro
+            
+            const tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            // Feedback visual: Muda o ícone para um "V" (check) rapidinho
+            const btn = event.currentTarget;
+            const icon = btn.querySelector('.material-symbols-rounded');
+            const originalText = icon.textContent;
+            
+            icon.textContent = 'check';
+            btn.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500');
+            btn.classList.remove('border-white/10', 'text-slate-300');
+            
+            setTimeout(() => {
+                icon.textContent = originalText;
+                btn.classList.remove('bg-green-500/20', 'text-green-400', 'border-green-500');
+                btn.classList.add('border-white/10', 'text-slate-300');
+            }, 2000);
+        };
+
+        // === MÁQUINA DE ESCREVER ===
         function setupTypewriter(inputId, prefix, texts, isChipContainer = false) {
-            let ptIndex = 0; 
-            let charIndex = 0; 
-            let isDeleting = false;
-            let animationTimeout;
+            let ptIndex = 0; let charIndex = 0; let isDeleting = false; let animationTimeout;
             const inputEl = document.getElementById(inputId);
-
             if (!inputEl) return;
-
             function shouldHidePlaceholder() {
                 if (inputEl.value.length > 0) return true;
                 if (isChipContainer) {
@@ -330,16 +374,13 @@
                 }
                 return false;
             }
-
             function type() {
                 if (shouldHidePlaceholder()) {
                     inputEl.setAttribute('placeholder', '');
                     clearTimeout(animationTimeout);
                     return;
                 }
-
                 const currentText = texts[ptIndex];
-                
                 if (isDeleting) {
                     inputEl.setAttribute('placeholder', prefix + currentText.substring(0, charIndex - 1));
                     charIndex--;
@@ -347,254 +388,310 @@
                     inputEl.setAttribute('placeholder', prefix + currentText.substring(0, charIndex + 1));
                     charIndex++;
                 }
-
                 let typeSpeed = isDeleting ? 30 : 60;
-
                 if (!isDeleting && charIndex === currentText.length) {
-                    typeSpeed = 2500;
-                    isDeleting = true;
+                    typeSpeed = 2500; isDeleting = true;
                 } else if (isDeleting && charIndex === 0) {
-                    isDeleting = false;
-                    ptIndex = (ptIndex + 1) % texts.length;
-                    typeSpeed = 500; 
+                    isDeleting = false; ptIndex = (ptIndex + 1) % texts.length; typeSpeed = 500; 
                 }
-
-                clearTimeout(animationTimeout);
-                animationTimeout = setTimeout(type, typeSpeed);
+                clearTimeout(animationTimeout); animationTimeout = setTimeout(type, typeSpeed);
             }
-
             inputEl.addEventListener('input', () => {
                 if (shouldHidePlaceholder()) {
-                    inputEl.setAttribute('placeholder', '');
-                    clearTimeout(animationTimeout);
+                    inputEl.setAttribute('placeholder', ''); clearTimeout(animationTimeout);
                 } else {
-                    charIndex = 0;
-                    isDeleting = false;
-                    clearTimeout(animationTimeout);
-                    type();
+                    charIndex = 0; isDeleting = false; clearTimeout(animationTimeout); type();
                 }
             });
-
             if (isChipContainer) {
                 const observer = new MutationObserver(() => {
                     if (shouldHidePlaceholder()) {
-                        inputEl.setAttribute('placeholder', '');
-                        clearTimeout(animationTimeout);
+                        inputEl.setAttribute('placeholder', ''); clearTimeout(animationTimeout);
                     } else if (inputEl.value.length === 0) {
-                        charIndex = 0;
-                        isDeleting = false;
-                        clearTimeout(animationTimeout);
-                        type();
+                        charIndex = 0; isDeleting = false; clearTimeout(animationTimeout); type();
                     }
                 });
                 observer.observe(inputEl.parentElement, { childList: true });
             }
-            
             type();
         }
 
-        // Inicializar Máquinas de Escrever (O campo principal agora é ChipContainer = true)
-        setupTypewriter('urlInput', '', [
-            "Digite sua palavra-chave...",
-            "Ex: evento",
-            "Ex: aula",
-            "Ex: imersão",
-            "Ex: masterclass",
-            "Ex: maratona",
-            "Ex: workshop",
-            "Ex: jornada",
-            "Ex: intensivo",
-            "Ex: intensivão"
-        ], true);
+        setupTypewriter('urlInput', '', ["Digite sua palavra-chave...", "Ex: masterclass", "Ex: workshop"], true);
+        setupTypewriter('channelInput', '', ["Ex: inexploroficial (nome)", "Ex: UC123456... (id)"], true);
+        setupTypewriter('descInput', '', ["Ex: Hotmart"], true);
+        setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
 
-        setupTypewriter('channelInput', '', [
-            "Ex: @caiocalderaro",
-            "Ex: @inexploroficial",
-            "Ex: UCyFbTJjYi6tpWgdcS7",
-            "Ex: https://youtube.com/@inexploroficial"
-        ], true);
-
-        setupTypewriter('descInput', '', [
-            "Ex: https://go.hotmart.com",
-            "Ex: WhatsApp",
-            "Ex: Aula 2",
-            "Ex: Entre no Grupo"
-        ], true);
-
-        setupTypewriter('negativeInput', '', [
-            "Ex: minicurso",
-            "Ex: webinar",
-            "Ex: playlist",
-            "Ex: vagas encerradas"
-        ], true);
-
-        // === SISTEMA DE CHIPS (Tags) PARA OS FILTROS ===
+        // === CHIPS SYSTEM ===
         function setupChipSystem(inputId, containerId) {
-            const input = document.getElementById(inputId);
-            const container = document.getElementById(containerId);
-
+            const input = document.getElementById(inputId); const container = document.getElementById(containerId);
             if (!input || !container) return;
-
             input.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ',') {
-                    e.preventDefault();
-                    let value = input.value.trim().replace(/,$/, ''); 
-                    if (value) {
-                        createChip(value, container, input);
-                        input.value = ''; 
-                    }
+                    e.preventDefault(); let value = input.value.trim().replace(/,$/, ''); 
+                    if (value) { createChip(value, container, input); input.value = ''; }
                 } else if (e.key === 'Backspace' && input.value === '') {
                     const chips = container.querySelectorAll('.chip');
-                    if (chips.length > 0) {
-                        chips[chips.length - 1].remove();
-                    }
+                    if (chips.length > 0) chips[chips.length - 1].remove();
                 }
             });
-
             input.addEventListener('blur', function() {
                 let value = input.value.trim().replace(/,$/, '');
-                if (value) {
-                    createChip(value, container, input);
-                    input.value = '';
-                }
+                if (value) { createChip(value, container, input); input.value = ''; }
             });
         }
-
         function createChip(text, container, input) {
             const chip = document.createElement('span');
             chip.className = 'chip bg-highlight text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm whitespace-nowrap';
-            chip.innerHTML = `
-                ${text} 
-                <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors" onclick="this.parentElement.remove()">close</span>
-            `;
+            chip.setAttribute('data-value', text); 
+            chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors" onclick="this.parentElement.remove()">close</span>`;
             container.insertBefore(chip, input);
         }
+        function getChipsData(containerId) {
+            return Array.from(document.getElementById(containerId).querySelectorAll('.chip')).map(chip => chip.getAttribute('data-value').trim());
+        }
 
-        // Ativar o sistema de chips em todos os 4 campos (incluindo o principal)
         setupChipSystem('urlInput', 'mainInputContainer');
         setupChipSystem('channelInput', 'channelContainer');
         setupChipSystem('descInput', 'descContainer');
         setupChipSystem('negativeInput', 'negativeContainer');
 
-
-        // === CONFIGURAÇÃO PARTICLES.JS ===
+        // === PARTICULAS ===
         try {
-            if(typeof particlesJS !== 'undefined') {
-                particlesJS('particles-js', {
-                  "particles": {
-                    "number": { "value": 40, "density": { "enable": true, "value_area": 800 } },
-                    "color": { "value": "#dc2626" },
-                    "shape": { "type": "circle" },
-                    "opacity": { "value": 0.4, "random": false },
-                    "size": { "value": 3, "random": true },
-                    "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 },
-                    "move": { "enable": true, "speed": 1, "direction": "none", "random": true, "out_mode": "out" }
-                  },
-                  "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false } }, "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.5 } } } },
-                  "retina_detect": true
-                });
-            }
-        } catch (e) { console.error("Partículas não inicializadas."); }
+            particlesJS('particles-js', {
+                "particles": { "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#dc2626" }, "shape": { "type": "circle" }, "opacity": { "value": 0.4 }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 1 } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" } } }, "retina_detect": true
+            });
+        } catch (e) {}
 
-        // === DADOS MOCK E RENDERIZAÇÃO DE CARDS ===
-        const mockVideos = [
-            {
-                title: "AULA 01: O Segredo do Marketing Digital em 2026",
-                channel: "Especialista em Vendas",
-                thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                status: "Ao Vivo",
-                viewers: "1.2k assistindo",
-                date: "Agora"
-            },
-            {
-                title: "Lançamento Oficial: Mentoria Código de Riqueza",
-                channel: "Thiago Finanças",
-                thumbnail: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                status: "Agendado",
-                viewers: "Agendado para 20:00",
-                date: "Hoje"
-            },
-            {
-                title: "Como criar automações com Google Apps Script",
-                channel: "Dev Na Prática",
-                thumbnail: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-                status: "Finalizado",
-                viewers: "45 mil views",
-                date: "Há 2 dias"
-            }
-        ];
-
-        const resultsContainer = document.getElementById('resultsContainer');
-        const resultsGrid = document.getElementById('resultsGrid');
+        // === MOTOR DE BUSCA RIGOROSA YOUTUBE API ===
         const searchBtn = document.getElementById('searchBtn');
+        const resultsGrid = document.getElementById('resultsGrid');
         const loadingIndicator = document.getElementById('loadingIndicator');
 
-        function createCard(video) {
-            let statusStyle = "bg-slate-800 text-white border-slate-600";
-            let statusIcon = "play_circle";
-            let pulseClass = "";
-            
-            if (video.status === "Ao Vivo") {
-                statusStyle = "bg-highlight/20 text-highlight border-highlight backdrop-blur-md";
-                statusIcon = "sensors";
-                pulseClass = "animate-pulse";
-            } else if (video.status === "Agendado") {
-                statusStyle = "bg-amber-500/20 text-amber-400 border-amber-500/50 backdrop-blur-md";
-                statusIcon = "schedule";
-            } else if (video.status === "Finalizado") {
-                statusStyle = "bg-green-500/20 text-green-400 border-green-500/50 backdrop-blur-md";
-                statusIcon = "task_alt";
-            }
-
-            return `
-                <article class="video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl">
-                    <div class="relative aspect-video overflow-hidden">
-                        <img src="${video.thumbnail}" alt="Thumbnail" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110">
-                        
-                        <!-- Badge de Status -->
-                        <div class="absolute top-4 left-4 ${statusStyle} border px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-lg ${pulseClass}">
-                            <span class="material-symbols-rounded text-[16px]">${statusIcon}</span>
-                            ${video.status}
-                        </div>
-                    </div>
-
-                    <div class="p-6 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
-                        <h3 class="text-lg font-bold leading-tight mb-3 text-white line-clamp-2">${video.title}</h3>
-                        
-                        <div class="flex items-center gap-2 text-slate-400 mb-4">
-                            <span class="material-symbols-rounded text-[18px]">account_circle</span>
-                            <span class="text-sm font-semibold">${video.channel}</span>
-                        </div>
-                        
-                        <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
-                            <div class="flex flex-col">
-                                <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">${video.date}</span>
-                                <span class="text-sm text-slate-300 font-medium">${video.viewers}</span>
-                            </div>
-                            
-                            <button class="w-10 h-10 rounded-full bg-white/5 hover:bg-highlight hover:text-white transition-colors flex items-center justify-center border border-white/10 hover:border-transparent">
-                                <span class="material-symbols-rounded text-[20px]">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </article>
-            `;
+        function formatYTDate(dateStr, isEnd) {
+            if(!dateStr) return null;
+            const time = isEnd ? "23:59:59Z" : "00:00:00Z";
+            return `${dateStr}T${time}`;
         }
 
-        searchBtn.addEventListener('click', () => {
+        searchBtn.addEventListener('click', async () => {
+            if(CF_WORKER_URL.includes("seu-worker")) {
+                resultsContainer.classList.remove('hidden');
+                updateScrollState();
+                showAlert("Atenção: Você precisa configurar a URL do seu Cloudflare Worker no código fonte para realizar as buscas.", true);
+                return;
+            }
+
+            hideAlert();
             resultsContainer.classList.remove('hidden');
             resultsGrid.innerHTML = '';
+            document.getElementById('resultsCount').textContent = '0';
             loadingIndicator.classList.remove('hidden');
             loadingIndicator.classList.add('flex');
+            updateScrollState();
+
+            // 1. Coleta de Dados
+            const mainKws = getChipsData('mainInputContainer');
+            const descKws = getChipsData('descContainer');
+            const negativeKws = getChipsData('negativeContainer');
+            const channelKws = getChipsData('channelContainer');
             
-            setTimeout(() => {
+            const lang = document.getElementById('langFilter').value;
+            const country = document.getElementById('countryFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const subsSize = document.getElementById('subsFilter').value;
+            const dateStart = document.getElementById('dateStart').value;
+            const dateEnd = document.getElementById('dateEnd').value;
+
+            // 2. Construção da Query
+            let queryParts = [];
+            if (mainKws.length > 0) queryParts.push(`(${mainKws.map(kw => `intitle:"${kw}"`).join(' OR ')})`);
+            if (descKws.length > 0) queryParts.push(descKws.map(kw => `"${kw}"`).join(' '));
+            if (negativeKws.length > 0) queryParts.push(negativeKws.map(kw => `-"${kw}"`).join(' '));
+            const q = queryParts.join(' ');
+
+            // 3. Montagem da URL direcionando para o CLOUDFLARE WORKER
+            let searchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
+            
+            if (lang) searchUrl += `&relevanceLanguage=${lang}`;
+            if (country) searchUrl += `&regionCode=${country}`;
+            if (status !== 'all') searchUrl += `&eventType=${status}`;
+            if (dateStart) searchUrl += `&publishedAfter=${encodeURIComponent(formatYTDate(dateStart, false))}`;
+            if (dateEnd) searchUrl += `&publishedBefore=${encodeURIComponent(formatYTDate(dateEnd, true))}`;
+
+            try {
+                // Primeira chamada: Busca os vídeos (Search API via Worker)
+                const searchResponse = await fetch(searchUrl);
+                const searchData = await searchResponse.json();
+
+                if (searchData.error) throw new Error(searchData.error.message);
+
+                let items = searchData.items || [];
+
+                // 4. PÓS-FILTRO JAVASCRIPT RIGOROSO
+                items = items.filter(item => {
+                    const title = (item.snippet.title || '').toLowerCase();
+                    const desc = (item.snippet.description || '').toLowerCase();
+                    const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
+                    const channelId = item.snippet.channelId;
+
+                    const titlePass = mainKws.length === 0 || mainKws.some(kw => title.includes(kw.toLowerCase()));
+                    if (!titlePass) return false;
+
+                    const descPass = descKws.length === 0 || descKws.every(kw => desc.includes(kw.toLowerCase()));
+                    if (!descPass) return false;
+
+                    const negativePass = negativeKws.length === 0 || !negativeKws.some(kw => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()));
+                    if (!negativePass) return false;
+
+                    if (channelKws.length > 0) {
+                        const channelPass = channelKws.some(kw => {
+                            const lowKw = kw.toLowerCase();
+                            return channelId === kw || channelTitle.includes(lowKw) || lowKw.includes(channelId.toLowerCase());
+                        });
+                        if(!channelPass) return false;
+                    }
+
+                    return true;
+                });
+
+                // 5. FILTRO DE INSCRITOS (Channels API via Worker)
+                if (subsSize !== 'all' && items.length > 0) {
+                    const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
+                    const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics&id=${uniqueChannelIds.join(',')}`;
+                    const channelsResponse = await fetch(channelsUrl);
+                    const channelsData = await channelsResponse.json();
+                    
+                    const subsMap = {};
+                    if(channelsData.items) {
+                        channelsData.items.forEach(ch => { subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); });
+                    }
+
+                    items = items.filter(item => {
+                        const count = subsMap[item.snippet.channelId] || 0;
+                        if (subsSize === 'small') return count <= 10000;
+                        if (subsSize === 'medium') return count > 10000 && count <= 100000;
+                        if (subsSize === 'large') return count > 100000;
+                        return true;
+                    });
+                }
+
+                // 6. BUSCA DE QUANTIDADE DE COMENTÁRIOS (Videos API via Worker)
+                if (items.length > 0) {
+                    // Extrair todos os IDs dos vídeos que passaram no filtro
+                    const videoIds = items.map(item => item.id.videoId).join(',');
+                    // Chama a API de Videos para pegar estatísticas
+                    const videosUrl = `${CF_WORKER_URL}/videos?part=statistics&id=${videoIds}`;
+                    const videosResponse = await fetch(videosUrl);
+                    const videosData = await videosResponse.json();
+
+                    // Mapeia ID do Vídeo para a quantidade de comentários
+                    const commentsMap = {};
+                    if(videosData.items) {
+                        videosData.items.forEach(v => {
+                            commentsMap[v.id] = parseInt(v.statistics.commentCount || 0, 10);
+                        });
+                    }
+
+                    // Injeta a contagem de comentários no objeto do vídeo para renderizar depois
+                    items.forEach(item => {
+                        item.commentCount = commentsMap[item.id.videoId] || 0;
+                    });
+                }
+
+                // 7. RENDERIZAÇÃO DOS CARDS
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
-                const shuffled = [...mockVideos].sort(() => 0.5 - Math.random());
-                resultsGrid.innerHTML = shuffled.map(createCard).join('');
-            }, 1500);
-        });
 
+                document.getElementById('resultsCount').textContent = items.length;
+
+                if (items.length === 0) {
+                    resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">Nenhum lançamento encontrado que atenda a todas as regras rigorosas.</div>`;
+                    return;
+                }
+
+                items.forEach(item => {
+                    const videoId = item.id.videoId;
+                    const snippet = item.snippet;
+                    const commentCount = item.commentCount || 0;
+                    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                    
+                    // Status Badge (Ao Vivo, Agendado)
+                    let statusBadge = '';
+                    if(snippet.liveBroadcastContent === 'live') {
+                        statusBadge = `<div class="absolute top-4 left-4 bg-highlight/20 text-highlight border border-highlight backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg animate-pulse">
+                                          <span class="material-symbols-rounded text-[14px] sm:text-[16px]">sensors</span> Ao Vivo
+                                       </div>`;
+                    } else if (snippet.liveBroadcastContent === 'upcoming') {
+                        statusBadge = `<div class="absolute top-4 left-4 bg-blue-500/20 text-blue-400 border border-blue-500 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg">
+                                          <span class="material-symbols-rounded text-[14px] sm:text-[16px]">schedule</span> Agendado
+                                       </div>`;
+                    }
+
+                    const parser = new DOMParser();
+                    const decodedTitle = parser.parseFromString(snippet.title, 'text/html').body.textContent;
+                    const pubDate = new Date(snippet.publishedAt).toLocaleDateString('pt-BR');
+                    
+                    // Formatação visual do número de comentários (Ex: 1.500)
+                    const formattedComments = commentCount.toLocaleString('pt-BR');
+
+                    const card = document.createElement('article');
+                    card.className = "video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl cursor-pointer group";
+                    
+                    // Ação de clique de abrir nova aba na guia inteira
+                    card.onclick = () => window.open(videoUrl, '_blank');
+                    
+                    card.innerHTML = `
+                        <div class="relative aspect-video overflow-hidden bg-slate-900">
+                            <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            ${statusBadge}
+                        </div>
+                        <div class="p-5 sm:p-6 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
+                            <h3 class="text-base sm:text-lg font-bold leading-tight mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
+                            <div class="flex items-center gap-2 text-slate-400 mb-4">
+                                <span class="material-symbols-rounded text-[16px] sm:text-[18px]">account_circle</span>
+                                <span class="text-xs sm:text-sm font-semibold truncate">${snippet.channelTitle}</span>
+                            </div>
+                            
+                            <!-- Rodapé do Card -->
+                            <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                                <div class="flex items-center gap-4 sm:gap-6">
+                                    <!-- Bloco: Data de Publicação -->
+                                    <div class="flex flex-col">
+                                        <span class="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-wider">Publicação</span>
+                                        <span class="text-xs sm:text-sm text-slate-300 font-medium">${pubDate}</span>
+                                    </div>
+                                    
+                                    <!-- Bloco: Quantidade de Comentários -->
+                                    <div class="flex flex-col">
+                                        <span class="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-wider">Comentários</span>
+                                        <span class="text-xs sm:text-sm text-slate-300 font-medium flex items-center gap-1.5">
+                                            <span class="material-symbols-rounded text-[14px]">chat_bubble</span>
+                                            ${formattedComments}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Botões de Ação (Acessar e Copiar Link) -->
+                                <div class="flex items-center gap-2 relative z-20">
+                                    <button onclick="copyVideoUrl(event, '${videoUrl}')" title="Copiar URL" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 flex-shrink-0">
+                                        <span class="material-symbols-rounded text-[16px] sm:text-[18px]">content_copy</span>
+                                    </button>
+                                    <button class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/5 group-hover:bg-highlight group-hover:text-white transition-colors flex items-center justify-center border border-white/10 flex-shrink-0">
+                                        <span class="material-symbols-rounded text-[18px] sm:text-[20px]">arrow_forward</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    resultsGrid.appendChild(card);
+                });
+
+            } catch (error) {
+                loadingIndicator.classList.add('hidden');
+                loadingIndicator.classList.remove('flex');
+                showAlert(`Erro na busca: Verifique o console ou a URL do backend. (${error.message})`, true);
+            }
+        });
     </script>
 </body>
 </html>
