@@ -148,7 +148,14 @@
                     Descubra novos lançamentos de forma inteligente e fuja da concorrência
                 </p>
 
-                <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 w-full mx-auto">
+                <!-- Wrapper para os botões de controle de Modo E/OU Principal -->
+                <div class="w-full max-w-lg mx-auto mt-6 flex justify-end px-2 hidden" id="mainModeWrapper">
+                    <button id="mainModeBtn" class="text-[11px] px-3 py-1 rounded-full border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all font-bold tracking-wider cursor-pointer z-30 relative" data-mode="AND" onclick="toggleLogicMode(this)">
+                        Modo: E (Obrigatório Ambos)
+                    </button>
+                </div>
+
+                <div class="info-field-wrapper mt-2 p-2 md:p-2.5 w-full mx-auto">
                     <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-0">
                         <div id="mainInputContainer" class="w-full flex-1 flex flex-wrap items-center bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px]" onclick="document.getElementById('urlInput').focus()">
                             <svg class="w-6 h-6 text-slate-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -177,24 +184,102 @@
                 <!-- ÁREA DE FILTROS -->
                 <div id="filtersWrapper" class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out w-full max-w-md mx-auto">
                     <div class="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full text-left">
+                        
+                        <!-- Coluna 1: Idioma -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Idioma</label>
-                            <select id="langFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
-                                <option value="" class="bg-surface">Todos os Idiomas</option>
+                            <select id="langFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
+                                <option value="" class="bg-surface">Qualquer Idioma</option>
                                 <option value="pt" class="bg-surface">Português</option>
                                 <option value="en" class="bg-surface">Inglês</option>
                                 <option value="es" class="bg-surface">Espanhol</option>
+                                <option value="fr" class="bg-surface">Francês</option>
+                                <option value="de" class="bg-surface">Alemão</option>
+                                <option value="it" class="bg-surface">Italiano</option>
+                                <option value="ja" class="bg-surface">Japonês</option>
+                                <option value="ko" class="bg-surface">Coreano</option>
+                                <option value="zh-Hans" class="bg-surface">Chinês (Simplificado)</option>
+                                <option value="zh-Hant" class="bg-surface">Chinês (Tradicional)</option>
+                                <option value="ru" class="bg-surface">Russo</option>
+                                <option value="ar" class="bg-surface">Árabe</option>
+                                <option value="hi" class="bg-surface">Hindi</option>
+                                <option value="bn" class="bg-surface">Bengali</option>
+                                <option value="tr" class="bg-surface">Turco</option>
+                                <option value="vi" class="bg-surface">Vietnamita</option>
+                                <option value="th" class="bg-surface">Tailandês</option>
+                                <option value="nl" class="bg-surface">Holandês</option>
+                                <option value="pl" class="bg-surface">Polonês</option>
+                                <option value="id" class="bg-surface">Indonésio</option>
+                                <option value="sv" class="bg-surface">Sueco</option>
+                                <option value="no" class="bg-surface">Norueguês</option>
+                                <option value="da" class="bg-surface">Dinamarquês</option>
+                                <option value="fi" class="bg-surface">Finlandês</option>
+                                <option value="el" class="bg-surface">Grego</option>
+                                <option value="he" class="bg-surface">Hebraico</option>
+                                <option value="ur" class="bg-surface">Urdu</option>
+                                <option value="fa" class="bg-surface">Persa</option>
                             </select>
                         </div>
+                        
+                        <!-- Coluna 2: País -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">País</label>
-                            <select id="countryFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
-                                <option value="" class="bg-surface">Todos os Países</option>
+                            <select id="countryFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
+                                <option value="" class="bg-surface">Qualquer País</option>
                                 <option value="BR" class="bg-surface">Brasil</option>
                                 <option value="US" class="bg-surface">Estados Unidos</option>
                                 <option value="PT" class="bg-surface">Portugal</option>
+                                <!-- Lista global adicionada -->
+                                <option value="AF" class="bg-surface">Afeganistão</option>
+                                <option value="ZA" class="bg-surface">África do Sul</option>
+                                <option value="DE" class="bg-surface">Alemanha</option>
+                                <option value="AO" class="bg-surface">Angola</option>
+                                <option value="AR" class="bg-surface">Argentina</option>
+                                <option value="AU" class="bg-surface">Austrália</option>
+                                <option value="BE" class="bg-surface">Bélgica</option>
+                                <option value="BO" class="bg-surface">Bolívia</option>
+                                <option value="CA" class="bg-surface">Canadá</option>
+                                <option value="CL" class="bg-surface">Chile</option>
+                                <option value="CN" class="bg-surface">China</option>
+                                <option value="CO" class="bg-surface">Colômbia</option>
+                                <option value="KR" class="bg-surface">Coreia do Sul</option>
+                                <option value="CU" class="bg-surface">Cuba</option>
+                                <option value="EG" class="bg-surface">Egito</option>
+                                <option value="SV" class="bg-surface">El Salvador</option>
+                                <option value="AE" class="bg-surface">Emirados Árabes</option>
+                                <option value="EC" class="bg-surface">Equador</option>
+                                <option value="ES" class="bg-surface">Espanha</option>
+                                <option value="FR" class="bg-surface">França</option>
+                                <option value="GR" class="bg-surface">Grecia</option>
+                                <option value="GT" class="bg-surface">Guatemala</option>
+                                <option value="HT" class="bg-surface">Haiti</option>
+                                <option value="HN" class="bg-surface">Honduras</option>
+                                <option value="IN" class="bg-surface">Índia</option>
+                                <option value="ID" class="bg-surface">Indonésia</option>
+                                <option value="IE" class="bg-surface">Irlanda</option>
+                                <option value="IL" class="bg-surface">Israel</option>
+                                <option value="IT" class="bg-surface">Itália</option>
+                                <option value="JM" class="bg-surface">Jamaica</option>
+                                <option value="JP" class="bg-surface">Japão</option>
+                                <option value="MX" class="bg-surface">México</option>
+                                <option value="MZ" class="bg-surface">Moçambique</option>
+                                <option value="NI" class="bg-surface">Nicarágua</option>
+                                <option value="NG" class="bg-surface">Nigéria</option>
+                                <option value="NZ" class="bg-surface">Nova Zelândia</option>
+                                <option value="PA" class="bg-surface">Panamá</option>
+                                <option value="PY" class="bg-surface">Paraguai</option>
+                                <option value="PE" class="bg-surface">Peru</option>
+                                <option value="PR" class="bg-surface">Porto Rico</option>
+                                <option value="GB" class="bg-surface">Reino Unido</option>
+                                <option value="DO" class="bg-surface">República Dominicana</option>
+                                <option value="RU" class="bg-surface">Rússia</option>
+                                <option value="CH" class="bg-surface">Suíça</option>
+                                <option value="UY" class="bg-surface">Uruguai</option>
+                                <option value="VE" class="bg-surface">Venezuela</option>
                             </select>
                         </div>
+
+                        <!-- Coluna 1: Status -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Status</label>
                             <select id="statusFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
@@ -204,6 +289,8 @@
                                 <option value="completed" class="bg-surface">Finalizado</option>
                             </select>
                         </div>
+                        
+                        <!-- Coluna 2: Tamanho Canal -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Inscritos</label>
                             <select id="subsFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
@@ -213,6 +300,8 @@
                                 <option value="large" class="bg-surface">Mais de 100 mil Inscritos</option>
                             </select>
                         </div>
+
+                        <!-- Intervalo de Datas -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Intervalo de Datas</label>
                             <div class="w-full min-h-[48px] flex items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 transition-colors focus-within:border-highlight overflow-hidden">
@@ -222,24 +311,40 @@
                                 <input type="date" id="dateEnd" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
                             </div>
                         </div>
+
+                        <!-- Filtro de Canais com Toggle -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Filtro de Canais</label>
+                            <div class="flex items-center justify-between ml-1">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Filtro de Canais</label>
+                                <button id="channelModeBtn" class="hidden text-[9px] px-2 py-0.5 rounded border border-white/20 bg-white/10 text-white transition-all uppercase font-bold tracking-wider cursor-pointer" data-mode="AND" onclick="toggleLogicMode(this)">Modo: E</button>
+                            </div>
                             <div id="channelContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('channelInput').focus()">
                                 <input type="text" id="channelInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
+
+                        <!-- Filtro de Descrição com Toggle -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Palavras-chave na Descrição</label>
+                            <div class="flex items-center justify-between ml-1">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave na Descrição</label>
+                                <button id="descModeBtn" class="hidden text-[9px] px-2 py-0.5 rounded border border-white/20 bg-white/10 text-white transition-all uppercase font-bold tracking-wider cursor-pointer" data-mode="AND" onclick="toggleLogicMode(this)">Modo: E</button>
+                            </div>
                             <div id="descContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('descInput').focus()">
                                 <input type="text" id="descInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
+
+                        <!-- Filtro de Negativas com Toggle -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Palavras-chave Negativas</label>
+                            <div class="flex items-center justify-between ml-1">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave Negativas</label>
+                                <button id="negativeModeBtn" class="hidden text-[9px] px-2 py-0.5 rounded border border-white/20 bg-white/10 text-white transition-all uppercase font-bold tracking-wider cursor-pointer" data-mode="AND" onclick="toggleLogicMode(this)">Modo: E</button>
+                            </div>
                             <div id="negativeContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('negativeInput').focus()">
                                 <input type="text" id="negativeInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -267,7 +372,7 @@
             <!-- Loading Indicator -->
             <div id="loadingIndicator" class="hidden flex-col items-center justify-center py-20 w-full col-span-full">
                 <div class="w-12 h-12 border-4 border-white/10 border-t-highlight rounded-full animate-spin mb-4"></div>
-                <p class="text-slate-400 font-bold">Processando filtros e buscando estatísticas...</p>
+                <p class="text-slate-400 font-bold">Processando filtros avançados e buscas E/OU...</p>
             </div>
         </div>
     </div>
@@ -276,9 +381,8 @@
         // ==========================================
         // CONFIGURAÇÃO CLOUDFLARE WORKER (BACKEND)
         // ==========================================
-        // Substitua esta URL pela URL do seu Worker no Cloudflare.
-        // O seu Worker servirá como um "Proxy" para a API do YouTube, 
-        // escondendo sua API KEY do frontend.
+        // IMPORTANTE: Insira aqui a URL real que o Cloudflare te forneceu 
+        // (Sem a barra / no final).
         const CF_WORKER_URL = "https://unilancamento.grupo-bhds.workers.dev"; 
 
         // === LÓGICA DO ACORDEÃO E SCROLL ===
@@ -334,10 +438,46 @@
         }
         function hideAlert() { alertBox.classList.add('hidden'); }
 
-        // === FUNÇÃO PARA COPIAR URL DO VÍDEO (CROSS-BROWSER) ===
-        window.copyVideoUrl = function(event, url) {
-            event.stopPropagation(); // Bloqueia o clique de abrir o card do vídeo inteiro
+        // === BOTÕES DE TOGGLE: MODO "E" ou "OU" ===
+        window.toggleLogicMode = function(btn) {
+            if(btn.dataset.mode === 'AND') {
+                btn.dataset.mode = 'OR';
+                btn.innerText = 'Modo: OU';
+                btn.classList.replace('bg-white/10', 'bg-highlight/20');
+                btn.classList.replace('border-white/20', 'border-highlight/50');
+                btn.classList.add('text-highlight');
+                btn.classList.remove('text-white');
+            } else {
+                btn.dataset.mode = 'AND';
+                btn.innerText = 'Modo: E';
+                btn.classList.replace('bg-highlight/20', 'bg-white/10');
+                btn.classList.replace('border-highlight/50', 'border-white/20');
+                btn.classList.remove('text-highlight');
+                btn.classList.add('text-white');
+            }
+        };
+
+        // Função que detecta se há chips suficientes (2 ou mais) para mostrar o botão E/OU
+        function updateToggleVisibility(containerId, toggleBtnId, wrapperId = null) {
+            const chips = document.getElementById(containerId).querySelectorAll('.chip');
+            const toggleBtn = document.getElementById(toggleBtnId);
+            const wrapper = wrapperId ? document.getElementById(wrapperId) : null;
             
+            if (chips.length >= 2) {
+                if(wrapper) wrapper.classList.remove('hidden');
+                else if(toggleBtn) toggleBtn.classList.remove('hidden');
+            } else {
+                if(wrapper) wrapper.classList.add('hidden');
+                else if(toggleBtn) toggleBtn.classList.add('hidden');
+                
+                // Opcional: Se sumir, reseta para "AND" (E)
+                if (toggleBtn && toggleBtn.dataset.mode === 'OR') toggleLogicMode(toggleBtn);
+            }
+        }
+
+        // === FUNÇÃO PARA COPIAR URL DO VÍDEO ===
+        window.copyVideoUrl = function(event, url) {
+            event.stopPropagation();
             const tempInput = document.createElement('input');
             tempInput.value = url;
             document.body.appendChild(tempInput);
@@ -345,7 +485,6 @@
             document.execCommand('copy');
             document.body.removeChild(tempInput);
             
-            // Feedback visual: Muda o ícone para um "V" (check) rapidinho
             const btn = event.currentTarget;
             const icon = btn.querySelector('.material-symbols-rounded');
             const originalText = icon.textContent;
@@ -377,8 +516,7 @@
             function type() {
                 if (shouldHidePlaceholder()) {
                     inputEl.setAttribute('placeholder', '');
-                    clearTimeout(animationTimeout);
-                    return;
+                    clearTimeout(animationTimeout); return;
                 }
                 const currentText = texts[ptIndex];
                 if (isDeleting) {
@@ -422,38 +560,64 @@
         setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
 
         // === CHIPS SYSTEM ===
-        function setupChipSystem(inputId, containerId) {
+        function setupChipSystem(inputId, containerId, toggleBtnId, wrapperId = null) {
             const input = document.getElementById(inputId); const container = document.getElementById(containerId);
             if (!input || !container) return;
             input.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ',') {
                     e.preventDefault(); let value = input.value.trim().replace(/,$/, ''); 
-                    if (value) { createChip(value, container, input); input.value = ''; }
+                    if (value) { 
+                        createChip(value, container, input); 
+                        input.value = ''; 
+                        updateToggleVisibility(containerId, toggleBtnId, wrapperId);
+                    }
                 } else if (e.key === 'Backspace' && input.value === '') {
                     const chips = container.querySelectorAll('.chip');
-                    if (chips.length > 0) chips[chips.length - 1].remove();
+                    if (chips.length > 0) {
+                        chips[chips.length - 1].remove();
+                        updateToggleVisibility(containerId, toggleBtnId, wrapperId);
+                    }
                 }
             });
             input.addEventListener('blur', function() {
                 let value = input.value.trim().replace(/,$/, '');
-                if (value) { createChip(value, container, input); input.value = ''; }
+                if (value) { 
+                    createChip(value, container, input); 
+                    input.value = ''; 
+                    updateToggleVisibility(containerId, toggleBtnId, wrapperId);
+                }
             });
         }
         function createChip(text, container, input) {
             const chip = document.createElement('span');
             chip.className = 'chip bg-highlight text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm whitespace-nowrap';
             chip.setAttribute('data-value', text); 
-            chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors" onclick="this.parentElement.remove()">close</span>`;
+            chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors" onclick="this.parentElement.remove(); document.getElementById('urlInput').focus();">close</span>`;
+            
+            // Adiciona listener para a remoção manual do chip também atualizar a UI do toggle
+            chip.querySelector('span').addEventListener('click', () => {
+                setTimeout(() => {
+                    const containerId = container.id;
+                    let toggleBtnId, wrapperId;
+                    if(containerId === 'mainInputContainer') { toggleBtnId = 'mainModeBtn'; wrapperId = 'mainModeWrapper'; }
+                    if(containerId === 'descContainer') toggleBtnId = 'descModeBtn';
+                    if(containerId === 'channelContainer') toggleBtnId = 'channelModeBtn';
+                    if(containerId === 'negativeContainer') toggleBtnId = 'negativeModeBtn';
+                    updateToggleVisibility(containerId, toggleBtnId, wrapperId);
+                }, 10);
+            });
+
             container.insertBefore(chip, input);
         }
         function getChipsData(containerId) {
             return Array.from(document.getElementById(containerId).querySelectorAll('.chip')).map(chip => chip.getAttribute('data-value').trim());
         }
 
-        setupChipSystem('urlInput', 'mainInputContainer');
-        setupChipSystem('channelInput', 'channelContainer');
-        setupChipSystem('descInput', 'descContainer');
-        setupChipSystem('negativeInput', 'negativeContainer');
+        // Setup Chips mapeados com seus respectivos botões de Modo E/OU
+        setupChipSystem('urlInput', 'mainInputContainer', 'mainModeBtn', 'mainModeWrapper');
+        setupChipSystem('channelInput', 'channelContainer', 'channelModeBtn');
+        setupChipSystem('descInput', 'descContainer', 'descModeBtn');
+        setupChipSystem('negativeInput', 'negativeContainer', 'negativeModeBtn');
 
         // === PARTICULAS ===
         try {
@@ -474,13 +638,6 @@
         }
 
         searchBtn.addEventListener('click', async () => {
-            if(CF_WORKER_URL.includes("seu-worker")) {
-                resultsContainer.classList.remove('hidden');
-                updateScrollState();
-                showAlert("Atenção: Você precisa configurar a URL do seu Cloudflare Worker no código fonte para realizar as buscas.", true);
-                return;
-            }
-
             hideAlert();
             resultsContainer.classList.remove('hidden');
             resultsGrid.innerHTML = '';
@@ -489,11 +646,16 @@
             loadingIndicator.classList.add('flex');
             updateScrollState();
 
-            // 1. Coleta de Dados
+            // 1. Coleta de Dados das Palavras e os "Modos E/OU" de cada uma
             const mainKws = getChipsData('mainInputContainer');
             const descKws = getChipsData('descContainer');
             const negativeKws = getChipsData('negativeContainer');
             const channelKws = getChipsData('channelContainer');
+
+            const mainMode = document.getElementById('mainModeBtn').getAttribute('data-mode'); // 'AND' ou 'OR'
+            const descMode = document.getElementById('descModeBtn').getAttribute('data-mode');
+            const negativeMode = document.getElementById('negativeModeBtn').getAttribute('data-mode');
+            const channelMode = document.getElementById('channelModeBtn').getAttribute('data-mode');
             
             const lang = document.getElementById('langFilter').value;
             const country = document.getElementById('countryFilter').value;
@@ -502,14 +664,39 @@
             const dateStart = document.getElementById('dateStart').value;
             const dateEnd = document.getElementById('dateEnd').value;
 
-            // 2. Construção da Query
+            // 2. Construção da Query usando Dorks do YouTube, agora sensível a E/OU
             let queryParts = [];
-            if (mainKws.length > 0) queryParts.push(`(${mainKws.map(kw => `intitle:"${kw}"`).join(' OR ')})`);
-            if (descKws.length > 0) queryParts.push(descKws.map(kw => `"${kw}"`).join(' '));
-            if (negativeKws.length > 0) queryParts.push(negativeKws.map(kw => `-"${kw}"`).join(' '));
+            
+            // Palavras Principais
+            if (mainKws.length > 0) {
+                if(mainMode === 'OR') {
+                    queryParts.push(`(${mainKws.map(kw => `intitle:"${kw}"`).join(' OR ')})`);
+                } else { // AND
+                    queryParts.push(mainKws.map(kw => `intitle:"${kw}"`).join(' '));
+                }
+            }
+            
+            // Descrição
+            if (descKws.length > 0) {
+                if(descMode === 'OR') {
+                    queryParts.push(`(${descKws.map(kw => `"${kw}"`).join(' OR ')})`);
+                } else { // AND
+                    queryParts.push(descKws.map(kw => `"${kw}"`).join(' '));
+                }
+            }
+
+            // Negativas (Tanto no E ou OU, o Dork usa - no Youtube, ajustamos no filtro JS também)
+            if (negativeKws.length > 0) {
+                if(negativeMode === 'OR') {
+                    // Pelo menos 1 ausente
+                    queryParts.push(negativeKws.map(kw => `-"${kw}"`).join(' '));
+                } else { // AND (Excluir apenas se tiver todas as palavras juntas. O Youtube nativamente só suporta subtrair unitariamente, deixamos a precisão grossa pro JS)
+                    // Se for AND, evitamos colocar no Dork para não quebrar e deixamos o JS resolver a precisão.
+                }
+            }
+            
             const q = queryParts.join(' ');
 
-            // 3. Montagem da URL direcionando para o CLOUDFLARE WORKER
             let searchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
             
             if (lang) searchUrl += `&relevanceLanguage=${lang}`;
@@ -519,7 +706,6 @@
             if (dateEnd) searchUrl += `&publishedBefore=${encodeURIComponent(formatYTDate(dateEnd, true))}`;
 
             try {
-                // Primeira chamada: Busca os vídeos (Search API via Worker)
                 const searchResponse = await fetch(searchUrl);
                 const searchData = await searchResponse.json();
 
@@ -527,34 +713,58 @@
 
                 let items = searchData.items || [];
 
-                // 4. PÓS-FILTRO JAVASCRIPT RIGOROSO
+                // 4. PÓS-FILTRO JAVASCRIPT RIGOROSO (Agora respeitando os modos E/OU e regras absolutas)
                 items = items.filter(item => {
                     const title = (item.snippet.title || '').toLowerCase();
                     const desc = (item.snippet.description || '').toLowerCase();
                     const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
                     const channelId = item.snippet.channelId;
 
-                    const titlePass = mainKws.length === 0 || mainKws.some(kw => title.includes(kw.toLowerCase()));
+                    // --- Regra 1: Palavras Principais no Título (E/OU) ---
+                    const titlePass = mainKws.length === 0 || (
+                        mainMode === 'AND' ? mainKws.every(kw => title.includes(kw.toLowerCase()))
+                                           : mainKws.some(kw => title.includes(kw.toLowerCase()))
+                    );
                     if (!titlePass) return false;
 
-                    const descPass = descKws.length === 0 || descKws.every(kw => desc.includes(kw.toLowerCase()));
+                    // --- Regra 2: Descrição (E/OU). (Se estiver no título também, não importa, a regra é estar na descrição) ---
+                    const descPass = descKws.length === 0 || (
+                        descMode === 'AND' ? descKws.every(kw => desc.includes(kw.toLowerCase()))
+                                           : descKws.some(kw => desc.includes(kw.toLowerCase()))
+                    );
                     if (!descPass) return false;
 
-                    const negativePass = negativeKws.length === 0 || !negativeKws.some(kw => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()));
+                    // --- Regra 3: Negativas (E/OU) ---
+                    let negativePass = true;
+                    if (negativeKws.length > 0) {
+                        if (negativeMode === 'AND') {
+                            // Se MODO AND: o vídeo só é reprovado se conter TODAS as palavras negativas juntas.
+                            const hasAllNegatives = negativeKws.every(kw => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()));
+                            negativePass = !hasAllNegatives;
+                        } else {
+                            // Se MODO OR (Padrão Negativo): o vídeo é reprovado se conter QUALQUER UMA palavra negativa.
+                            const hasAnyNegative = negativeKws.some(kw => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()));
+                            negativePass = !hasAnyNegative;
+                        }
+                    }
                     if (!negativePass) return false;
 
-                    if (channelKws.length > 0) {
-                        const channelPass = channelKws.some(kw => {
+                    // --- Regra 4: Canal (E/OU) ---
+                    const channelPass = channelKws.length === 0 || (
+                        channelMode === 'AND' ? channelKws.every(kw => {
                             const lowKw = kw.toLowerCase();
                             return channelId === kw || channelTitle.includes(lowKw) || lowKw.includes(channelId.toLowerCase());
-                        });
-                        if(!channelPass) return false;
-                    }
+                        }) : channelKws.some(kw => {
+                            const lowKw = kw.toLowerCase();
+                            return channelId === kw || channelTitle.includes(lowKw) || lowKw.includes(channelId.toLowerCase());
+                        })
+                    );
+                    if (!channelPass) return false;
 
                     return true;
                 });
 
-                // 5. FILTRO DE INSCRITOS (Channels API via Worker)
+                // 5. FILTRO DE INSCRITOS
                 if (subsSize !== 'all' && items.length > 0) {
                     const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
                     const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics&id=${uniqueChannelIds.join(',')}`;
@@ -575,16 +785,13 @@
                     });
                 }
 
-                // 6. BUSCA DE QUANTIDADE DE COMENTÁRIOS (Videos API via Worker)
+                // 6. BUSCA DE QUANTIDADE DE COMENTÁRIOS
                 if (items.length > 0) {
-                    // Extrair todos os IDs dos vídeos que passaram no filtro
                     const videoIds = items.map(item => item.id.videoId).join(',');
-                    // Chama a API de Videos para pegar estatísticas
                     const videosUrl = `${CF_WORKER_URL}/videos?part=statistics&id=${videoIds}`;
                     const videosResponse = await fetch(videosUrl);
                     const videosData = await videosResponse.json();
 
-                    // Mapeia ID do Vídeo para a quantidade de comentários
                     const commentsMap = {};
                     if(videosData.items) {
                         videosData.items.forEach(v => {
@@ -592,20 +799,19 @@
                         });
                     }
 
-                    // Injeta a contagem de comentários no objeto do vídeo para renderizar depois
                     items.forEach(item => {
                         item.commentCount = commentsMap[item.id.videoId] || 0;
                     });
                 }
 
-                // 7. RENDERIZAÇÃO DOS CARDS
+                // 7. RENDERIZAÇÃO
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
 
                 document.getElementById('resultsCount').textContent = items.length;
 
                 if (items.length === 0) {
-                    resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">Nenhum lançamento encontrado que atenda a todas as regras rigorosas.</div>`;
+                    resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">Nenhum lançamento encontrado que atenda a todas as regras E/OU estipuladas.</div>`;
                     return;
                 }
 
@@ -615,7 +821,6 @@
                     const commentCount = item.commentCount || 0;
                     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
                     
-                    // Status Badge (Ao Vivo, Agendado)
                     let statusBadge = '';
                     if(snippet.liveBroadcastContent === 'live') {
                         statusBadge = `<div class="absolute top-4 left-4 bg-highlight/20 text-highlight border border-highlight backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg animate-pulse">
@@ -630,14 +835,10 @@
                     const parser = new DOMParser();
                     const decodedTitle = parser.parseFromString(snippet.title, 'text/html').body.textContent;
                     const pubDate = new Date(snippet.publishedAt).toLocaleDateString('pt-BR');
-                    
-                    // Formatação visual do número de comentários (Ex: 1.500)
                     const formattedComments = commentCount.toLocaleString('pt-BR');
 
                     const card = document.createElement('article');
                     card.className = "video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl cursor-pointer group";
-                    
-                    // Ação de clique de abrir nova aba na guia inteira
                     card.onclick = () => window.open(videoUrl, '_blank');
                     
                     card.innerHTML = `
@@ -652,16 +853,12 @@
                                 <span class="text-xs sm:text-sm font-semibold truncate">${snippet.channelTitle}</span>
                             </div>
                             
-                            <!-- Rodapé do Card -->
                             <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
                                 <div class="flex items-center gap-4 sm:gap-6">
-                                    <!-- Bloco: Data de Publicação -->
                                     <div class="flex flex-col">
                                         <span class="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-wider">Publicação</span>
                                         <span class="text-xs sm:text-sm text-slate-300 font-medium">${pubDate}</span>
                                     </div>
-                                    
-                                    <!-- Bloco: Quantidade de Comentários -->
                                     <div class="flex flex-col">
                                         <span class="text-[9px] sm:text-[10px] text-slate-500 font-bold uppercase tracking-wider">Comentários</span>
                                         <span class="text-xs sm:text-sm text-slate-300 font-medium flex items-center gap-1.5">
@@ -670,8 +867,6 @@
                                         </span>
                                     </div>
                                 </div>
-
-                                <!-- Botões de Ação (Acessar e Copiar Link) -->
                                 <div class="flex items-center gap-2 relative z-20">
                                     <button onclick="copyVideoUrl(event, '${videoUrl}')" title="Copiar URL" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 flex-shrink-0">
                                         <span class="material-symbols-rounded text-[16px] sm:text-[18px]">content_copy</span>
