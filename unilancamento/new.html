@@ -130,11 +130,17 @@
             100% { transform: translateY(0); opacity: 1; }
         }
 
-        /* Esconder a setinha padrão do select */
+        /* Esconder barra de rolagem e impedir estiramento no container de chips */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Esconder a setinha padrão do select e centralizar texto */
         select {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
+            text-align: center;
+            text-align-last: center;
         }
     </style>
 </head>
@@ -160,7 +166,8 @@
 
                 <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 w-full mx-auto">
                     <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-0">
-                        <div id="mainInputContainer" class="w-full flex-1 flex flex-wrap items-center bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px] gap-y-2" onclick="document.getElementById('urlInput').focus()">
+                        <!-- Aplicada barra de rolagem oculta para não esticar -->
+                        <div id="mainInputContainer" class="w-full flex-1 flex flex-nowrap items-center bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px] overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide" onclick="document.getElementById('urlInput').focus()">
                             <svg class="w-6 h-6 text-slate-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                             <!-- Chips serão inseridos aqui -->
                             <input 
@@ -171,7 +178,7 @@
                         </div>
                         <button 
                             id="searchBtn" 
-                            class="w-full md:w-auto bg-[#DC2626] border border-borderStrong hover:bg-[rgb(190,30,30)] text-white font-bold text-base md:text-lg px-8 py-4 rounded-xl md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative whitespace-nowrap"
+                            class="w-full md:w-auto bg-[#DC2626] border border-borderStrong hover:bg-[rgb(190,30,30)] text-white font-bold text-base md:text-lg px-8 py-4 rounded-xl md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative whitespace-nowrap flex-shrink-0"
                         >
                             <span class="material-symbols-rounded">manage_search</span>
                             <span>Buscar Lançamento</span>
@@ -182,21 +189,21 @@
                 <!-- BARRA DE CONTROLES CENTRALIZADA -->
                 <div class="mt-6 w-full mx-auto flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-4 relative z-20">
                     
-                    <!-- Botão Combinações (Com Menu no Clique) -->
+                    <!-- Botão Combinações -->
                     <div class="relative">
-                        <button id="comboToggleBtn" onclick="toggleComboMenu(event)" class="bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 flex items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold">
+                        <button id="comboToggleBtn" onclick="toggleComboMenu(event)" class="bg-[#0F172A] border border-white/10 hover:border-highlight/50 rounded-xl px-5 py-2.5 flex justify-center items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold w-full sm:w-auto min-w-[160px]">
                             <span class="material-symbols-rounded text-[20px]">auto_awesome</span>
                             Combinações
                         </button>
                         <!-- Menu Dropdown -->
-                        <div id="comboDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-80 bg-[#080B14] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 overflow-hidden z-50 max-h-[300px] overflow-y-auto">
+                        <div id="comboDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-80 bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50 max-h-[300px] overflow-y-auto">
                             <!-- Combinação 1 -->
                             <button onclick="applySmartCombo1(); toggleComboMenu(event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">
                                 "Aula 1" <span class="text-orange-400 font-bold">OU</span> "Evento" <span class="text-orange-400 font-bold">OU</span> "Workshop" <span class="text-blue-400 font-bold">E</span> Gratuito <span class="text-blue-400 font-bold">E</span> Online <br><br>
                                 <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas:</span>
                                 minicurso <span class="text-orange-400 font-bold">OU</span> mini-curso
                             </button>
-                            <!-- Combinação 2 (Nova) -->
+                            <!-- Combinação 2 -->
                             <button onclick="applySmartCombo2(); toggleComboMenu(event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                                 "aula" <span class="text-orange-400 font-bold">OU</span> "evento" <span class="text-orange-400 font-bold">OU</span> "semana do" <span class="text-orange-400 font-bold">OU</span> "semana da" <span class="text-orange-400 font-bold">OU</span> "semana de" <span class="text-blue-400 font-bold">E</span> "grátis" <span class="text-orange-400 font-bold">OU</span> "gratis" <span class="text-orange-400 font-bold">OU</span> "gratuito" <span class="text-orange-400 font-bold">OU</span> "gratuita" <span class="text-blue-400 font-bold">E</span> "100% online" <span class="text-orange-400 font-bold">OU</span> "online" <br><br>
                                 <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas:</span>
@@ -206,20 +213,20 @@
                     </div>
 
                     <!-- Botão Filtros Avançados -->
-                    <button id="toggleFiltersBtn" class="bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 flex items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold group">
+                    <button id="toggleFiltersBtn" class="bg-[#0F172A] border border-white/10 hover:border-highlight/50 rounded-xl px-5 py-2.5 flex justify-center items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold group w-full sm:w-auto min-w-[160px]">
                         <span class="material-symbols-rounded text-[20px]">tune</span>
                         <span>Filtros Avançados</span>
                         <span id="filtersArrow" class="material-symbols-rounded text-[20px] transition-transform duration-300">expand_more</span>
                     </button>
 
-                    <!-- Botão Organizar (Estilo Padronizado) -->
-                    <div class="relative flex items-center">
-                        <select id="sortFilter" onchange="saveState()" class="bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 hover:text-white rounded-xl pl-10 pr-4 py-2 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-bold w-full appearance-none">
-                            <option value="views" class="bg-[#080B14] font-semibold text-slate-300">Organizar</option>
-                            <option value="comments" class="bg-[#080B14] font-semibold text-slate-300">Nº de Comentários</option>
-                            <option value="subs" class="bg-[#080B14] font-semibold text-slate-300">Nº de Inscritos</option>
+                    <!-- Botão Organizar -->
+                    <div class="relative flex items-center justify-center w-full sm:w-auto min-w-[160px]">
+                        <select id="sortFilter" onchange="handleSort()" class="bg-[#0F172A] border border-white/10 hover:border-highlight/50 text-slate-300 hover:text-white rounded-xl pl-10 pr-4 py-2.5 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-bold w-full appearance-none flex items-center justify-center">
+                            <option value="views" class="bg-[#0F172A] font-semibold text-slate-300">Nº de Visualizações</option>
+                            <option value="comments" class="bg-[#0F172A] font-semibold text-slate-300">Nº de Comentários</option>
+                            <option value="subs" class="bg-[#0F172A] font-semibold text-slate-300">Nº de Inscritos</option>
                         </select>
-                        <span class="material-symbols-rounded text-[20px] text-slate-300 absolute left-3 pointer-events-none">sort</span>
+                        <span class="material-symbols-rounded text-[20px] text-slate-300 absolute left-4 pointer-events-none">sort</span>
                     </div>
 
                 </div>
@@ -230,7 +237,7 @@
                         
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Idioma</label>
-                            <select id="langFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
+                            <select id="langFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto" style="text-align-last: left;">
                                 <option value="" class="bg-surface">Qualquer Idioma</option>
                                 <option value="pt" class="bg-surface">Português</option>
                                 <option value="en" class="bg-surface">Inglês</option>
@@ -265,7 +272,7 @@
                         
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">País</label>
-                            <select id="countryFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
+                            <select id="countryFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto" style="text-align-last: left;">
                                 <option value="" class="bg-surface">Qualquer País</option>
                                 <option value="BR" class="bg-surface">Brasil</option>
                                 <option value="US" class="bg-surface">Estados Unidos</option>
@@ -321,7 +328,7 @@
 
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Status</label>
-                            <select id="statusFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="statusFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold" style="text-align-last: left;">
                                 <option value="all" class="bg-surface">Todos os Status</option>
                                 <option value="live" class="bg-surface">Ao Vivo</option>
                                 <option value="upcoming" class="bg-surface">Agendado</option>
@@ -331,7 +338,7 @@
                         
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Inscritos</label>
-                            <select id="subsFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="subsFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold" style="text-align-last: left;">
                                 <option value="all" class="bg-surface">Todos os Tamanhos</option>
                                 <option value="small" class="bg-surface">Até 10 mil Inscritos</option>
                                 <option value="medium" class="bg-surface">De 10 mil a 100 mil Inscritos</option>
@@ -353,7 +360,7 @@
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Filtro de Canais</label>
                             </div>
-                            <div id="channelContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('channelInput').focus()">
+                            <div id="channelContainer" class="w-full min-h-[48px] relative flex flex-nowrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text overflow-x-auto scrollbar-hide" onclick="document.getElementById('channelInput').focus()">
                                 <input type="text" id="channelInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
@@ -362,7 +369,7 @@
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave na Descrição</label>
                             </div>
-                            <div id="descContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('descInput').focus()">
+                            <div id="descContainer" class="w-full min-h-[48px] relative flex flex-nowrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text overflow-x-auto scrollbar-hide" onclick="document.getElementById('descInput').focus()">
                                 <input type="text" id="descInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
@@ -371,7 +378,7 @@
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave Negativas</label>
                             </div>
-                            <div id="negativeContainer" class="w-full min-h-[48px] relative flex flex-wrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text" onclick="document.getElementById('negativeInput').focus()">
+                            <div id="negativeContainer" class="w-full min-h-[48px] relative flex flex-nowrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text overflow-x-auto scrollbar-hide" onclick="document.getElementById('negativeInput').focus()">
                                 <input type="text" id="negativeInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1">
                             </div>
                         </div>
@@ -390,7 +397,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-6 px-2">
-                <!-- Títulos em Destaque Absoluto com Quebra Inteligente -->
+                <!-- Títulos em Destaque com Quebra -->
                 <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#DC2626] flex flex-wrap items-center gap-2 sm:gap-3 drop-shadow-md leading-tight w-full">
                     <span>Lançamentos Encontrados</span>
                     <span id="resultsCount" class="text-sm sm:text-base bg-[#DC2626] text-white py-1 px-4 rounded-full shadow-lg whitespace-nowrap">0</span>
@@ -427,6 +434,7 @@
         // Variáveis Globais de Paginação e Resultados
         let globalNextPageToken = '';
         let globalAccumulatedItems = [];
+        let globalTotalResultsAPI = 0; // Guarda o número total da API para visualização
 
         // === LOCAL STORAGE (SALVAR/CARREGAR SESSÃO) ===
         function saveState() {
@@ -477,7 +485,6 @@
                             if(t.type === 'word') {
                                 createChipAndOp(t.value, container, input);
                             } else if (t.type === 'op') {
-                                // O Operador é inserido automaticamente antes da palavra, o último precisa ser corrigido se divergir
                                 const ops = container.querySelectorAll('.chip-op');
                                 if(ops.length > 0) {
                                     const lastOp = ops[ops.length - 1];
@@ -542,10 +549,11 @@
             saveState();
         });
 
-        sortFilter.addEventListener('change', () => {
+        // Atualização automática via OnChange (Ordenação)
+        window.handleSort = function() {
             if (globalAccumulatedItems.length > 0) renderGrid(globalAccumulatedItems);
             saveState();
-        });
+        };
 
         function toggleComboMenu(e) {
             e.stopPropagation();
@@ -571,7 +579,7 @@
         }
         function hideAlert() { alertBox.classList.add('hidden'); }
 
-        // === FUNÇÕES PARA COPIAR (URL E CANAL) ===
+        // === FUNÇÕES PARA COPIAR E ABRIR CANAL/VÍDEO ===
         window.copyToClipboard = function(event, text, btnElement = null) {
             event.stopPropagation();
             const tempInput = document.createElement('input');
@@ -593,12 +601,29 @@
                         icon.textContent = originalText;
                         btnElement.classList.remove('bg-green-500/20', 'text-green-400', 'border-green-500');
                         btnElement.classList.add('border-white/10');
-                        // Tenta restaurar a cor base (alguns são slate-300, outros 400)
                         if(btnElement.classList.contains('w-fit')) btnElement.classList.add('text-slate-400');
                         else btnElement.classList.add('text-slate-300');
                     }, 2000);
                 }
             }
+        };
+
+        window.openChannelAndCopy = function(event, handle, id, element) {
+            event.stopPropagation();
+            const url = handle ? `https://www.youtube.com/${handle}` : `https://www.youtube.com/channel/${id}`;
+            window.open(url, '_blank');
+            const textToCopy = handle ? handle : id;
+            
+            const tempInput = document.createElement('input');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            const originalColor = element.className;
+            element.classList.add('text-green-400');
+            setTimeout(() => { element.classList.remove('text-green-400'); }, 2000);
         };
 
         // === MÁQUINA DE ESCREVER ===
@@ -674,7 +699,7 @@
             return v;
         }
 
-        // === NOVO CHIPS SYSTEM INTELIGENTE (Trata a vírgula perfeitamente e espaços) ===
+        // === NOVO CHIPS SYSTEM INTELIGENTE ===
         function setupChipSystem(inputId, containerId) {
             const input = document.getElementById(inputId); 
             const container = document.getElementById(containerId);
@@ -730,7 +755,7 @@
                 const isMain = container.id === 'mainInputContainer';
                 const op = document.createElement('span');
                 
-                const baseClasses = 'chip-op text-[10px] rounded px-2 py-0.5 cursor-pointer transition-colors select-none font-bold mx-0.5 flex items-center justify-center border';
+                const baseClasses = 'chip-op text-[10px] rounded px-2 py-0.5 cursor-pointer transition-colors select-none font-bold mx-0.5 flex items-center justify-center border flex-shrink-0';
                 const andClasses = isMain 
                     ? 'bg-slate-200 border-slate-300 text-slate-600 hover:bg-slate-300 hover:text-slate-800' 
                     : 'bg-white/10 border-white/20 text-slate-300 hover:bg-white/20 hover:text-white';
@@ -759,7 +784,7 @@
             }
 
             const chip = document.createElement('span');
-            chip.className = 'chip bg-highlight text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm whitespace-nowrap';
+            chip.className = 'chip bg-highlight text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm whitespace-nowrap flex-shrink-0';
             chip.setAttribute('data-value', text); 
             chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors">close</span>`;
             
@@ -804,7 +829,7 @@
             }
         }
 
-        // === COMBINAÇÕES INTELIGENTES ===
+        // === COMBINAÇÕES ===
         window.applySmartCombo1 = function() {
             clearChips('mainInputContainer');
             clearChips('negativeContainer');
@@ -866,10 +891,17 @@
         setupChipSystem('descInput', 'descContainer');
         setupChipSystem('negativeInput', 'negativeContainer');
 
-        // Função Emoji Bandeiras
-        function getFlagEmoji(countryCode) {
-            if (!countryCode) return '🌐';
-            return [...countryCode.toUpperCase()].map(c => String.fromCodePoint(127397 + c.charCodeAt())).join('');
+        // Função Imagem da Bandeira por País (Usando FlagCDN e Lista para Tooltip)
+        function getCountryName(code) {
+            const select = document.getElementById('countryFilter');
+            const option = select.querySelector(`option[value="${code}"]`);
+            return option ? option.innerText : code;
+        }
+        
+        function getFlagImg(countryCode) {
+            if (!countryCode) return '<span class="material-symbols-rounded text-white">public</span>';
+            const name = getCountryName(countryCode.toUpperCase());
+            return `<img src="https://flagcdn.com/w40/${countryCode.toLowerCase()}.png" alt="${name}" class="w-6 h-auto object-contain rounded-sm shadow-sm">`;
         }
 
         // === AVALIADOR LÓGICO INTELIGENTE ===
@@ -893,7 +925,7 @@
              }).join(' ').replace(/\s+/g, ' ').trim();
         }
 
-        // Fetch com Timeout (Prevenção de Loop Infinito/Travamento)
+        // Fetch com Timeout Limitado a 15 segundos
         async function fetchWithTimeout(resource, options = {}) {
             const { timeout = 15000 } = options;
             const controller = new AbortController();
@@ -913,13 +945,13 @@
         const loadMoreContainer = document.getElementById('loadMoreContainer');
 
         searchBtn.addEventListener('click', () => {
-            // Auto encolher os filtros caso estejam abertos ao clicar em buscar
             if(isFiltersOpen) {
                 document.getElementById('toggleFiltersBtn').click();
             }
 
             globalNextPageToken = '';
             globalAccumulatedItems = [];
+            globalTotalResultsAPI = 0;
             resultsGrid.innerHTML = '';
             document.getElementById('resultsCount').textContent = '0';
             performSearch(false);
@@ -977,7 +1009,7 @@
             if (dateEnd) baseSearchUrl += `&publishedBefore=${encodeURIComponent(formatYTDate(dateEnd, true))}`;
 
             try {
-                // AUTO-PESQUISA: Procura até 3 páginas internamente se o filtro JS devolver 0 items.
+                // Sistema Auto-Suga: Avança páginas automaticamente se tudo for limpo no filtro JS
                 let loopCount = 0;
                 let finalItems = [];
                 let currentNextPageToken = isLoadMore ? globalNextPageToken : '';
@@ -986,18 +1018,20 @@
                     let searchUrl = baseSearchUrl;
                     if (currentNextPageToken) searchUrl += `&pageToken=${currentNextPageToken}`;
 
-                    // ETAPA 1: Busca Inicial na Search API com Timeout
                     const searchResponse = await fetchWithTimeout(searchUrl, { timeout: 15000 });
                     const searchData = await searchResponse.json();
 
                     if (searchData.error) throw new Error(searchData.error.message);
 
+                    if (!isLoadMore && loopCount === 0) {
+                        globalTotalResultsAPI = searchData.pageInfo?.totalResults || 0;
+                    }
+
                     currentNextPageToken = searchData.nextPageToken || '';
                     let items = searchData.items || [];
 
-                    if(items.length === 0) break; // Acabou a API real
+                    if(items.length === 0) break;
 
-                    // ETAPA 2: PÓS-FILTRO JAVASCRIPT RIGOROSO
                     items = items.filter(item => {
                         const title = (item.snippet.title || '').toLowerCase();
                         const desc = (item.snippet.description || '').toLowerCase();
@@ -1018,17 +1052,18 @@
                         return true;
                     });
 
-                    // ETAPA 3: FILTRO DE INSCRITOS (Channels API)
                     const subsMap = {};
+                    const channelHandleMap = {};
                     if (items.length > 0) {
                         const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
-                        const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics&id=${uniqueChannelIds.join(',')}`;
+                        const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics,snippet&id=${uniqueChannelIds.join(',')}`;
                         const channelsResponse = await fetchWithTimeout(channelsUrl);
                         const channelsData = await channelsResponse.json();
                         
                         if(channelsData.items) {
                             channelsData.items.forEach(ch => { 
                                 subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); 
+                                channelHandleMap[ch.id] = ch.snippet?.customUrl || '';
                             });
                         }
 
@@ -1043,7 +1078,6 @@
                         }
                     }
 
-                    // ETAPA 4: BUSCA DE ESTATÍSTICAS E PAÍS DO VÍDEO (Videos API)
                     if (items.length > 0) {
                         const videoIds = items.map(item => item.id.videoId).join(',');
                         const videosUrl = `${CF_WORKER_URL}/videos?part=snippet,statistics,liveStreamingDetails&id=${videoIds}`;
@@ -1059,7 +1093,6 @@
                                 statsMap[v.id] = v.statistics || {};
                                 liveDetailsMap[v.id] = v.liveStreamingDetails || null;
                                 
-                                // Extrai o país do idioma de áudio do vídeo (ex: pt-BR -> BR)
                                 let langCode = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
                                 let countryExtracted = langCode.includes('-') ? langCode.split('-')[1] : langCode;
                                 videoCountryMap[v.id] = countryExtracted.toUpperCase();
@@ -1073,10 +1106,11 @@
                             item.subscriberCount = subsMap[item.snippet.channelId] || 0; 
                             item.liveDetails = liveDetailsMap[item.id.videoId];
                             item.videoCountryCode = videoCountryMap[item.id.videoId] || ''; 
+                            item.channelHandle = channelHandleMap[item.snippet.channelId] || '';
                         });
                     }
 
-                    // ETAPA 5: HARMONIA MATEMÁTICA ENTRE STATUS E DATA
+                    // HARMONIA ENTRE STATUS E DATAS
                     items = items.filter(item => {
                         const now = new Date();
                         const liveContent = item.snippet.liveBroadcastContent; 
@@ -1095,12 +1129,10 @@
 
                         if (status !== 'all') {
                             if (status === 'live' && liveContent !== 'live') return false; 
-                            
                             if (status === 'upcoming') {
                                 if (liveContent !== 'upcoming') return false;
                                 if (scheduledStart && scheduledStart <= now) return false;
                             }
-
                             if (status === 'completed') {
                                 if (liveContent === 'live' || liveContent === 'upcoming') return false;
                                 if (targetDateForFilter > now) return false;
@@ -1118,7 +1150,6 @@
                 globalNextPageToken = currentNextPageToken;
                 globalAccumulatedItems = globalAccumulatedItems.concat(finalItems);
 
-                // Tira os loaders
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
                 
@@ -1145,15 +1176,14 @@
                 loadMoreBtn.classList.remove('opacity-50', 'pointer-events-none');
                 
                 let errorMsg = error.message;
-                if (error.name === 'AbortError') errorMsg = "A ligação demorou muito a responder. A pesquisa foi interrompida.";
+                if (error.name === 'AbortError') errorMsg = "A ligação demorou muito a responder. A pesquisa foi interrompida (Timeout). Tente novamente.";
                 showAlert(`Erro na busca: ${errorMsg}`, true);
             }
         }
 
-        // Função isolada de Renderização e Ordenação
+        // === RENDERIZADOR ===
         function renderGrid(itemsArray) {
             const sortFilterVal = document.getElementById('sortFilter').value;
-            
             let itemsToRender = [...itemsArray];
 
             if (sortFilterVal === 'views') {
@@ -1164,7 +1194,10 @@
                 itemsToRender.sort((a, b) => b.subscriberCount - a.subscriberCount);
             }
 
-            document.getElementById('resultsCount').textContent = itemsToRender.length;
+            // Exibe a quantidade renderizada vs A quantidade Total estimada pela API
+            const displayTotal = globalTotalResultsAPI > 0 ? ` de ${globalTotalResultsAPI.toLocaleString('pt-PT')}` : '';
+            document.getElementById('resultsCount').textContent = `${itemsToRender.length}${displayTotal}`;
+            
             resultsGrid.innerHTML = '';
 
             itemsToRender.forEach(item => {
@@ -1173,16 +1206,18 @@
                 const commentCount = item.commentCount || 0;
                 const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
                 
-                // Bandeira do Vídeo em Pílula
-                const flagEmoji = getFlagEmoji(item.videoCountryCode);
+                // Bandeira do Vídeo em Imagem Pílula
+                const flagImg = getFlagImg(item.videoCountryCode);
+                const countryName = getCountryName(item.videoCountryCode);
+                
                 let flagPill = '';
                 if(item.videoCountryCode) {
-                    flagPill = `<div class="absolute top-4 right-4 bg-black/50 backdrop-blur-md border border-white/20 px-2 py-1 rounded-lg text-lg drop-shadow-lg flex items-center justify-center cursor-help" title="País do Vídeo: ${item.videoCountryCode}">
-                                    ${flagEmoji}
+                    flagPill = `<div class="absolute top-4 right-4 bg-black/50 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full drop-shadow-lg flex items-center justify-center cursor-default" title="${countryName}">
+                                    ${flagImg}
                                 </div>`;
                 }
 
-                // Pílulas com Cores e Estilos Idênticos
+                // Pílulas com Cores Fixas (Sem pulsar e em vermelho absoluto)
                 let statusBadge = '';
                 if(snippet.liveBroadcastContent === 'live') {
                     statusBadge = `<div class="absolute top-4 left-4 bg-[#DC2626] text-white px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg border border-[#B91C1C]">
@@ -1201,7 +1236,7 @@
                 const pubDate = targetDate.toLocaleDateString('pt-PT');
                 const formattedComments = commentCount.toLocaleString('pt-PT');
 
-                // REGRA DE AFILIADO HOTMART (Apenas Ícone com as exatas cores de cópia)
+                // AFILIADO HOTMART (Ícone Clean)
                 const hotmartRegex = /(https?:\/\/(?:go\.|pay\.|www\.)?hotmart\.com\/[^\s]+)/i;
                 const hotmartMatch = snippet.description.match(hotmartRegex);
                 let afiliarBtn = '';
@@ -1221,6 +1256,10 @@
                 card.className = "video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl cursor-pointer group";
                 card.onclick = () => window.open(videoUrl, '_blank');
                 
+                // Nome do Canal com Expansão de Efeito
+                const channelHandleRaw = item.channelHandle || snippet.channelId;
+                const displayHandle = channelHandleRaw.startsWith('@') ? channelHandleRaw : '@' + channelHandleRaw;
+
                 card.innerHTML = `
                     <div class="relative aspect-video overflow-hidden bg-slate-900">
                         <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -1230,9 +1269,11 @@
                     <div class="p-6 sm:p-7 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
                         <h3 class="text-base sm:text-lg md:text-xl font-bold leading-snug mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
                         
-                        <div class="flex items-center gap-2 text-slate-400 mb-6 cursor-pointer hover:text-white transition-colors w-fit group/channel" onclick="copyToClipboard(event, '${snippet.channelId}', this)" title="Copiar ID do Canal">
-                            <span class="material-symbols-rounded text-[18px]">account_circle</span>
-                            <span class="text-sm font-semibold truncate group-hover/channel:underline">${snippet.channelTitle}</span>
+                        <div class="flex items-center gap-2 text-slate-400 mb-6 cursor-pointer w-fit group/channel relative" onclick="openChannelAndCopy(event, '${item.channelHandle}', '${snippet.channelId}', this)" title="Abrir e Copiar @ do Canal">
+                            <span class="material-symbols-rounded text-[18px] flex-shrink-0 group-hover/channel:text-white transition-colors">account_circle</span>
+                            <div class="relative w-[160px] sm:w-[180px] h-5">
+                                <span class="text-sm font-semibold truncate absolute top-0 left-0 w-full group-hover/channel:w-auto group-hover/channel:bg-[#0F172A] group-hover/channel:z-50 group-hover/channel:px-1 rounded transition-all group-hover/channel:text-white">${snippet.channelTitle}</span>
+                            </div>
                         </div>
                         
                         <div class="mt-auto flex flex-row items-end justify-between border-t border-white/10 pt-5 gap-3">
