@@ -24,7 +24,7 @@
                     },
                     colors: {
                         surface: '#0F172A',
-                        highlight: 'rgb(220, 38, 38)',
+                        highlight: '#DC2626',
                         borderStrong: 'rgb(185, 28, 28)'
                     }
                 }
@@ -129,6 +129,13 @@
             0% { transform: translateY(-20px); opacity: 0; }
             100% { transform: translateY(0); opacity: 1; }
         }
+
+        /* Esconder a setinha padrão do select */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
     </style>
 </head>
 <body id="mainBody" class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 selection:bg-highlight selection:text-white relative transition-all duration-500">
@@ -153,8 +160,9 @@
 
                 <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 w-full mx-auto">
                     <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-0">
-                        <div id="mainInputContainer" class="w-full flex-1 flex flex-wrap items-center bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px]" onclick="document.getElementById('urlInput').focus()">
+                        <div id="mainInputContainer" class="w-full flex-1 flex flex-wrap items-center bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px] gap-y-2" onclick="document.getElementById('urlInput').focus()">
                             <svg class="w-6 h-6 text-slate-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <!-- Chips serão inseridos aqui -->
                             <input 
                                 type="text" 
                                 id="urlInput" 
@@ -163,7 +171,7 @@
                         </div>
                         <button 
                             id="searchBtn" 
-                            class="w-full md:w-auto bg-[rgb(220,38,38)] border border-[rgb(185,28,28)] hover:bg-[rgb(190,30,30)] text-white font-bold text-base md:text-lg px-8 py-4 rounded-xl md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative whitespace-nowrap"
+                            class="w-full md:w-auto bg-[#DC2626] border border-borderStrong hover:bg-[rgb(190,30,30)] text-white font-bold text-base md:text-lg px-8 py-4 rounded-xl md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative whitespace-nowrap"
                         >
                             <span class="material-symbols-rounded">manage_search</span>
                             <span>Buscar Lançamento</span>
@@ -171,21 +179,21 @@
                     </div>
                 </div>
 
-                <!-- BARRA DE CONTROLES (Combinações, Filtros, Ordenação) -->
+                <!-- BARRA DE CONTROLES CENTRALIZADA -->
                 <div class="mt-6 w-full mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-4 relative z-20">
                     
-                    <!-- Botão Combinações -->
-                    <div class="relative group">
-                        <button class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold">
+                    <!-- Botão Combinações (Com Menu no Clique) -->
+                    <div class="relative">
+                        <button id="comboToggleBtn" onclick="toggleComboMenu(event)" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold">
                             <span class="material-symbols-rounded text-[20px]">auto_awesome</span>
                             Combinações
                         </button>
                         <!-- Menu Dropdown -->
-                        <div class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-72 bg-[#080B14] border border-white/10 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden z-50">
-                            <button onclick="applySmartCombo1()" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">
-                                <span class="font-bold text-highlight block mb-1 text-sm">Lançamento Padrão</span>
-                                "Aula 1" <span class="text-orange-400 font-bold">OU</span> "Evento" <span class="text-orange-400 font-bold">OU</span> "Workshop" <span class="text-blue-400 font-bold">E</span> Gratuito <span class="text-blue-400 font-bold">E</span> Online <br>
-                                Negativas: minicurso <span class="text-orange-400 font-bold">OU</span> mini-curso
+                        <div id="comboDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-72 bg-[#080B14] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 overflow-hidden z-50">
+                            <button onclick="applySmartCombo1(); toggleComboMenu(event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                                "Aula 1" <span class="text-orange-400 font-bold">OU</span> "Evento" <span class="text-orange-400 font-bold">OU</span> "Workshop" <span class="text-blue-400 font-bold">E</span> Gratuito <span class="text-blue-400 font-bold">E</span> Online <br><br>
+                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas Automáticas:</span>
+                                minicurso <span class="text-orange-400 font-bold">OU</span> mini-curso
                             </button>
                         </div>
                     </div>
@@ -197,14 +205,14 @@
                         <span id="filtersArrow" class="material-symbols-rounded text-[20px] transition-transform duration-300">expand_more</span>
                     </button>
 
-                    <!-- Botão Organizar -->
-                    <div class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold relative group">
-                        <span class="material-symbols-rounded text-[20px]">sort</span>
-                        <select id="sortFilter" class="bg-transparent border-none outline-none cursor-pointer appearance-none font-bold text-inherit">
-                            <option value="views" class="bg-[#080B14] text-slate-300">Organizar</option>
-                            <option value="comments" class="bg-[#080B14] text-slate-300">Nº de Comentários</option>
-                            <option value="subs" class="bg-[#080B14] text-slate-300">Nº de Inscritos</option>
+                    <!-- Botão Organizar (Com o mesmo estilo dos filtros avançados) -->
+                    <div class="relative flex items-center">
+                        <select id="sortFilter" class="bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl pl-10 pr-4 py-2 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold w-full">
+                            <option value="views" class="bg-[#080B14]">Nº de Visualizações</option>
+                            <option value="comments" class="bg-[#080B14]">Nº de Comentários</option>
+                            <option value="subs" class="bg-[#080B14]">Nº de Inscritos</option>
                         </select>
+                        <span class="material-symbols-rounded text-[20px] text-slate-400 absolute left-3 pointer-events-none">sort</span>
                     </div>
 
                 </div>
@@ -213,7 +221,6 @@
                 <div id="filtersWrapper" class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out w-full max-w-md mx-auto">
                     <div class="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full text-left">
                         
-                        <!-- Coluna 1: Idioma -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Idioma</label>
                             <select id="langFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
@@ -249,7 +256,6 @@
                             </select>
                         </div>
                         
-                        <!-- Coluna 2: País -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">País</label>
                             <select id="countryFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
@@ -306,7 +312,6 @@
                             </select>
                         </div>
 
-                        <!-- Coluna 1: Status -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Status</label>
                             <select id="statusFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
@@ -317,7 +322,6 @@
                             </select>
                         </div>
                         
-                        <!-- Coluna 2: Tamanho Canal -->
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Inscritos</label>
                             <select id="subsFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
@@ -328,7 +332,6 @@
                             </select>
                         </div>
 
-                        <!-- Intervalo de Datas -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Intervalo de Datas</label>
                             <div class="w-full min-h-[48px] flex items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 transition-colors focus-within:border-highlight overflow-hidden">
@@ -339,7 +342,6 @@
                             </div>
                         </div>
 
-                        <!-- Filtro de Canais com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Filtro de Canais</label>
@@ -349,7 +351,6 @@
                             </div>
                         </div>
 
-                        <!-- Filtro de Descrição com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave na Descrição</label>
@@ -359,7 +360,6 @@
                             </div>
                         </div>
 
-                        <!-- Filtro de Negativas com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave Negativas</label>
@@ -383,20 +383,30 @@
             </div>
 
             <div class="flex items-center justify-between mb-6 px-2">
-                <h2 class="text-2xl font-bold text-white flex items-center gap-2 drop-shadow-md">
-                    Lançamentos Encontrados <span id="resultsCount" class="text-sm bg-white/10 text-slate-300 py-1 px-3 rounded-full ml-2">0</span>
+                <!-- Títulos em Destaque Absoluto -->
+                <h2 class="text-2xl md:text-3xl font-extrabold text-[#DC2626] flex items-center gap-3 drop-shadow-md">
+                    Lançamentos Encontrados 
+                    <span id="resultsCount" class="text-base bg-[#DC2626] text-white py-1 px-4 rounded-full shadow-lg">0</span>
                 </h2>
             </div>
 
             <!-- Grid de Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="resultsGrid">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4" id="resultsGrid">
                 <!-- Os cards serão injetados aqui -->
             </div>
 
             <!-- Loading Indicator -->
             <div id="loadingIndicator" class="hidden flex-col items-center justify-center py-20 w-full col-span-full">
-                <div class="w-12 h-12 border-4 border-white/10 border-t-highlight rounded-full animate-spin mb-4"></div>
-                <p class="text-slate-400 font-bold">A processar filtros avançados e pesquisas E/OU...</p>
+                <div class="w-12 h-12 border-4 border-white/10 border-t-[#DC2626] rounded-full animate-spin mb-4"></div>
+                <p class="text-slate-400 font-bold">A processar filtros e pesquisar na API...</p>
+            </div>
+
+            <!-- Botão Carregar Mais (Paginação Infinita) -->
+            <div id="loadMoreContainer" class="w-full flex justify-center mt-10 hidden">
+                <button id="loadMoreBtn" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm px-8 py-3 rounded-full transition-all flex items-center gap-2 shadow-lg">
+                    <span class="material-symbols-rounded">refresh</span>
+                    Carregar Mais Lançamentos
+                </button>
             </div>
         </div>
     </div>
@@ -407,7 +417,11 @@
         // ==========================================
         const CF_WORKER_URL = "https://unilancamento.grupo-bhds.workers.dev"; 
 
-        // === LÓGICA DO ACORDEÃO E SCROLL ===
+        // Variáveis Globais de Paginação e Resultados
+        let globalNextPageToken = '';
+        let globalAccumulatedItems = [];
+
+        // === LÓGICA DO ACORDEÃO, DROPDOWN E SCROLL ===
         const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
         const filtersWrapper = document.getElementById('filtersWrapper');
         const filtersArrow = document.getElementById('filtersArrow');
@@ -415,6 +429,7 @@
         const resultsContainer = document.getElementById('resultsContainer');
         const alertBox = document.getElementById('alertBox');
         const alertMessage = document.getElementById('alertMessage');
+        const sortFilter = document.getElementById('sortFilter');
         
         let isFiltersOpen = false;
 
@@ -446,6 +461,22 @@
             updateScrollState();
         });
 
+        // Evento de reorganizar a lista se o usuário mudar o filtro após buscar
+        sortFilter.addEventListener('change', () => {
+            if (globalAccumulatedItems.length > 0) {
+                renderGrid(globalAccumulatedItems);
+            }
+        });
+
+        function toggleComboMenu(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('comboDropdown');
+            menu.classList.toggle('hidden');
+        }
+        document.addEventListener('click', () => {
+            document.getElementById('comboDropdown').classList.add('hidden');
+        });
+
         // === SISTEMA DE ALERTA ===
         function showAlert(msg, isError = false) {
             alertBox.classList.remove('hidden');
@@ -457,7 +488,6 @@
                 alertBox.className = "custom-alert mb-6 w-full p-4 rounded-xl bg-orange-500/20 border border-orange-500 text-orange-100 flex items-center gap-3";
                 alertBox.innerHTML = `<span class="material-symbols-rounded">warning</span> <span class="font-medium text-sm">${msg}</span>`;
             }
-            // Auto hide success alerts
             if (!isError) setTimeout(hideAlert, 4000);
         }
         function hideAlert() { alertBox.classList.add('hidden'); }
@@ -560,16 +590,31 @@
             return v;
         }
 
-        // === NOVO CHIPS SYSTEM (Com lógica E/OU embutida entre as palavras) ===
+        // === NOVO CHIPS SYSTEM INTELIGENTE ===
         function setupChipSystem(inputId, containerId) {
             const input = document.getElementById(inputId); 
             const container = document.getElementById(containerId);
             if (!input || !container) return;
             
+            // Adiciona listener de INPUT global (Para resolver a vírgula no Mobile e Desktop instantaneamente)
+            input.addEventListener('input', function(e) {
+                if (this.value.includes(',')) {
+                    let parts = this.value.split(',');
+                    for(let i=0; i < parts.length - 1; i++) {
+                        let val = parts[i].trim();
+                        if (val) {
+                            if (containerId === 'channelContainer') val = cleanChannelInput(val);
+                            createChipAndOp(val, container, input);
+                        }
+                    }
+                    this.value = parts[parts.length - 1].trimStart();
+                }
+            });
+
             input.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ',') {
+                if (e.key === 'Enter') {
                     e.preventDefault(); 
-                    let value = input.value.trim().replace(/,$/, ''); 
+                    let value = input.value.trim(); 
                     if (value) { 
                         if (containerId === 'channelContainer') value = cleanChannelInput(value);
                         createChipAndOp(value, container, input); 
@@ -585,6 +630,7 @@
                     }
                 }
             });
+            
             input.addEventListener('blur', function() {
                 let value = input.value.trim().replace(/,$/, '');
                 if (value) { 
@@ -647,7 +693,15 @@
             container.insertBefore(chip, input);
         }
 
-        // Função auxiliar para injetar chips via Javascript (Usado pelo Smart Combos)
+        function clearChips(containerId) {
+            const container = document.getElementById(containerId);
+            const elements = container.querySelectorAll('.chip, .chip-op');
+            elements.forEach(el => el.remove());
+            const input = document.getElementById(containerId.replace('Container', 'Input'));
+            if(input) input.value = '';
+        }
+
+        // Função auxiliar robusta para injetar o Dork Completo
         function addChipWithOp(containerId, text, opBefore = 'AND') {
             const input = document.getElementById(containerId.replace('Container', 'Input'));
             const container = document.getElementById(containerId);
@@ -664,29 +718,24 @@
             }
         }
 
-        function clearChips(containerId) {
-            const container = document.getElementById(containerId);
-            const chips = container.querySelectorAll('.chip, .chip-op');
-            chips.forEach(c => c.remove());
-        }
-
-        // === COMBINAÇÕES INTELIGENTES ===
+        // === COMBINAÇÕES ===
         window.applySmartCombo1 = function() {
             clearChips('mainInputContainer');
             clearChips('negativeContainer');
 
-            // "Aula 1" [OU] "Evento" [OU] "Workshop" [E] Gratuito [E] Online
+            // Exige foco e limpeza total de nós de texto fantasma no container principal
+            document.getElementById('urlInput').value = '';
+
             addChipWithOp('mainInputContainer', 'Aula 1'); 
             addChipWithOp('mainInputContainer', 'Evento', 'OR');
             addChipWithOp('mainInputContainer', 'Workshop', 'OR');
             addChipWithOp('mainInputContainer', 'Gratuito', 'AND');
             addChipWithOp('mainInputContainer', 'Online', 'AND');
 
-            // -minicurso [OU] -mini-curso (Como é o campo negativo, adicionamos as palavras normalmente com OU)
             addChipWithOp('negativeContainer', 'minicurso');
             addChipWithOp('negativeContainer', 'mini-curso', 'OR');
             
-            showAlert("Combinação 'Lançamento Padrão' aplicada com sucesso!", false);
+            showAlert("Combinação de Palavras-Chave aplicada com sucesso!", false);
         };
 
         function getLogicTokens(containerId) {
@@ -707,45 +756,23 @@
         setupChipSystem('descInput', 'descContainer');
         setupChipSystem('negativeInput', 'negativeContainer');
 
-        // === PARTICULAS ===
-        try {
-            particlesJS('particles-js', {
-                "particles": { "number": { "value": 40, "density": { "enable": true, "value_area": 800 } }, "color": { "value": "#dc2626" }, "shape": { "type": "circle" }, "opacity": { "value": 0.4 }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 }, "move": { "enable": true, "speed": 1 } }, "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": true, "mode": "grab" } } }, "retina_detect": true
-            });
-        } catch (e) {}
+        // Função Emoji Bandeiras
+        function getFlagEmoji(countryCode) {
+            if (!countryCode) return '🌐';
+            return [...countryCode.toUpperCase()].map(c => String.fromCodePoint(127397 + c.charCodeAt())).join('');
+        }
 
         // === AVALIADOR LÓGICO INTELIGENTE ===
         function evaluateLogicCustom(tokens, matchFn) {
             if (tokens.length === 0) return true;
-            
             let expr = tokens.map(t => t.type === 'word' ? matchFn(t.value) : t.value);
-            
             for (let i = 0; i < expr.length; i++) {
-                if (expr[i] === 'AND') {
-                    expr.splice(i - 1, 3, expr[i-1] && expr[i+1]);
-                    i--;
-                }
+                if (expr[i] === 'AND') { expr.splice(i - 1, 3, expr[i-1] && expr[i+1]); i--; }
             }
-            
             for (let i = 0; i < expr.length; i++) {
-                if (expr[i] === 'OR') {
-                    expr.splice(i - 1, 3, expr[i-1] || expr[i+1]);
-                    i--;
-                }
+                if (expr[i] === 'OR') { expr.splice(i - 1, 3, expr[i-1] || expr[i+1]); i--; }
             }
-            
             return expr[0];
-        }
-
-        // === MOTOR DE BUSCA RIGOROSA YOUTUBE API ===
-        const searchBtn = document.getElementById('searchBtn');
-        const resultsGrid = document.getElementById('resultsGrid');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-
-        function formatYTDate(dateStr, isEnd) {
-            if(!dateStr) return null;
-            const time = isEnd ? "23:59:59Z" : "00:00:00Z";
-            return `${dateStr}T${time}`;
         }
 
         function buildQueryString(tokens, prefix = '') {
@@ -756,16 +783,42 @@
              }).join(' ').replace(/\s+/g, ' ').trim();
         }
 
-        searchBtn.addEventListener('click', async () => {
-            hideAlert();
-            resultsContainer.classList.remove('hidden');
+        // =====================================
+        // MOTOR PRINCIPAL DE BUSCA DA API
+        // =====================================
+        const searchBtn = document.getElementById('searchBtn');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const resultsGrid = document.getElementById('resultsGrid');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+        searchBtn.addEventListener('click', () => {
+            globalNextPageToken = '';
+            globalAccumulatedItems = [];
             resultsGrid.innerHTML = '';
             document.getElementById('resultsCount').textContent = '0';
-            loadingIndicator.classList.remove('hidden');
-            loadingIndicator.classList.add('flex');
-            updateScrollState();
+            performSearch(false);
+        });
 
-            // 1. Coleta os Tokens
+        loadMoreBtn.addEventListener('click', () => {
+            performSearch(true);
+        });
+
+        async function performSearch(isLoadMore) {
+            hideAlert();
+            resultsContainer.classList.remove('hidden');
+            
+            if (!isLoadMore) {
+                loadingIndicator.classList.remove('hidden');
+                loadingIndicator.classList.add('flex');
+            } else {
+                loadMoreBtn.innerHTML = `<span class="material-symbols-rounded animate-spin">autorenew</span> A carregar...`;
+                loadMoreBtn.classList.add('opacity-50', 'pointer-events-none');
+            }
+            
+            updateScrollState();
+            loadMoreContainer.classList.add('hidden');
+
             const mainTokens = getLogicTokens('mainInputContainer');
             const descTokens = getLogicTokens('descContainer');
             const negativeTokens = getLogicTokens('negativeContainer');
@@ -777,11 +830,8 @@
             const subsSize = document.getElementById('subsFilter').value;
             const dateStart = document.getElementById('dateStart').value;
             const dateEnd = document.getElementById('dateEnd').value;
-            const sortFilter = document.getElementById('sortFilter').value;
 
-            // 2. Construção da Query HÍBRIDA (API + Google Dorks)
             let queryParts = [];
-            
             if (mainTokens.length > 0) queryParts.push(`(${buildQueryString(mainTokens, 'intitle')})`);
             if (descTokens.length > 0) queryParts.push(`(${buildQueryString(descTokens)})`);
             if (channelTokens.length > 0) queryParts.push(`(${buildQueryString(channelTokens)})`);
@@ -795,12 +845,15 @@
             const q = queryParts.join(' ');
 
             let searchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
-            
             if (lang) searchUrl += `&relevanceLanguage=${lang}`;
             if (country) searchUrl += `&regionCode=${country}`;
             if (status !== 'all') searchUrl += `&eventType=${status}`;
             if (dateStart) searchUrl += `&publishedAfter=${encodeURIComponent(formatYTDate(dateStart, false))}`;
             if (dateEnd) searchUrl += `&publishedBefore=${encodeURIComponent(formatYTDate(dateEnd, true))}`;
+            
+            if (isLoadMore && globalNextPageToken) {
+                searchUrl += `&pageToken=${globalNextPageToken}`;
+            }
 
             try {
                 // ETAPA 1: Busca Inicial na Search API
@@ -809,47 +862,47 @@
 
                 if (searchData.error) throw new Error(searchData.error.message);
 
+                globalNextPageToken = searchData.nextPageToken || '';
                 let items = searchData.items || [];
 
-                // ETAPA 2: PÓS-FILTRO JAVASCRIPT RIGOROSO (Palavras-Chave E/OU)
+                // ETAPA 2: PÓS-FILTRO JAVASCRIPT RIGOROSO
                 items = items.filter(item => {
                     const title = (item.snippet.title || '').toLowerCase();
                     const desc = (item.snippet.description || '').toLowerCase();
                     const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
                     const channelId = item.snippet.channelId;
 
-                    const titlePass = evaluateLogicCustom(mainTokens, (kw) => title.includes(kw.toLowerCase()));
-                    if (!titlePass) return false;
-
-                    const descPass = evaluateLogicCustom(descTokens, (kw) => desc.includes(kw.toLowerCase()));
-                    if (!descPass) return false;
+                    if (!evaluateLogicCustom(mainTokens, (kw) => title.includes(kw.toLowerCase()))) return false;
+                    if (!evaluateLogicCustom(descTokens, (kw) => desc.includes(kw.toLowerCase()))) return false;
 
                     if (negativeTokens.length > 0) {
-                        const hasNegative = evaluateLogicCustom(negativeTokens, (kw) => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()));
-                        if (hasNegative) return false;
+                        if (evaluateLogicCustom(negativeTokens, (kw) => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()))) return false;
                     }
 
-                    const channelPass = evaluateLogicCustom(channelTokens, (kw) => {
+                    if (!evaluateLogicCustom(channelTokens, (kw) => {
                         const lowKw = kw.toLowerCase();
                         const cTitleNoSpace = channelTitle.replace(/\s+/g, '');
                         const kwNoSpace = lowKw.replace(/\s+/g, '');
                         return channelId === kw || channelTitle.includes(lowKw) || cTitleNoSpace.includes(kwNoSpace) || kwNoSpace.includes(cTitleNoSpace);
-                    });
-                    if (!channelPass) return false;
+                    })) return false;
 
                     return true;
                 });
 
-                // ETAPA 3: FILTRO DE INSCRITOS (Channels API)
+                // ETAPA 3: FILTRO DE INSCRITOS E PAÍS (Channels API)
                 const subsMap = {};
+                const countryMap = {};
                 if (items.length > 0) {
                     const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
-                    const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics&id=${uniqueChannelIds.join(',')}`;
+                    const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics,snippet&id=${uniqueChannelIds.join(',')}`;
                     const channelsResponse = await fetch(channelsUrl);
                     const channelsData = await channelsResponse.json();
                     
                     if(channelsData.items) {
-                        channelsData.items.forEach(ch => { subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); });
+                        channelsData.items.forEach(ch => { 
+                            subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); 
+                            countryMap[ch.id] = ch.snippet?.country || ''; 
+                        });
                     }
 
                     if(subsSize !== 'all') {
@@ -866,7 +919,6 @@
                 // ETAPA 4: BUSCA DE ESTATÍSTICAS E DETALHES DE LIVE (Videos API)
                 if (items.length > 0) {
                     const videoIds = items.map(item => item.id.videoId).join(',');
-                    // A parte 'liveStreamingDetails' permite saber a data exata do agendamento
                     const videosUrl = `${CF_WORKER_URL}/videos?part=statistics,liveStreamingDetails&id=${videoIds}`;
                     const videosResponse = await fetch(videosUrl);
                     const videosData = await videosResponse.json();
@@ -884,154 +936,181 @@
                     items.forEach(item => {
                         const stats = statsMap[item.id.videoId] || {};
                         item.commentCount = parseInt(stats.commentCount || 0, 10);
-                        item.viewCount = parseInt(stats.viewCount || 0, 10); // Resgatando Views para poder ordenar depois
+                        item.viewCount = parseInt(stats.viewCount || 0, 10); 
                         item.subscriberCount = subsMap[item.snippet.channelId] || 0; 
+                        item.channelCountryCode = countryMap[item.snippet.channelId] || ''; 
                         item.liveDetails = liveDetailsMap[item.id.videoId];
                     });
                 }
 
-                // ETAPA 5: FILTRO DE STATUS 100% RIGOROSO E MATEMÁTICO
+                // ETAPA 5: FILTRO DE STATUS RIGOROSO (Matemático)
                 items = items.filter(item => {
                     const now = new Date();
-                    const liveContent = item.snippet.liveBroadcastContent; // 'none', 'live', 'upcoming'
+                    const liveContent = item.snippet.liveBroadcastContent; 
                     const publishedAt = new Date(item.snippet.publishedAt);
                     const scheduledStart = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : null;
 
                     if (status !== 'all') {
-                        if (status === 'live' && liveContent !== 'live') {
-                            return false; // Deve estar em transmissão AGORA
-                        }
+                        if (status === 'live' && liveContent !== 'live') return false; 
                         
                         if (status === 'upcoming') {
                             if (liveContent !== 'upcoming') return false;
-                            // Se a live travou na API mas a data de agendamento já passou da data de hoje/agora, ele remove!
                             if (scheduledStart && scheduledStart <= now) return false;
                         }
 
                         if (status === 'completed') {
-                            // Não pode ser nem live e nem agendado.
                             if (liveContent === 'live' || liveContent === 'upcoming') return false;
-                            // A data do vídeo não pode ser no futuro.
                             if (publishedAt > now) return false;
                         }
                     }
                     return true;
                 });
 
-                // ETAPA 6: ORDENAR OS VÍDEOS (Organizar por...)
-                if (sortFilter === 'views') {
-                    items.sort((a, b) => b.viewCount - a.viewCount);
-                } else if (sortFilter === 'comments') {
-                    items.sort((a, b) => b.commentCount - a.commentCount);
-                } else if (sortFilter === 'subs') {
-                    items.sort((a, b) => b.subscriberCount - a.subscriberCount);
-                }
+                // Junta os novos itens aprovados na lista global
+                globalAccumulatedItems = globalAccumulatedItems.concat(items);
 
-                // ETAPA 7: RENDERIZAÇÃO E BOTÃO HOTMART
+                // Tira os loaders
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
+                
+                loadMoreBtn.innerHTML = `<span class="material-symbols-rounded">refresh</span> Carregar Mais Lançamentos`;
+                loadMoreBtn.classList.remove('opacity-50', 'pointer-events-none');
 
-                document.getElementById('resultsCount').textContent = items.length;
-
-                if (items.length === 0) {
+                if (globalAccumulatedItems.length === 0 && !globalNextPageToken) {
                     resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-medium bg-white/5 rounded-2xl">Nenhum lançamento encontrado que atenda a todas as regras estipuladas nesta busca.</div>`;
                     return;
                 }
 
-                items.forEach(item => {
-                    const videoId = item.id.videoId;
-                    const snippet = item.snippet;
-                    const commentCount = item.commentCount || 0;
-                    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-                    
-                    let statusBadge = '';
-                    if(snippet.liveBroadcastContent === 'live') {
-                        statusBadge = `<div class="absolute top-4 left-4 bg-highlight/20 text-highlight border border-highlight backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg animate-pulse">
-                                          <span class="material-symbols-rounded text-[14px] sm:text-[16px]">sensors</span> Ao Vivo
-                                       </div>`;
-                    } else if (snippet.liveBroadcastContent === 'upcoming') {
-                        statusBadge = `<div class="absolute top-4 left-4 bg-blue-500/20 text-blue-400 border border-blue-500 backdrop-blur-md px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg">
-                                          <span class="material-symbols-rounded text-[14px] sm:text-[16px]">schedule</span> Agendado
-                                       </div>`;
-                    }
+                // Chama a renderização passando a lista global e o modo sort
+                renderGrid(globalAccumulatedItems);
 
-                    const parser = new DOMParser();
-                    const decodedTitle = parser.parseFromString(snippet.title, 'text/html').body.textContent;
-                    
-                    // Exibir a data exata em que o vídeo foi publicado ou está agendado
-                    const targetDate = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : new Date(snippet.publishedAt);
-                    const pubDate = targetDate.toLocaleDateString('pt-PT');
-                    
-                    const formattedComments = commentCount.toLocaleString('pt-PT');
-
-                    // REGRA DE AFILIADO HOTMART
-                    const hotmartRegex = /(https?:\/\/(?:go\.|pay\.|www\.)?hotmart\.com\/[^\s]+)/i;
-                    const hotmartMatch = snippet.description.match(hotmartRegex);
-                    let afiliarBtn = '';
-                    
-                    if (hotmartMatch && hotmartMatch[1]) {
-                        const hotmartUrl = hotmartMatch[1];
-                        const inexplorUrl = `https://inexplor.grupobhds.com/desbloqueio-produto-oculto/hotmart?po=${encodeURIComponent(hotmartUrl)}`;
-                        
-                        afiliarBtn = `
-                            <button onclick="window.open('${inexplorUrl}', '_blank'); event.stopPropagation();" title="Afiliar-se a este produto" class="h-10 px-4 rounded-full bg-orange-500/20 text-orange-400 hover:bg-orange-500 hover:text-white transition-colors flex items-center justify-center border border-orange-500/50 shadow-sm flex-shrink-0 text-sm font-bold gap-2">
-                                <span class="material-symbols-rounded text-[18px]">storefront</span>
-                                <span class="hidden sm:inline">Afiliar</span>
-                            </button>
-                        `;
-                    }
-
-                    const card = document.createElement('article');
-                    card.className = "video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl cursor-pointer group";
-                    card.onclick = () => window.open(videoUrl, '_blank');
-                    
-                    card.innerHTML = `
-                        <div class="relative aspect-video overflow-hidden bg-slate-900">
-                            <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            ${statusBadge}
-                        </div>
-                        <div class="p-6 sm:p-7 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
-                            <h3 class="text-base sm:text-lg md:text-xl font-bold leading-snug mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
-                            <div class="flex items-center gap-2 text-slate-400 mb-6">
-                                <span class="material-symbols-rounded text-[18px]">account_circle</span>
-                                <span class="text-sm font-semibold truncate">${snippet.channelTitle}</span>
-                            </div>
-                            
-                            <div class="mt-auto flex flex-row items-end justify-between border-t border-white/10 pt-5 gap-3">
-                                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 flex-grow overflow-hidden">
-                                    <div class="flex flex-col flex-shrink-0">
-                                        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Data</span>
-                                        <span class="text-sm text-slate-300 font-medium">${pubDate}</span>
-                                    </div>
-                                    <div class="flex flex-col flex-shrink-0">
-                                        <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Comentários</span>
-                                        <span class="text-sm text-slate-300 font-medium flex items-center gap-1.5">
-                                            <span class="material-symbols-rounded text-[14px]">chat_bubble</span>
-                                            ${formattedComments}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2 relative z-20 flex-shrink-0">
-                                    ${afiliarBtn}
-                                    <button onclick="copyVideoUrl(event, '${videoUrl}')" title="Copiar URL" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
-                                        <span class="material-symbols-rounded text-[18px]">content_copy</span>
-                                    </button>
-                                    <button class="w-10 h-10 rounded-full bg-white/5 group-hover:bg-highlight group-hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
-                                        <span class="material-symbols-rounded text-[20px]">arrow_forward</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    resultsGrid.appendChild(card);
-                });
+                // Controla se o botão de Carregar Mais deve aparecer
+                if (globalNextPageToken) {
+                    loadMoreContainer.classList.remove('hidden');
+                } else {
+                    loadMoreContainer.classList.add('hidden');
+                }
 
             } catch (error) {
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
-                showAlert(`Erro na busca: Verifique o console ou a URL do backend. (${error.message})`, true);
+                loadMoreBtn.innerHTML = `<span class="material-symbols-rounded">refresh</span> Tentar Novamente`;
+                loadMoreBtn.classList.remove('opacity-50', 'pointer-events-none');
+                showAlert(`Erro na busca: Verifique a URL do backend. (${error.message})`, true);
             }
-        });
+        }
+
+        // Função isolada de Renderização e Ordenação
+        function renderGrid(itemsArray) {
+            const sortFilterVal = document.getElementById('sortFilter').value;
+            
+            // Clonamos a array para não mutar a original acidentalmente
+            let itemsToRender = [...itemsArray];
+
+            // Ordena matematicamente baseada no filtro selecionado
+            if (sortFilterVal === 'views') {
+                itemsToRender.sort((a, b) => b.viewCount - a.viewCount);
+            } else if (sortFilterVal === 'comments') {
+                itemsToRender.sort((a, b) => b.commentCount - a.commentCount);
+            } else if (sortFilterVal === 'subs') {
+                itemsToRender.sort((a, b) => b.subscriberCount - a.subscriberCount);
+            }
+
+            document.getElementById('resultsCount').textContent = itemsToRender.length;
+            resultsGrid.innerHTML = '';
+
+            itemsToRender.forEach(item => {
+                const videoId = item.id.videoId;
+                const snippet = item.snippet;
+                const commentCount = item.commentCount || 0;
+                const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                
+                // Bandeira do País
+                const flagEmoji = getFlagEmoji(item.channelCountryCode);
+
+                // Pílulas com Cores e Estilos Idênticos (Sem pulsar e em vermelho)
+                let statusBadge = '';
+                if(snippet.liveBroadcastContent === 'live') {
+                    statusBadge = `<div class="absolute top-4 left-4 bg-[#DC2626] text-white px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg border border-[#B91C1C]">
+                                      <span class="material-symbols-rounded text-[14px] sm:text-[16px]">sensors</span> Ao Vivo
+                                   </div>`;
+                } else if (snippet.liveBroadcastContent === 'upcoming') {
+                    statusBadge = `<div class="absolute top-4 left-4 bg-[#DC2626] text-white px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg border border-[#B91C1C]">
+                                      <span class="material-symbols-rounded text-[14px] sm:text-[16px]">schedule</span> Agendado
+                                   </div>`;
+                }
+
+                const parser = new DOMParser();
+                const decodedTitle = parser.parseFromString(snippet.title, 'text/html').body.textContent;
+                
+                const targetDate = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : new Date(snippet.publishedAt);
+                const pubDate = targetDate.toLocaleDateString('pt-BR');
+                const formattedComments = commentCount.toLocaleString('pt-BR');
+
+                // REGRA DE AFILIADO HOTMART COM BOTÃO REDUZIDO (Apenas Ícone)
+                const hotmartRegex = /(https?:\/\/(?:go\.|pay\.|www\.)?hotmart\.com\/[^\s]+)/i;
+                const hotmartMatch = snippet.description.match(hotmartRegex);
+                let afiliarBtn = '';
+                
+                if (hotmartMatch && hotmartMatch[1]) {
+                    const hotmartUrl = hotmartMatch[1];
+                    const inexplorUrl = `https://inexplor.grupobhds.com/desbloqueio-produto-oculto/hotmart?po=${encodeURIComponent(hotmartUrl)}`;
+                    
+                    afiliarBtn = `
+                        <button onclick="window.open('${inexplorUrl}', '_blank'); event.stopPropagation();" title="Afiliar-se na Hotmart" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                            <span class="material-symbols-rounded text-[18px]">attach_money</span>
+                        </button>
+                    `;
+                }
+
+                const card = document.createElement('article');
+                card.className = "video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl cursor-pointer group";
+                card.onclick = () => window.open(videoUrl, '_blank');
+                
+                card.innerHTML = `
+                    <div class="relative aspect-video overflow-hidden bg-slate-900">
+                        <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        ${statusBadge}
+                        <div class="absolute top-4 right-4 text-2xl drop-shadow-lg" title="País do Canal: ${item.channelCountryCode || 'Desconhecido'}">
+                            ${flagEmoji}
+                        </div>
+                    </div>
+                    <div class="p-6 sm:p-7 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold leading-snug mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
+                        <div class="flex items-center gap-2 text-slate-400 mb-6">
+                            <span class="material-symbols-rounded text-[18px]">account_circle</span>
+                            <span class="text-sm font-semibold truncate">${snippet.channelTitle}</span>
+                        </div>
+                        
+                        <div class="mt-auto flex flex-row items-end justify-between border-t border-white/10 pt-5 gap-3">
+                            <div class="flex flex-wrap items-center gap-x-5 gap-y-2 flex-grow overflow-hidden">
+                                <div class="flex flex-col flex-shrink-0">
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Data</span>
+                                    <span class="text-sm text-slate-300 font-medium">${pubDate}</span>
+                                </div>
+                                <div class="flex flex-col flex-shrink-0">
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Comentários</span>
+                                    <span class="text-sm text-slate-300 font-medium flex items-center gap-1.5">
+                                        <span class="material-symbols-rounded text-[14px]">chat_bubble</span>
+                                        ${formattedComments}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 relative z-20 flex-shrink-0">
+                                ${afiliarBtn}
+                                <button onclick="copyVideoUrl(event, '${videoUrl}')" title="Copiar URL" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                                    <span class="material-symbols-rounded text-[18px]">content_copy</span>
+                                </button>
+                                <button class="w-10 h-10 rounded-full bg-white/5 group-hover:bg-highlight group-hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                                    <span class="material-symbols-rounded text-[20px]">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                resultsGrid.appendChild(card);
+            });
+        }
     </script>
 </body>
 </html>
