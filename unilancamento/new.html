@@ -180,39 +180,46 @@
                 </div>
 
                 <!-- BARRA DE CONTROLES CENTRALIZADA -->
-                <div class="mt-6 w-full mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-4 relative z-20">
+                <div class="mt-6 w-full mx-auto flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-4 relative z-20">
                     
                     <!-- Botão Combinações (Com Menu no Clique) -->
                     <div class="relative">
-                        <button id="comboToggleBtn" onclick="toggleComboMenu(event)" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold">
+                        <button id="comboToggleBtn" onclick="toggleComboMenu(event)" class="bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 flex items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold">
                             <span class="material-symbols-rounded text-[20px]">auto_awesome</span>
                             Combinações
                         </button>
                         <!-- Menu Dropdown -->
-                        <div id="comboDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-72 bg-[#080B14] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 overflow-hidden z-50">
-                            <button onclick="applySmartCombo1(); toggleComboMenu(event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                        <div id="comboDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-80 bg-[#080B14] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 overflow-hidden z-50 max-h-[300px] overflow-y-auto">
+                            <!-- Combinação 1 -->
+                            <button onclick="applySmartCombo1(); toggleComboMenu(event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">
                                 "Aula 1" <span class="text-orange-400 font-bold">OU</span> "Evento" <span class="text-orange-400 font-bold">OU</span> "Workshop" <span class="text-blue-400 font-bold">E</span> Gratuito <span class="text-blue-400 font-bold">E</span> Online <br><br>
-                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas Automáticas:</span>
+                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas:</span>
                                 minicurso <span class="text-orange-400 font-bold">OU</span> mini-curso
+                            </button>
+                            <!-- Combinação 2 (Nova) -->
+                            <button onclick="applySmartCombo2(); toggleComboMenu(event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                                "aula" <span class="text-orange-400 font-bold">OU</span> "evento" <span class="text-orange-400 font-bold">OU</span> "semana do" <span class="text-orange-400 font-bold">OU</span> "semana da" <span class="text-orange-400 font-bold">OU</span> "semana de" <span class="text-blue-400 font-bold">E</span> "grátis" <span class="text-orange-400 font-bold">OU</span> "gratis" <span class="text-orange-400 font-bold">OU</span> "gratuito" <span class="text-orange-400 font-bold">OU</span> "gratuita" <span class="text-blue-400 font-bold">E</span> "100% online" <span class="text-orange-400 font-bold">OU</span> "online" <br><br>
+                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas:</span>
+                                "lista de espera" <span class="text-orange-400 font-bold">OU</span> "encerrado" <span class="text-orange-400 font-bold">OU</span> "encerrada"
                             </button>
                         </div>
                     </div>
 
                     <!-- Botão Filtros Avançados -->
-                    <button id="toggleFiltersBtn" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold group">
+                    <button id="toggleFiltersBtn" class="bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 flex items-center gap-2 text-slate-300 hover:text-white transition-colors text-sm font-bold group">
                         <span class="material-symbols-rounded text-[20px]">tune</span>
                         <span>Filtros Avançados</span>
                         <span id="filtersArrow" class="material-symbols-rounded text-[20px] transition-transform duration-300">expand_more</span>
                     </button>
 
-                    <!-- Botão Organizar (Com o mesmo estilo dos filtros avançados) -->
+                    <!-- Botão Organizar (Estilo Padronizado) -->
                     <div class="relative flex items-center">
-                        <select id="sortFilter" class="bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl pl-10 pr-4 py-2 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold w-full">
-                            <option value="views" class="bg-[#080B14]">Nº de Visualizações</option>
-                            <option value="comments" class="bg-[#080B14]">Nº de Comentários</option>
-                            <option value="subs" class="bg-[#080B14]">Nº de Inscritos</option>
+                        <select id="sortFilter" onchange="saveState()" class="bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 hover:text-white rounded-xl pl-10 pr-4 py-2 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-bold w-full appearance-none">
+                            <option value="views" class="bg-[#080B14] font-semibold text-slate-300">Organizar</option>
+                            <option value="comments" class="bg-[#080B14] font-semibold text-slate-300">Nº de Comentários</option>
+                            <option value="subs" class="bg-[#080B14] font-semibold text-slate-300">Nº de Inscritos</option>
                         </select>
-                        <span class="material-symbols-rounded text-[20px] text-slate-400 absolute left-3 pointer-events-none">sort</span>
+                        <span class="material-symbols-rounded text-[20px] text-slate-300 absolute left-3 pointer-events-none">sort</span>
                     </div>
 
                 </div>
@@ -223,7 +230,7 @@
                         
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Idioma</label>
-                            <select id="langFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
+                            <select id="langFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
                                 <option value="" class="bg-surface">Qualquer Idioma</option>
                                 <option value="pt" class="bg-surface">Português</option>
                                 <option value="en" class="bg-surface">Inglês</option>
@@ -258,7 +265,7 @@
                         
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">País</label>
-                            <select id="countryFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
+                            <select id="countryFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold overflow-y-auto">
                                 <option value="" class="bg-surface">Qualquer País</option>
                                 <option value="BR" class="bg-surface">Brasil</option>
                                 <option value="US" class="bg-surface">Estados Unidos</option>
@@ -314,7 +321,7 @@
 
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Status</label>
-                            <select id="statusFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="statusFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
                                 <option value="all" class="bg-surface">Todos os Status</option>
                                 <option value="live" class="bg-surface">Ao Vivo</option>
                                 <option value="upcoming" class="bg-surface">Agendado</option>
@@ -324,7 +331,7 @@
                         
                         <div class="flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Inscritos</label>
-                            <select id="subsFilter" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
+                            <select id="subsFilter" onchange="saveState()" class="w-full h-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 outline-none focus:border-highlight transition-colors cursor-pointer text-sm font-semibold">
                                 <option value="all" class="bg-surface">Todos os Tamanhos</option>
                                 <option value="small" class="bg-surface">Até 10 mil Inscritos</option>
                                 <option value="medium" class="bg-surface">De 10 mil a 100 mil Inscritos</option>
@@ -336,9 +343,9 @@
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Intervalo de Datas</label>
                             <div class="w-full min-h-[48px] flex items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 transition-colors focus-within:border-highlight overflow-hidden">
                                 <span class="text-slate-400 text-xs font-semibold whitespace-nowrap">De:</span>
-                                <input type="date" id="dateStart" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                                <input type="date" id="dateStart" onchange="saveState()" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
                                 <span class="text-slate-400 text-xs font-semibold whitespace-nowrap ml-1">Até:</span>
-                                <input type="date" id="dateEnd" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                                <input type="date" id="dateEnd" onchange="saveState()" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
                             </div>
                         </div>
 
@@ -383,10 +390,10 @@
             </div>
 
             <div class="flex items-center justify-between mb-6 px-2">
-                <!-- Títulos em Destaque Absoluto -->
-                <h2 class="text-2xl md:text-3xl font-extrabold text-[#DC2626] flex items-center gap-3 drop-shadow-md">
-                    Lançamentos Encontrados 
-                    <span id="resultsCount" class="text-base bg-[#DC2626] text-white py-1 px-4 rounded-full shadow-lg">0</span>
+                <!-- Títulos em Destaque Absoluto com Quebra Inteligente -->
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#DC2626] flex flex-wrap items-center gap-2 sm:gap-3 drop-shadow-md leading-tight w-full">
+                    <span>Lançamentos Encontrados</span>
+                    <span id="resultsCount" class="text-sm sm:text-base bg-[#DC2626] text-white py-1 px-4 rounded-full shadow-lg whitespace-nowrap">0</span>
                 </h2>
             </div>
 
@@ -398,7 +405,7 @@
             <!-- Loading Indicator -->
             <div id="loadingIndicator" class="hidden flex-col items-center justify-center py-20 w-full col-span-full">
                 <div class="w-12 h-12 border-4 border-white/10 border-t-[#DC2626] rounded-full animate-spin mb-4"></div>
-                <p class="text-slate-400 font-bold">A processar filtros e pesquisar na API...</p>
+                <p class="text-slate-400 font-bold text-center px-4">Beba um café! Encontrando seus lançamentos milionários...</p>
             </div>
 
             <!-- Botão Carregar Mais (Paginação Infinita) -->
@@ -420,6 +427,79 @@
         // Variáveis Globais de Paginação e Resultados
         let globalNextPageToken = '';
         let globalAccumulatedItems = [];
+
+        // === LOCAL STORAGE (SALVAR/CARREGAR SESSÃO) ===
+        function saveState() {
+            setTimeout(() => {
+                const state = {
+                    main: getLogicTokens('mainInputContainer'),
+                    desc: getLogicTokens('descContainer'),
+                    neg: getLogicTokens('negativeContainer'),
+                    channel: getLogicTokens('channelContainer'),
+                    lang: document.getElementById('langFilter').value,
+                    country: document.getElementById('countryFilter').value,
+                    status: document.getElementById('statusFilter').value,
+                    subs: document.getElementById('subsFilter').value,
+                    dateStart: document.getElementById('dateStart').value,
+                    dateEnd: document.getElementById('dateEnd').value,
+                    sort: document.getElementById('sortFilter').value,
+                    filtersOpen: isFiltersOpen
+                };
+                localStorage.setItem('unilancamento_state', JSON.stringify(state));
+            }, 100);
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('unilancamento_state');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    
+                    document.getElementById('langFilter').value = state.lang || '';
+                    document.getElementById('countryFilter').value = state.country || '';
+                    document.getElementById('statusFilter').value = state.status || 'all';
+                    document.getElementById('subsFilter').value = state.subs || 'all';
+                    document.getElementById('dateStart').value = state.dateStart || '';
+                    document.getElementById('dateEnd').value = state.dateEnd || '';
+                    document.getElementById('sortFilter').value = state.sort || 'views';
+                    
+                    if(state.filtersOpen && !isFiltersOpen) {
+                        document.getElementById('toggleFiltersBtn').click();
+                    }
+
+                    const recreateChips = (containerId, tokens) => {
+                        const container = document.getElementById(containerId);
+                        const input = document.getElementById(containerId.replace('Container', 'Input'));
+                        if(!container || !input || !tokens) return;
+                        
+                        clearChips(containerId);
+                        tokens.forEach(t => {
+                            if(t.type === 'word') {
+                                createChipAndOp(t.value, container, input);
+                            } else if (t.type === 'op') {
+                                // O Operador é inserido automaticamente antes da palavra, o último precisa ser corrigido se divergir
+                                const ops = container.querySelectorAll('.chip-op');
+                                if(ops.length > 0) {
+                                    const lastOp = ops[ops.length - 1];
+                                    if(lastOp.getAttribute('data-op') !== t.value) {
+                                        lastOp.click();
+                                    }
+                                }
+                            }
+                        });
+                    };
+
+                    recreateChips('mainInputContainer', state.main);
+                    recreateChips('descContainer', state.desc);
+                    recreateChips('negativeContainer', state.neg);
+                    recreateChips('channelContainer', state.channel);
+                    
+                } catch(e) {
+                    console.error("Erro ao carregar sessão anterior:", e);
+                }
+            }
+        }
+        document.addEventListener("DOMContentLoaded", loadState);
 
         // === LÓGICA DO ACORDEÃO, DROPDOWN E SCROLL ===
         const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
@@ -459,13 +539,12 @@
                 filtersArrow.classList.remove('rotate-180');
             }
             updateScrollState();
+            saveState();
         });
 
-        // Evento de reorganizar a lista se o usuário mudar o filtro após buscar
         sortFilter.addEventListener('change', () => {
-            if (globalAccumulatedItems.length > 0) {
-                renderGrid(globalAccumulatedItems);
-            }
+            if (globalAccumulatedItems.length > 0) renderGrid(globalAccumulatedItems);
+            saveState();
         });
 
         function toggleComboMenu(e) {
@@ -492,29 +571,34 @@
         }
         function hideAlert() { alertBox.classList.add('hidden'); }
 
-        // === FUNÇÃO PARA COPIAR URL DO VÍDEO ===
-        window.copyVideoUrl = function(event, url) {
+        // === FUNÇÕES PARA COPIAR (URL E CANAL) ===
+        window.copyToClipboard = function(event, text, btnElement = null) {
             event.stopPropagation();
             const tempInput = document.createElement('input');
-            tempInput.value = url;
+            tempInput.value = text;
             document.body.appendChild(tempInput);
             tempInput.select();
             document.execCommand('copy');
             document.body.removeChild(tempInput);
             
-            const btn = event.currentTarget;
-            const icon = btn.querySelector('.material-symbols-rounded');
-            const originalText = icon.textContent;
-            
-            icon.textContent = 'check';
-            btn.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500');
-            btn.classList.remove('border-white/10', 'text-slate-300');
-            
-            setTimeout(() => {
-                icon.textContent = originalText;
-                btn.classList.remove('bg-green-500/20', 'text-green-400', 'border-green-500');
-                btn.classList.add('border-white/10', 'text-slate-300');
-            }, 2000);
+            if(btnElement) {
+                const icon = btnElement.querySelector('.material-symbols-rounded');
+                if(icon) {
+                    const originalText = icon.textContent;
+                    icon.textContent = 'check';
+                    btnElement.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500');
+                    btnElement.classList.remove('border-white/10', 'text-slate-300', 'text-slate-400');
+                    
+                    setTimeout(() => {
+                        icon.textContent = originalText;
+                        btnElement.classList.remove('bg-green-500/20', 'text-green-400', 'border-green-500');
+                        btnElement.classList.add('border-white/10');
+                        // Tenta restaurar a cor base (alguns são slate-300, outros 400)
+                        if(btnElement.classList.contains('w-fit')) btnElement.classList.add('text-slate-400');
+                        else btnElement.classList.add('text-slate-300');
+                    }, 2000);
+                }
+            }
         };
 
         // === MÁQUINA DE ESCREVER ===
@@ -590,13 +674,12 @@
             return v;
         }
 
-        // === NOVO CHIPS SYSTEM INTELIGENTE ===
+        // === NOVO CHIPS SYSTEM INTELIGENTE (Trata a vírgula perfeitamente e espaços) ===
         function setupChipSystem(inputId, containerId) {
             const input = document.getElementById(inputId); 
             const container = document.getElementById(containerId);
             if (!input || !container) return;
             
-            // Adiciona listener de INPUT global (Para resolver a vírgula no Mobile e Desktop instantaneamente)
             input.addEventListener('input', function(e) {
                 if (this.value.includes(',')) {
                     let parts = this.value.split(',');
@@ -627,6 +710,7 @@
                         const prevNode = lastChip.previousElementSibling;
                         if (prevNode && prevNode.classList.contains('chip-op')) prevNode.remove();
                         lastChip.remove();
+                        saveState();
                     }
                 }
             });
@@ -669,6 +753,7 @@
                         this.innerText = 'E';
                         this.className = `${baseClasses} ${andClasses}`;
                     }
+                    saveState();
                 };
                 container.insertBefore(op, input);
             }
@@ -687,10 +772,12 @@
                 else if (nextNode && nextNode.classList.contains('chip-op')) nextNode.remove();
                 
                 chip.remove();
+                saveState();
                 document.getElementById('urlInput').focus();
             });
 
             container.insertBefore(chip, input);
+            saveState();
         }
 
         function clearChips(containerId) {
@@ -701,7 +788,6 @@
             if(input) input.value = '';
         }
 
-        // Função auxiliar robusta para injetar o Dork Completo
         function addChipWithOp(containerId, text, opBefore = 'AND') {
             const input = document.getElementById(containerId.replace('Container', 'Input'));
             const container = document.getElementById(containerId);
@@ -718,12 +804,10 @@
             }
         }
 
-        // === COMBINAÇÕES ===
+        // === COMBINAÇÕES INTELIGENTES ===
         window.applySmartCombo1 = function() {
             clearChips('mainInputContainer');
             clearChips('negativeContainer');
-
-            // Exige foco e limpeza total de nós de texto fantasma no container principal
             document.getElementById('urlInput').value = '';
 
             addChipWithOp('mainInputContainer', 'Aula 1'); 
@@ -735,7 +819,33 @@
             addChipWithOp('negativeContainer', 'minicurso');
             addChipWithOp('negativeContainer', 'mini-curso', 'OR');
             
-            showAlert("Combinação de Palavras-Chave aplicada com sucesso!", false);
+            saveState();
+            showAlert("Combinação aplicada com sucesso!", false);
+        };
+
+        window.applySmartCombo2 = function() {
+            clearChips('mainInputContainer');
+            clearChips('negativeContainer');
+            document.getElementById('urlInput').value = '';
+
+            addChipWithOp('mainInputContainer', 'aula'); 
+            addChipWithOp('mainInputContainer', 'evento', 'OR');
+            addChipWithOp('mainInputContainer', 'semana do', 'OR');
+            addChipWithOp('mainInputContainer', 'semana da', 'OR');
+            addChipWithOp('mainInputContainer', 'semana de', 'OR');
+            addChipWithOp('mainInputContainer', 'grátis', 'AND');
+            addChipWithOp('mainInputContainer', 'gratis', 'OR');
+            addChipWithOp('mainInputContainer', 'gratuito', 'OR');
+            addChipWithOp('mainInputContainer', 'gratuita', 'OR');
+            addChipWithOp('mainInputContainer', '100% online', 'AND');
+            addChipWithOp('mainInputContainer', 'online', 'OR');
+
+            addChipWithOp('negativeContainer', 'lista de espera');
+            addChipWithOp('negativeContainer', 'encerrado', 'OR');
+            addChipWithOp('negativeContainer', 'encerrada', 'OR');
+            
+            saveState();
+            showAlert("Combinação aplicada com sucesso!", false);
         };
 
         function getLogicTokens(containerId) {
@@ -783,6 +893,16 @@
              }).join(' ').replace(/\s+/g, ' ').trim();
         }
 
+        // Fetch com Timeout (Prevenção de Loop Infinito/Travamento)
+        async function fetchWithTimeout(resource, options = {}) {
+            const { timeout = 15000 } = options;
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            const response = await fetch(resource, { ...options, signal: controller.signal });
+            clearTimeout(id);
+            return response;
+        }
+
         // =====================================
         // MOTOR PRINCIPAL DE BUSCA DA API
         // =====================================
@@ -793,6 +913,11 @@
         const loadMoreContainer = document.getElementById('loadMoreContainer');
 
         searchBtn.addEventListener('click', () => {
+            // Auto encolher os filtros caso estejam abertos ao clicar em buscar
+            if(isFiltersOpen) {
+                document.getElementById('toggleFiltersBtn').click();
+            }
+
             globalNextPageToken = '';
             globalAccumulatedItems = [];
             resultsGrid.innerHTML = '';
@@ -844,130 +969,154 @@
 
             const q = queryParts.join(' ');
 
-            let searchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
-            if (lang) searchUrl += `&relevanceLanguage=${lang}`;
-            if (country) searchUrl += `&regionCode=${country}`;
-            if (status !== 'all') searchUrl += `&eventType=${status}`;
-            if (dateStart) searchUrl += `&publishedAfter=${encodeURIComponent(formatYTDate(dateStart, false))}`;
-            if (dateEnd) searchUrl += `&publishedBefore=${encodeURIComponent(formatYTDate(dateEnd, true))}`;
-            
-            if (isLoadMore && globalNextPageToken) {
-                searchUrl += `&pageToken=${globalNextPageToken}`;
-            }
+            let baseSearchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
+            if (lang) baseSearchUrl += `&relevanceLanguage=${lang}`;
+            if (country) baseSearchUrl += `&regionCode=${country}`;
+            if (status !== 'all') baseSearchUrl += `&eventType=${status}`;
+            if (dateStart) baseSearchUrl += `&publishedAfter=${encodeURIComponent(formatYTDate(dateStart, false))}`;
+            if (dateEnd) baseSearchUrl += `&publishedBefore=${encodeURIComponent(formatYTDate(dateEnd, true))}`;
 
             try {
-                // ETAPA 1: Busca Inicial na Search API
-                const searchResponse = await fetch(searchUrl);
-                const searchData = await searchResponse.json();
+                // AUTO-PESQUISA: Procura até 3 páginas internamente se o filtro JS devolver 0 items.
+                let loopCount = 0;
+                let finalItems = [];
+                let currentNextPageToken = isLoadMore ? globalNextPageToken : '';
 
-                if (searchData.error) throw new Error(searchData.error.message);
+                while (loopCount < 3 && finalItems.length === 0) {
+                    let searchUrl = baseSearchUrl;
+                    if (currentNextPageToken) searchUrl += `&pageToken=${currentNextPageToken}`;
 
-                globalNextPageToken = searchData.nextPageToken || '';
-                let items = searchData.items || [];
+                    // ETAPA 1: Busca Inicial na Search API com Timeout
+                    const searchResponse = await fetchWithTimeout(searchUrl, { timeout: 15000 });
+                    const searchData = await searchResponse.json();
 
-                // ETAPA 2: PÓS-FILTRO JAVASCRIPT RIGOROSO
-                items = items.filter(item => {
-                    const title = (item.snippet.title || '').toLowerCase();
-                    const desc = (item.snippet.description || '').toLowerCase();
-                    const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
-                    const channelId = item.snippet.channelId;
+                    if (searchData.error) throw new Error(searchData.error.message);
 
-                    if (!evaluateLogicCustom(mainTokens, (kw) => title.includes(kw.toLowerCase()))) return false;
-                    if (!evaluateLogicCustom(descTokens, (kw) => desc.includes(kw.toLowerCase()))) return false;
+                    currentNextPageToken = searchData.nextPageToken || '';
+                    let items = searchData.items || [];
 
-                    if (negativeTokens.length > 0) {
-                        if (evaluateLogicCustom(negativeTokens, (kw) => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()))) return false;
-                    }
+                    if(items.length === 0) break; // Acabou a API real
 
-                    if (!evaluateLogicCustom(channelTokens, (kw) => {
-                        const lowKw = kw.toLowerCase();
-                        const cTitleNoSpace = channelTitle.replace(/\s+/g, '');
-                        const kwNoSpace = lowKw.replace(/\s+/g, '');
-                        return channelId === kw || channelTitle.includes(lowKw) || cTitleNoSpace.includes(kwNoSpace) || kwNoSpace.includes(cTitleNoSpace);
-                    })) return false;
+                    // ETAPA 2: PÓS-FILTRO JAVASCRIPT RIGOROSO
+                    items = items.filter(item => {
+                        const title = (item.snippet.title || '').toLowerCase();
+                        const desc = (item.snippet.description || '').toLowerCase();
+                        const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
+                        const channelId = item.snippet.channelId;
 
-                    return true;
-                });
+                        if (!evaluateLogicCustom(mainTokens, (kw) => title.includes(kw.toLowerCase()))) return false;
+                        if (!evaluateLogicCustom(descTokens, (kw) => desc.includes(kw.toLowerCase()))) return false;
+                        if (negativeTokens.length > 0 && evaluateLogicCustom(negativeTokens, (kw) => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()))) return false;
 
-                // ETAPA 3: FILTRO DE INSCRITOS E PAÍS (Channels API)
-                const subsMap = {};
-                const countryMap = {};
-                if (items.length > 0) {
-                    const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
-                    const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics,snippet&id=${uniqueChannelIds.join(',')}`;
-                    const channelsResponse = await fetch(channelsUrl);
-                    const channelsData = await channelsResponse.json();
-                    
-                    if(channelsData.items) {
-                        channelsData.items.forEach(ch => { 
-                            subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); 
-                            countryMap[ch.id] = ch.snippet?.country || ''; 
-                        });
-                    }
+                        if (!evaluateLogicCustom(channelTokens, (kw) => {
+                            const lowKw = kw.toLowerCase();
+                            const cTitleNoSpace = channelTitle.replace(/\s+/g, '');
+                            const kwNoSpace = lowKw.replace(/\s+/g, '');
+                            return channelId === kw || channelTitle.includes(lowKw) || cTitleNoSpace.includes(kwNoSpace) || kwNoSpace.includes(cTitleNoSpace);
+                        })) return false;
 
-                    if(subsSize !== 'all') {
-                        items = items.filter(item => {
-                            const count = subsMap[item.snippet.channelId] || 0;
-                            if (subsSize === 'small') return count <= 10000;
-                            if (subsSize === 'medium') return count > 10000 && count <= 100000;
-                            if (subsSize === 'large') return count > 100000;
-                            return true;
-                        });
-                    }
-                }
-
-                // ETAPA 4: BUSCA DE ESTATÍSTICAS E DETALHES DE LIVE (Videos API)
-                if (items.length > 0) {
-                    const videoIds = items.map(item => item.id.videoId).join(',');
-                    const videosUrl = `${CF_WORKER_URL}/videos?part=statistics,liveStreamingDetails&id=${videoIds}`;
-                    const videosResponse = await fetch(videosUrl);
-                    const videosData = await videosResponse.json();
-
-                    const statsMap = {};
-                    const liveDetailsMap = {};
-                    
-                    if(videosData.items) {
-                        videosData.items.forEach(v => {
-                            statsMap[v.id] = v.statistics || {};
-                            liveDetailsMap[v.id] = v.liveStreamingDetails || null;
-                        });
-                    }
-
-                    items.forEach(item => {
-                        const stats = statsMap[item.id.videoId] || {};
-                        item.commentCount = parseInt(stats.commentCount || 0, 10);
-                        item.viewCount = parseInt(stats.viewCount || 0, 10); 
-                        item.subscriberCount = subsMap[item.snippet.channelId] || 0; 
-                        item.channelCountryCode = countryMap[item.snippet.channelId] || ''; 
-                        item.liveDetails = liveDetailsMap[item.id.videoId];
+                        return true;
                     });
-                }
 
-                // ETAPA 5: FILTRO DE STATUS RIGOROSO (Matemático)
-                items = items.filter(item => {
-                    const now = new Date();
-                    const liveContent = item.snippet.liveBroadcastContent; 
-                    const publishedAt = new Date(item.snippet.publishedAt);
-                    const scheduledStart = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : null;
-
-                    if (status !== 'all') {
-                        if (status === 'live' && liveContent !== 'live') return false; 
+                    // ETAPA 3: FILTRO DE INSCRITOS (Channels API)
+                    const subsMap = {};
+                    if (items.length > 0) {
+                        const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
+                        const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics&id=${uniqueChannelIds.join(',')}`;
+                        const channelsResponse = await fetchWithTimeout(channelsUrl);
+                        const channelsData = await channelsResponse.json();
                         
-                        if (status === 'upcoming') {
-                            if (liveContent !== 'upcoming') return false;
-                            if (scheduledStart && scheduledStart <= now) return false;
+                        if(channelsData.items) {
+                            channelsData.items.forEach(ch => { 
+                                subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); 
+                            });
                         }
 
-                        if (status === 'completed') {
-                            if (liveContent === 'live' || liveContent === 'upcoming') return false;
-                            if (publishedAt > now) return false;
+                        if(subsSize !== 'all') {
+                            items = items.filter(item => {
+                                const count = subsMap[item.snippet.channelId] || 0;
+                                if (subsSize === 'small') return count <= 10000;
+                                if (subsSize === 'medium') return count > 10000 && count <= 100000;
+                                if (subsSize === 'large') return count > 100000;
+                                return true;
+                            });
                         }
                     }
-                    return true;
-                });
 
-                // Junta os novos itens aprovados na lista global
-                globalAccumulatedItems = globalAccumulatedItems.concat(items);
+                    // ETAPA 4: BUSCA DE ESTATÍSTICAS E PAÍS DO VÍDEO (Videos API)
+                    if (items.length > 0) {
+                        const videoIds = items.map(item => item.id.videoId).join(',');
+                        const videosUrl = `${CF_WORKER_URL}/videos?part=snippet,statistics,liveStreamingDetails&id=${videoIds}`;
+                        const videosResponse = await fetchWithTimeout(videosUrl);
+                        const videosData = await videosResponse.json();
+
+                        const statsMap = {};
+                        const liveDetailsMap = {};
+                        const videoCountryMap = {};
+                        
+                        if(videosData.items) {
+                            videosData.items.forEach(v => {
+                                statsMap[v.id] = v.statistics || {};
+                                liveDetailsMap[v.id] = v.liveStreamingDetails || null;
+                                
+                                // Extrai o país do idioma de áudio do vídeo (ex: pt-BR -> BR)
+                                let langCode = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
+                                let countryExtracted = langCode.includes('-') ? langCode.split('-')[1] : langCode;
+                                videoCountryMap[v.id] = countryExtracted.toUpperCase();
+                            });
+                        }
+
+                        items.forEach(item => {
+                            const stats = statsMap[item.id.videoId] || {};
+                            item.commentCount = parseInt(stats.commentCount || 0, 10);
+                            item.viewCount = parseInt(stats.viewCount || 0, 10); 
+                            item.subscriberCount = subsMap[item.snippet.channelId] || 0; 
+                            item.liveDetails = liveDetailsMap[item.id.videoId];
+                            item.videoCountryCode = videoCountryMap[item.id.videoId] || ''; 
+                        });
+                    }
+
+                    // ETAPA 5: HARMONIA MATEMÁTICA ENTRE STATUS E DATA
+                    items = items.filter(item => {
+                        const now = new Date();
+                        const liveContent = item.snippet.liveBroadcastContent; 
+                        const scheduledStart = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : null;
+                        const actualEnd = item.liveDetails?.actualEndTime ? new Date(item.liveDetails.actualEndTime) : null;
+                        const publishedAt = new Date(item.snippet.publishedAt);
+
+                        const targetDateForFilter = scheduledStart || actualEnd || publishedAt;
+
+                        if (dateStart || dateEnd) {
+                            const dStart = dateStart ? new Date(dateStart + "T00:00:00Z") : null;
+                            const dEnd = dateEnd ? new Date(dateEnd + "T23:59:59Z") : null;
+                            if (dStart && targetDateForFilter < dStart) return false;
+                            if (dEnd && targetDateForFilter > dEnd) return false;
+                        }
+
+                        if (status !== 'all') {
+                            if (status === 'live' && liveContent !== 'live') return false; 
+                            
+                            if (status === 'upcoming') {
+                                if (liveContent !== 'upcoming') return false;
+                                if (scheduledStart && scheduledStart <= now) return false;
+                            }
+
+                            if (status === 'completed') {
+                                if (liveContent === 'live' || liveContent === 'upcoming') return false;
+                                if (targetDateForFilter > now) return false;
+                            }
+                        }
+                        return true;
+                    });
+
+                    finalItems = items;
+                    loopCount++;
+                    
+                    if (finalItems.length === 0 && !currentNextPageToken) break;
+                }
+
+                globalNextPageToken = currentNextPageToken;
+                globalAccumulatedItems = globalAccumulatedItems.concat(finalItems);
 
                 // Tira os loaders
                 loadingIndicator.classList.add('hidden');
@@ -981,10 +1130,8 @@
                     return;
                 }
 
-                // Chama a renderização passando a lista global e o modo sort
                 renderGrid(globalAccumulatedItems);
 
-                // Controla se o botão de Carregar Mais deve aparecer
                 if (globalNextPageToken) {
                     loadMoreContainer.classList.remove('hidden');
                 } else {
@@ -996,7 +1143,10 @@
                 loadingIndicator.classList.remove('flex');
                 loadMoreBtn.innerHTML = `<span class="material-symbols-rounded">refresh</span> Tentar Novamente`;
                 loadMoreBtn.classList.remove('opacity-50', 'pointer-events-none');
-                showAlert(`Erro na busca: Verifique a URL do backend. (${error.message})`, true);
+                
+                let errorMsg = error.message;
+                if (error.name === 'AbortError') errorMsg = "A ligação demorou muito a responder. A pesquisa foi interrompida.";
+                showAlert(`Erro na busca: ${errorMsg}`, true);
             }
         }
 
@@ -1004,10 +1154,8 @@
         function renderGrid(itemsArray) {
             const sortFilterVal = document.getElementById('sortFilter').value;
             
-            // Clonamos a array para não mutar a original acidentalmente
             let itemsToRender = [...itemsArray];
 
-            // Ordena matematicamente baseada no filtro selecionado
             if (sortFilterVal === 'views') {
                 itemsToRender.sort((a, b) => b.viewCount - a.viewCount);
             } else if (sortFilterVal === 'comments') {
@@ -1025,10 +1173,16 @@
                 const commentCount = item.commentCount || 0;
                 const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
                 
-                // Bandeira do País
-                const flagEmoji = getFlagEmoji(item.channelCountryCode);
+                // Bandeira do Vídeo em Pílula
+                const flagEmoji = getFlagEmoji(item.videoCountryCode);
+                let flagPill = '';
+                if(item.videoCountryCode) {
+                    flagPill = `<div class="absolute top-4 right-4 bg-black/50 backdrop-blur-md border border-white/20 px-2 py-1 rounded-lg text-lg drop-shadow-lg flex items-center justify-center cursor-help" title="País do Vídeo: ${item.videoCountryCode}">
+                                    ${flagEmoji}
+                                </div>`;
+                }
 
-                // Pílulas com Cores e Estilos Idênticos (Sem pulsar e em vermelho)
+                // Pílulas com Cores e Estilos Idênticos
                 let statusBadge = '';
                 if(snippet.liveBroadcastContent === 'live') {
                     statusBadge = `<div class="absolute top-4 left-4 bg-[#DC2626] text-white px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg border border-[#B91C1C]">
@@ -1044,10 +1198,10 @@
                 const decodedTitle = parser.parseFromString(snippet.title, 'text/html').body.textContent;
                 
                 const targetDate = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : new Date(snippet.publishedAt);
-                const pubDate = targetDate.toLocaleDateString('pt-BR');
-                const formattedComments = commentCount.toLocaleString('pt-BR');
+                const pubDate = targetDate.toLocaleDateString('pt-PT');
+                const formattedComments = commentCount.toLocaleString('pt-PT');
 
-                // REGRA DE AFILIADO HOTMART COM BOTÃO REDUZIDO (Apenas Ícone)
+                // REGRA DE AFILIADO HOTMART (Apenas Ícone com as exatas cores de cópia)
                 const hotmartRegex = /(https?:\/\/(?:go\.|pay\.|www\.)?hotmart\.com\/[^\s]+)/i;
                 const hotmartMatch = snippet.description.match(hotmartRegex);
                 let afiliarBtn = '';
@@ -1071,15 +1225,14 @@
                     <div class="relative aspect-video overflow-hidden bg-slate-900">
                         <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         ${statusBadge}
-                        <div class="absolute top-4 right-4 text-2xl drop-shadow-lg" title="País do Canal: ${item.channelCountryCode || 'Desconhecido'}">
-                            ${flagEmoji}
-                        </div>
+                        ${flagPill}
                     </div>
                     <div class="p-6 sm:p-7 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
                         <h3 class="text-base sm:text-lg md:text-xl font-bold leading-snug mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
-                        <div class="flex items-center gap-2 text-slate-400 mb-6">
+                        
+                        <div class="flex items-center gap-2 text-slate-400 mb-6 cursor-pointer hover:text-white transition-colors w-fit group/channel" onclick="copyToClipboard(event, '${snippet.channelId}', this)" title="Copiar ID do Canal">
                             <span class="material-symbols-rounded text-[18px]">account_circle</span>
-                            <span class="text-sm font-semibold truncate">${snippet.channelTitle}</span>
+                            <span class="text-sm font-semibold truncate group-hover/channel:underline">${snippet.channelTitle}</span>
                         </div>
                         
                         <div class="mt-auto flex flex-row items-end justify-between border-t border-white/10 pt-5 gap-3">
@@ -1098,7 +1251,7 @@
                             </div>
                             <div class="flex items-center gap-2 relative z-20 flex-shrink-0">
                                 ${afiliarBtn}
-                                <button onclick="copyVideoUrl(event, '${videoUrl}')" title="Copiar URL" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                                <button onclick="copyToClipboard(event, '${videoUrl}', this)" title="Copiar URL do Vídeo" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
                                     <span class="material-symbols-rounded text-[18px]">content_copy</span>
                                 </button>
                                 <button class="w-10 h-10 rounded-full bg-white/5 group-hover:bg-highlight group-hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
