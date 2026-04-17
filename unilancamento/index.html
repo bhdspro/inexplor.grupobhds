@@ -983,9 +983,13 @@
         };
 
         function getCountryNameByCode(code) {
-            const select = document.getElementById('countryFilter');
-            const option = select.querySelector(`option[value="${code.toUpperCase()}"]`);
-            return option ? option.innerText : code.toUpperCase();
+            if (!code) return '';
+            try {
+                const regionNames = new Intl.DisplayNames(['pt-BR'], { type: 'region' });
+                return regionNames.of(code.toUpperCase());
+            } catch (e) {
+                return code.toUpperCase();
+            }
         }
         
         function getFlagImg(countryCode) {
@@ -1214,12 +1218,32 @@
                         const statsMap = {};
                         const liveDetailsMap = {};
                         const durationMap = {};
+                        const videoCountryMap = {}; // Novo mapa para guardar o país inferido pelo vídeo
                         
                         if(videosData.items) {
                             videosData.items.forEach(v => {
                                 statsMap[v.id] = v.statistics || {};
                                 liveDetailsMap[v.id] = v.liveStreamingDetails || null;
                                 durationMap[v.id] = parseIso8601Duration(v.contentDetails?.duration);
+                                
+                                // Extrai o país do vídeo com base no idioma de áudio/padrão fornecido pela API
+                                const lang = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
+                                let vCountry = '';
+                                if (lang) {
+                                    if (lang.includes('-')) {
+                                        const part2 = lang.split('-')[1];
+                                        if (/^[a-zA-Z]{2}$/.test(part2)) {
+                                            vCountry = part2.toUpperCase();
+                                        } else {
+                                            const mapped = langToCountryMap[lang.split('-')[0].toLowerCase()];
+                                            if (mapped) vCountry = mapped.toUpperCase();
+                                        }
+                                    } else {
+                                        const mapped = langToCountryMap[lang.toLowerCase()];
+                                        if (mapped) vCountry = mapped.toUpperCase();
+                                    }
+                                }
+                                videoCountryMap[v.id] = vCountry;
                             });
                         }
 
@@ -1232,6 +1256,10 @@
                             item.channelCountryCode = channelCountryMap[item.snippet.channelId] || ''; 
                             item.channelHandle = channelHandleMap[item.snippet.channelId] || '';
                             item.durationSecs = durationMap[item.id.videoId] || 0;
+                            
+                            // Aplica a regra principal: País do Canal. Se não houver, País do Vídeo.
+                            const videoCountryCode = videoCountryMap[item.id.videoId] || '';
+                            item.finalCountryCode = item.channelCountryCode || videoCountryCode;
                         });
                     }
 
@@ -1361,11 +1389,12 @@
                 const commentCount = item.commentCount || 0;
                 const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
                 
-                const flagImg = getFlagImg(item.channelCountryCode);
-                const countryName = getCountryNameByCode(item.channelCountryCode || '');
+                // Utilizando a nova propriedade 'finalCountryCode' que tem a hierarquia País do Canal -> País do Vídeo
+                const flagImg = getFlagImg(item.finalCountryCode);
+                const countryName = getCountryNameByCode(item.finalCountryCode || '');
                 
                 let flagPill = '';
-                if(item.channelCountryCode && flagImg) {
+                if(item.finalCountryCode && flagImg) {
                     flagPill = `<div class="absolute top-4 right-4 bg-[#0C1221] border border-white/20 w-11 h-8 rounded-lg drop-shadow-lg flex items-center justify-center cursor-default z-20" title="${countryName}">
                                     ${flagImg}
                                 </div>`;
