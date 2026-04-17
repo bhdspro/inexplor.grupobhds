@@ -197,7 +197,12 @@
                 <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 w-full mx-auto">
                     <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-0">
                         <div id="mainInputContainer" class="w-full flex-1 flex flex-nowrap items-center justify-start bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px] overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide" onclick="document.getElementById('urlInput').focus()">
-                            <svg class="w-6 h-6 text-slate-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><input type="text" id="urlInput" class="flex-grow bg-transparent text-base md:text-lg outline-none text-slate-900 placeholder-slate-500 font-bold min-w-[10px] w-auto text-left m-0 p-0">
+                            <svg class="w-6 h-6 text-slate-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <input 
+                                type="text" 
+                                id="urlInput" 
+                                class="flex-grow bg-transparent text-base md:text-lg outline-none text-slate-900 placeholder-slate-500 font-bold min-w-[10px] w-auto text-left m-0 p-0"
+                            >
                         </div>
                         <button 
                             id="searchBtn" 
@@ -270,7 +275,6 @@
                 <div id="filtersWrapper" class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out w-full max-w-md mx-auto">
                     <div class="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full text-left">
                         
-                        <!-- Idioma Custom Dropdown -->
                         <div class="flex flex-col gap-1.5 relative">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Idioma</label>
                             <button onclick="toggleMenu('langDropdown', event)" class="w-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 flex items-center justify-between transition-colors text-sm font-semibold text-left">
@@ -290,7 +294,6 @@
                             <input type="hidden" id="langFilter" value="">
                         </div>
                         
-                        <!-- País Custom Dropdown -->
                         <div class="flex flex-col gap-1.5 relative">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">País</label>
                             <button onclick="toggleMenu('countryDropdown', event)" class="w-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 flex items-center justify-between transition-colors text-sm font-semibold text-left">
@@ -312,7 +315,6 @@
                             <input type="hidden" id="countryFilter" value="">
                         </div>
 
-                        <!-- Status Custom Dropdown -->
                         <div class="flex flex-col gap-1.5 relative">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Status</label>
                             <button onclick="toggleMenu('statusDropdown', event)" class="w-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 flex items-center justify-between transition-colors text-sm font-semibold text-left">
@@ -328,7 +330,6 @@
                             <input type="hidden" id="statusFilter" value="all">
                         </div>
                         
-                        <!-- Inscritos Custom Dropdown -->
                         <div class="flex flex-col gap-1.5 relative">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Inscritos</label>
                             <button onclick="toggleMenu('subsDropdown', event)" class="w-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 flex items-center justify-between transition-colors text-sm font-semibold text-left">
@@ -344,7 +345,6 @@
                             <input type="hidden" id="subsFilter" value="all">
                         </div>
 
-                        <!-- Intervalo de Datas -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Intervalo de Datas</label>
                             <div class="w-full min-h-[48px] flex items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 transition-colors focus-within:border-highlight overflow-hidden">
@@ -355,7 +355,6 @@
                             </div>
                         </div>
 
-                        <!-- Filtro de Canais com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Filtro de Canais</label>
@@ -365,7 +364,6 @@
                             </div>
                         </div>
 
-                        <!-- Filtro de Descrição com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave na Descrição</label>
@@ -375,7 +373,6 @@
                             </div>
                         </div>
 
-                        <!-- Filtro de Negativas com Chips Inline -->
                         <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
                             <div class="flex items-center justify-between ml-1">
                                 <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave Negativas</label>
@@ -399,7 +396,7 @@
             </div>
 
             <div class="flex items-center justify-between mb-6 px-2">
-                <!-- Contador Real de Resultados (Sempre começando em 0 limpo) -->
+                <!-- Contador Real de Resultados -->
                 <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#DC2626] flex flex-wrap items-center gap-2 sm:gap-3 drop-shadow-md leading-tight w-full">
                     <span>Lançamentos Encontrados</span>
                     <span id="resultsCount" class="text-sm sm:text-base bg-[#DC2626] text-white py-1 px-4 rounded-full shadow-lg whitespace-nowrap">0</span>
@@ -923,7 +920,7 @@
 
         // === COMBINAÇÕES BLINDADAS (Limpam todos os containers antes) ===
         window.applySmartCombo1 = function() {
-            clearAllFilters(); // Apaga tudo para evitar choque
+            clearAllFilters(); 
 
             addChipWithOp('mainInputContainer', 'Aula 1'); 
             addChipWithOp('mainInputContainer', 'Evento', 'OR');
@@ -939,7 +936,7 @@
         };
 
         window.applySmartCombo2 = function() {
-            clearAllFilters(); // Apaga tudo para evitar choque
+            clearAllFilters(); 
 
             addChipWithOp('mainInputContainer', 'aula'); 
             addChipWithOp('mainInputContainer', 'evento', 'OR');
@@ -1000,7 +997,19 @@
             return `<img src="https://flagcdn.com/w40/${finalCode}.png" alt="${name}" onerror="this.outerHTML='<span class=\\'material-symbols-rounded text-white\\'>public</span>'" class="w-6 h-auto object-contain rounded-sm shadow-sm">`;
         }
 
-        // === AVALIADOR LÓGICO INTELIGENTE ===
+        // === AVALIADOR LÓGICO INTELIGENTE COM SUPORTE A CURINGA (*) ===
+        function matchWildcard(text, kw) {
+            const lowerText = (text || '').toLowerCase();
+            const lowerKw = (kw || '').toLowerCase();
+            if (lowerKw.includes('*')) {
+                const escapeRegex = (s) => s.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+                const regexStr = lowerKw.split('*').map(escapeRegex).join('.*');
+                const regex = new RegExp(regexStr, 'i');
+                return regex.test(lowerText);
+            }
+            return lowerText.includes(lowerKw);
+        }
+
         function evaluateLogicCustom(tokens, matchFn) {
             if (tokens.length === 0) return true;
             let expr = tokens.map(t => t.type === 'word' ? matchFn(t.value) : t.value);
@@ -1052,7 +1061,6 @@
                 document.getElementById('toggleFiltersBtn').click();
             }
             
-            // PREPARAÇÃO LIMPA PARA NOVA BUSCA
             globalNextPageToken = '';
             globalAccumulatedItems = [];
             resultsGrid.innerHTML = '';
@@ -1091,6 +1099,7 @@
             const subsSize = document.getElementById('subsFilter').value;
             const dateStart = document.getElementById('dateStart').value;
             const dateEnd = document.getElementById('dateEnd').value;
+            const sortFilterVal = document.getElementById('sortFilter').value;
 
             let queryParts = [];
             
@@ -1104,13 +1113,22 @@
             if (lang) baseSearchUrl += `&relevanceLanguage=${lang}`;
             if (country) baseSearchUrl += `&regionCode=${country}`;
             
+            // INJEÇÃO DA API PARA 'Ao Vivo' e 'Agendado'
+            if (status === 'live' || status === 'upcoming') {
+                baseSearchUrl += `&eventType=${status}`;
+            }
+
+            if (sortFilterVal === 'recent') {
+                baseSearchUrl += `&order=date`;
+            }
+            
             try {
                 let loopCount = 0;
                 let newItemsFound = [];
                 let currentNextPageToken = isLoadMore ? globalNextPageToken : '';
 
-                // O LOOP SÓ PARA SE ENCONTRAR PELO MENOS 20 VÍDEOS OU ESGOTAR AS 8 PÁGINAS (400 vídeos varridos)
-                while (loopCount < 8 && newItemsFound.length < 20) {
+                // LIMITE DE 10 PÁGINAS COM PARADA INTELIGENTE
+                while (loopCount < 10 && newItemsFound.length < 20) {
                     let searchUrl = baseSearchUrl;
                     if (currentNextPageToken) searchUrl += `&pageToken=${currentNextPageToken}`;
 
@@ -1130,24 +1148,27 @@
 
                     // PÓS-FILTRO JAVASCRIPT RIGOROSO
                     items = items.filter(item => {
-                        // BLOQUEIO DE DUPLICAÇÕES (O JavaScript varre o histórico para aniquilar clones)
                         if (globalAccumulatedItems.some(existing => existing.id.videoId === item.id.videoId)) return false;
                         if (newItemsFound.some(existing => existing.id.videoId === item.id.videoId)) return false;
 
-                        const title = (item.snippet.title || '').toLowerCase();
-                        const desc = (item.snippet.description || '').toLowerCase();
-                        const channelTitle = (item.snippet.channelTitle || '').toLowerCase();
+                        const title = (item.snippet.title || '');
+                        const desc = (item.snippet.description || '');
+                        const channelTitle = (item.snippet.channelTitle || '');
                         const channelId = item.snippet.channelId;
 
-                        if (!evaluateLogicCustom(mainTokens, (kw) => title.includes(kw.toLowerCase()))) return false;
-                        if (!evaluateLogicCustom(descTokens, (kw) => desc.includes(kw.toLowerCase()))) return false;
-                        if (negativeTokens.length > 0 && evaluateLogicCustom(negativeTokens, (kw) => title.includes(kw.toLowerCase()) || desc.includes(kw.toLowerCase()))) return false;
+                        if (!evaluateLogicCustom(mainTokens, (kw) => matchWildcard(title, kw))) return false;
+                        if (!evaluateLogicCustom(descTokens, (kw) => matchWildcard(desc, kw))) return false;
+                        if (negativeTokens.length > 0 && evaluateLogicCustom(negativeTokens, (kw) => matchWildcard(title, kw) || matchWildcard(desc, kw))) return false;
 
                         if (!evaluateLogicCustom(channelTokens, (kw) => {
                             const lowKw = kw.toLowerCase();
-                            const cTitleNoSpace = channelTitle.replace(/\s+/g, '');
+                            const cTitleNoSpace = channelTitle.toLowerCase().replace(/\s+/g, '');
                             const kwNoSpace = lowKw.replace(/\s+/g, '');
-                            return channelId === kw || channelTitle.includes(lowKw) || cTitleNoSpace.includes(kwNoSpace) || kwNoSpace.includes(cTitleNoSpace);
+                            
+                            if (lowKw.includes('*')) {
+                                return matchWildcard(channelId, kw) || matchWildcard(channelTitle, kw) || matchWildcard(cTitleNoSpace, kwNoSpace);
+                            }
+                            return channelId.toLowerCase() === lowKw || channelTitle.toLowerCase().includes(lowKw) || cTitleNoSpace.includes(kwNoSpace) || kwNoSpace.includes(cTitleNoSpace);
                         })) return false;
 
                         return true;
@@ -1214,7 +1235,7 @@
                         });
                     }
 
-                    // FILTRO DE SHORTS, STATUS E DATAS
+                    // FILTRO DE SHORTS E STATUS
                     items = items.filter(item => {
                         const now = new Date();
                         const liveContent = item.snippet.liveBroadcastContent; 
@@ -1239,14 +1260,29 @@
                             if (dEnd && targetDateForFilter > dEnd) return false;
                         }
 
+                        const liveDetails = item.liveDetails;
+                        let isLive = liveContent === 'live';
+                        let isUpcoming = liveContent === 'upcoming';
+                        let isCompleted = liveContent === 'completed' || liveContent === 'none';
+
+                        if (liveDetails) {
+                            if (liveDetails.actualEndTime) {
+                                isLive = false; isUpcoming = false; isCompleted = true;
+                            } else if (liveDetails.actualStartTime) {
+                                isLive = true; isUpcoming = false; isCompleted = false;
+                            } else if (liveDetails.scheduledStartTime) {
+                                isLive = false; isUpcoming = true; isCompleted = false;
+                            }
+                        }
+
                         if (status !== 'all') {
-                            if (status === 'live' && liveContent !== 'live') return false; 
+                            if (status === 'live' && !isLive) return false; 
                             if (status === 'upcoming') {
-                                if (liveContent !== 'upcoming') return false;
+                                if (!isUpcoming) return false;
                                 if (scheduledStart && scheduledStart <= now) return false;
                             }
                             if (status === 'completed') {
-                                if (liveContent === 'live' || liveContent === 'upcoming') return false;
+                                if (isLive || isUpcoming) return false;
                                 if (targetDateForFilter > now) return false;
                             }
                         }
@@ -1271,7 +1307,7 @@
                 if (globalAccumulatedItems.length === 0) {
                     resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-medium bg-white/5 rounded-2xl">Nenhum lançamento encontrado que atenda a todas as regras estipuladas nesta busca.</div>`;
                     document.getElementById('resultsCount').textContent = '0';
-                    loadMoreContainer.classList.add('hidden'); // Oculta o botão se falhar / não tiver nada
+                    loadMoreContainer.classList.add('hidden');
                     return;
                 }
 
@@ -1280,13 +1316,13 @@
                 if (globalNextPageToken) {
                     loadMoreContainer.classList.remove('hidden');
                 } else {
-                    loadMoreContainer.classList.add('hidden'); // Se acabaram as páginas da API, ele esconde o botão
+                    loadMoreContainer.classList.add('hidden'); 
                 }
 
             } catch (error) {
                 loadingIndicator.classList.add('hidden');
                 loadingIndicator.classList.remove('flex');
-                loadMoreContainer.classList.add('hidden'); // Falhou: Esconde o botão e evita o utilizador clicar
+                loadMoreContainer.classList.add('hidden'); 
                 
                 let errorMsg = error.message;
                 if (error.name === 'AbortError') errorMsg = "A ligação demorou muito a responder. A pesquisa foi interrompida (Timeout) para não bloquear o seu ecrã. Tente novamente.";
@@ -1297,6 +1333,7 @@
         // === RENDERIZADOR ===
         function renderGrid(itemsArray) {
             const sortFilterVal = document.getElementById('sortFilter').value;
+            const statusFilterVal = document.getElementById('statusFilter').value;
             let itemsToRender = [...itemsArray];
 
             if (sortFilterVal === 'views') {
@@ -1306,10 +1343,15 @@
             } else if (sortFilterVal === 'subs') {
                 itemsToRender.sort((a, b) => b.subscriberCount - a.subscriberCount);
             } else if (sortFilterVal === 'recent') {
-                itemsToRender.sort((a, b) => b.targetDateForFilter.getTime() - a.targetDateForFilter.getTime());
+                if (statusFilterVal === 'upcoming') {
+                    // Agendado: Data mais próxima de hoje primeiro (Crescente)
+                    itemsToRender.sort((a, b) => a.targetDateForFilter.getTime() - b.targetDateForFilter.getTime());
+                } else {
+                    // Todos, Finalizado, Ao Vivo: Data mais recente primeiro (Decrescente)
+                    itemsToRender.sort((a, b) => b.targetDateForFilter.getTime() - a.targetDateForFilter.getTime());
+                }
             }
 
-            // Exibição do contador estritamente real e verificado pelo Javascript
             document.getElementById('resultsCount').textContent = itemsToRender.length.toString();
             resultsGrid.innerHTML = '';
 
@@ -1324,17 +1366,17 @@
                 
                 let flagPill = '';
                 if(item.channelCountryCode && flagImg) {
-                    flagPill = `<div class="absolute top-4 right-4 bg-[#0C1221] w-11 h-8 rounded-lg drop-shadow-lg flex items-center justify-center cursor-default z-20" title="${countryName}">
+                    flagPill = `<div class="absolute top-4 right-4 bg-[#0C1221] border border-white/20 w-11 h-8 rounded-lg drop-shadow-lg flex items-center justify-center cursor-default z-20" title="${countryName}">
                                     ${flagImg}
                                 </div>`;
                 }
 
                 let statusBadge = '';
-                if(snippet.liveBroadcastContent === 'live') {
+                if(snippet.liveBroadcastContent === 'live' || (item.liveDetails && item.liveDetails.actualStartTime && !item.liveDetails.actualEndTime)) {
                     statusBadge = `<div class="absolute top-4 left-4 bg-[#DC2626] text-white px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg border border-[#B91C1C] z-20">
                                       <span class="material-symbols-rounded text-[14px] sm:text-[16px]">sensors</span> Ao Vivo
                                    </div>`;
-                } else if (snippet.liveBroadcastContent === 'upcoming') {
+                } else if (snippet.liveBroadcastContent === 'upcoming' || (item.liveDetails && item.liveDetails.scheduledStartTime && !item.liveDetails.actualStartTime)) {
                     statusBadge = `<div class="absolute top-4 left-4 bg-[#DC2626] text-white px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg border border-[#B91C1C] z-20">
                                       <span class="material-symbols-rounded text-[14px] sm:text-[16px]">schedule</span> Agendado
                                    </div>`;
@@ -1383,7 +1425,6 @@
                 
                 const subsFormatted = formatSubs(item.subscriberCount);
                 
-                // INSCRITOS ABAIXO DO NOME DO CANAL (Design Refinado)
                 card.innerHTML = `
                     <div class="relative aspect-video overflow-hidden bg-slate-900">
                         <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
@@ -1393,10 +1434,12 @@
                     <div class="p-6 sm:p-7 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
                         <h3 class="text-base sm:text-lg md:text-xl font-bold leading-snug mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
                         
-                        <div class="flex items-start gap-3 text-slate-400 mb-6 cursor-pointer w-fit group/channel relative" onclick="openChannelAndCopy(event, '${item.channelHandle}', '${snippet.channelId}', this)" title="Abrir guia do Canal e Copiar @">
+                        <div class="flex items-start gap-3 text-slate-400 mb-6 cursor-pointer w-full group/channel relative" onclick="openChannelAndCopy(event, '${item.channelHandle}', '${snippet.channelId}', this)" title="Abrir guia do Canal e Copiar @">
                             <span class="material-symbols-rounded text-[20px] mt-0.5 flex-shrink-0 group-hover/channel:text-white transition-colors">account_circle</span>
-                            <div class="channel-hover-effect flex flex-col">
-                                <span class="text-sm font-bold text-slate-300 group-hover/channel:text-white transition-colors leading-tight">${snippet.channelTitle}</span>
+                            <div class="flex flex-col w-[calc(100%-32px)] overflow-hidden">
+                                <div class="marquee-container">
+                                    <span class="text-sm font-bold text-slate-300 transition-all duration-300 leading-tight marquee-content ${snippet.channelTitle.length > 18 ? 'marquee-long' : ''}">${snippet.channelTitle}</span>
+                                </div>
                                 <span class="text-[11px] font-semibold text-slate-500 mt-0.5">${subsFormatted} inscritos</span>
                             </div>
                         </div>
