@@ -160,6 +160,16 @@
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
+            
+            /* Oculta a barra de rolagem por padrão em todos os navegadores */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        /* Oculta a barra no Chrome/Safari por padrão */
+        body::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
         }
 
         /* Permite seleção no input e no link de resultado */
@@ -213,6 +223,22 @@
         #dropdownMenu::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 8px; margin: 4px; }
         #dropdownMenu::-webkit-scrollbar-thumb { background: rgb(220, 38, 38); border-radius: 8px; }
         
+        /* Classes que exibem a barra de rolagem geral quando o card expande */
+        body.show-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: rgb(220, 38, 38) rgba(15, 23, 42, 0.5);
+        }
+        body.show-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        body.show-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        body.show-scrollbar::-webkit-scrollbar-thumb {
+            background: rgb(220, 38, 38);
+            border-radius: 8px;
+        }
+
         #particles-js {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         }
@@ -370,6 +396,23 @@
 
         const BASE_URL = 'https://desbloquearprodutooculto.onrender.com';
 
+        // Lógica de verificação para exibir a barra de rolagem dinamicamente
+        function atualizarBarraDeRolagem() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const resultArea = document.getElementById('resultArea');
+            const errorBox = document.getElementById('errorBox');
+            
+            const dropdownAberto = dropdownMenu && dropdownMenu.classList.contains('opacity-100');
+            const resultadoAberto = resultArea && !resultArea.classList.contains('hidden');
+            const erroAberto = errorBox && !errorBox.classList.contains('hidden');
+
+            if (dropdownAberto || resultadoAberto || erroAberto) {
+                document.body.classList.add('show-scrollbar');
+            } else {
+                document.body.classList.remove('show-scrollbar');
+            }
+        }
+
         // === DROPDOWN MATERIAL 3 ===
         function toggleDropdown() {
             const menu = document.getElementById('dropdownMenu');
@@ -386,6 +429,7 @@
                 menu.classList.add('opacity-100', 'visible', 'scale-100');
                 arrow.classList.add('rotate-180');
             }
+            atualizarBarraDeRolagem();
         }
 
         function selectPlatform(value, text) {
@@ -428,7 +472,11 @@
             if(!errorBox) return;
             errorBox.textContent = mensagem;
             errorBox.classList.remove('hidden');
-            setTimeout(() => { errorBox.classList.add('hidden'); }, 6000);
+            atualizarBarraDeRolagem();
+            setTimeout(() => { 
+                errorBox.classList.add('hidden'); 
+                atualizarBarraDeRolagem();
+            }, 6000);
         }
 
         async function iniciarExtracao() {
@@ -500,6 +548,7 @@
                 document.getElementById('finalUrl').textContent = urlFinal;
                 document.getElementById('finalUrl').href = urlFinal;
                 resultArea.classList.remove('hidden');
+                atualizarBarraDeRolagem();
                 
                 if (!premiumId) {
                     unlockCount++;
@@ -539,6 +588,17 @@
             const finalUrlEl = document.getElementById('finalUrl');
             if(finalUrlEl) window.open(finalUrlEl.textContent, '_blank');
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const parametros = new URLSearchParams(window.location.search);
+            const urlProduto = parametros.get('po');
+            if (urlProduto) {
+                const input = document.getElementById('urlInput');
+                if (input) {
+                    input.value = urlProduto;
+                }
+            }
+        });
     </script>
 </body>
 </html>
