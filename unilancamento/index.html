@@ -766,7 +766,7 @@
         }
 
         setupTypewriter('urlInput', '', ["Digite a sua palavra-chave...", "Ex: masterclass", "Ex: workshop"], true);
-        setupTypewriter('channelInput', '', ["Ex: https://youtube.com/@Canal"], true);
+        setupTypewriter('channelInput', '', ["Ex: https://youtube.com/@Canal", "Ex: https://youtube.com/@InexplorOficial"], true);
         setupTypewriter('descInput', '', ["Ex: Hotmart"], true);
         setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
 
@@ -1009,42 +1009,36 @@
         }
 
         // =========================================================================
-        // AVALIADOR LÓGICO INTELIGENTE (CORRIGIDO: MATEMÁTICA ESTrita DE "OU" PRIMEIRO, DEPOIS "E")
+        // AVALIADOR LÓGICO INTELIGENTE
         // =========================================================================
         
-        // Função para validar se a palavra é exata ou se usa o curinga '*'
         function matchWildcard(text, kw) {
             const lowerText = (text || '').toLowerCase();
             const lowerKw = (kw || '').toLowerCase();
             const escapeRegex = (s) => s.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
 
             if (lowerKw.includes('*')) {
-                // Modo Curinga: "mil*" vai achar "milhão", "milionário"
                 const regexStr = lowerKw.split('*').map(escapeRegex).join('.*');
                 const regex = new RegExp(regexStr, 'i');
                 return regex.test(lowerText);
             } else {
-                // Modo Exato: "mil" não acha "milhão". Isola a palavra usando Regex.
-                // O regex verifica se antes e depois da palavra existe o início/fim da frase ou caracteres que não sejam letras/números
                 const regexStr = `(?:^|[^a-zA-Z0-9À-ÿ_])` + escapeRegex(lowerKw) + `(?=[^a-zA-Z0-9À-ÿ_]|$)`;
                 const regex = new RegExp(regexStr, 'i');
                 return regex.test(lowerText);
             }
         }
 
-        // Corrigido para respeitar o agrupamento mental do usuário: Agrupar OR (OU) primeiro, e aplicar os AND (E) a esse grupo.
         function evaluateLogicCustom(tokens, matchFn) {
             if (tokens.length === 0) return true;
             let expr = tokens.map(t => t.type === 'word' ? matchFn(t.value) : t.value);
 
-            // 1ª Passada: Resolvemos todos os 'OR' (OU) agrupando sinônimos
             let andTokens = [];
             let currentVal = expr[0];
             for (let i = 1; i < expr.length; i += 2) {
                 let op = expr[i];
                 let nextVal = expr[i+1];
                 if (op === 'OR') {
-                    currentVal = currentVal || nextVal; // Agrupa as alternativas
+                    currentVal = currentVal || nextVal; 
                 } else if (op === 'AND') {
                     andTokens.push(currentVal);
                     andTokens.push('AND');
@@ -1053,7 +1047,6 @@
             }
             andTokens.push(currentVal);
 
-            // 2ª Passada: Resolvemos todos os 'AND' (E) restantes exigindo as condições
             let finalResult = andTokens[0];
             for (let i = 1; i < andTokens.length; i += 2) {
                 if (andTokens[i] === 'AND') {
@@ -1292,6 +1285,7 @@
                         const liveDetailsMap = {};
                         const durationMap = {};
                         const videoCountryMap = {};
+                        const videoLangMap = {}; // Novo mapa para o filtro restrito de idioma
                         
                         if(videosData.items) {
                             videosData.items.forEach(v => {
@@ -1299,19 +1293,21 @@
                                 liveDetailsMap[v.id] = v.liveStreamingDetails || null;
                                 durationMap[v.id] = parseIso8601Duration(v.contentDetails?.duration);
                                 
-                                const lang = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
+                                const vLang = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
+                                videoLangMap[v.id] = vLang;
+
                                 let vCountry = '';
-                                if (lang) {
-                                    if (lang.includes('-')) {
-                                        const part2 = lang.split('-')[1];
+                                if (vLang) {
+                                    if (vLang.includes('-')) {
+                                        const part2 = vLang.split('-')[1];
                                         if (/^[a-zA-Z]{2}$/.test(part2)) {
                                             vCountry = part2.toUpperCase();
                                         } else {
-                                            const mapped = langToCountryMap[lang.split('-')[0].toLowerCase()];
+                                            const mapped = langToCountryMap[vLang.split('-')[0].toLowerCase()];
                                             if (mapped) vCountry = mapped.toUpperCase();
                                         }
                                     } else {
-                                        const mapped = langToCountryMap[lang.toLowerCase()];
+                                        const mapped = langToCountryMap[vLang.toLowerCase()];
                                         if (mapped) vCountry = mapped.toUpperCase();
                                     }
                                 }
@@ -1328,19 +1324,55 @@
                             item.channelCountryCode = channelCountryMap[item.snippet.channelId] || ''; 
                             item.channelHandle = channelHandleMap[item.snippet.channelId] || '';
                             item.durationSecs = durationMap[item.id.videoId] || 0;
+                            item.videoLanguage = videoLangMap[item.id.videoId] || '';
                             
                             const videoCountryCode = videoCountryMap[item.id.videoId] || '';
                             item.finalCountryCode = item.channelCountryCode || videoCountryCode;
                         });
                     }
 
-                    // FILTRO DE SHORTS E STATUS
+                    // FILTRO DE SHORTS, STATUS E FILTROS RÍGIDOS DE PAÍS/IDIOMA
                     items = items.filter(item => {
                         const now = new Date();
                         const liveContent = item.snippet.liveBroadcastContent; 
                         
                         if (item.durationSecs > 0 && item.durationSecs <= 61 && liveContent === 'none') {
                             return false; 
+                        }
+
+                        // ===============================================
+                        // NOVO: FILTRO RÍGIDO DE PAÍS (JS)
+                        // ===============================================
+                        if (country && item.finalCountryCode.toUpperCase() !== country.toUpperCase()) {
+                            return false;
+                        }
+
+                        // ===============================================
+                        // NOVO: FILTRO RÍGIDO DE IDIOMA (JS)
+                        // ===============================================
+                        if (lang) {
+                            let isMatch = false;
+                            if (item.videoLanguage && item.videoLanguage.toLowerCase().startsWith(lang.toLowerCase())) {
+                                isMatch = true;
+                            }
+                            if (!isMatch) {
+                                // Mapeamento cruzado rigoroso: Se o YouTube não deu o idioma do vídeo, mas o canal é de um país nativo, validamos.
+                                const langCountryMap = {
+                                    'pt': ['BR', 'PT', 'AO', 'MZ', 'CV', 'GW', 'ST', 'TL', 'MO'],
+                                    'en': ['US', 'GB', 'CA', 'AU', 'NZ', 'IE', 'IN', 'ZA', 'NG'],
+                                    'es': ['ES', 'MX', 'AR', 'CO', 'CL', 'PE', 'VE', 'EC', 'GT', 'CU', 'BO', 'DO', 'HN', 'PY', 'SV', 'NI', 'CR', 'PR', 'PA', 'UY', 'GQ'],
+                                    'fr': ['FR', 'CA', 'BE', 'CH', 'SN', 'CI', 'ML', 'CD', 'CM', 'MG', 'HT'],
+                                    'de': ['DE', 'AT', 'CH', 'LI', 'LU'],
+                                    'it': ['IT', 'CH', 'SM', 'VA'],
+                                    'ja': ['JP']
+                                };
+                                const expectedCountries = langCountryMap[lang.toLowerCase()] || [];
+                                if (item.finalCountryCode && expectedCountries.includes(item.finalCountryCode.toUpperCase())) {
+                                    isMatch = true;
+                                }
+                            }
+                            // Se não bateu o idioma explícito, nem o país do canal, o JS exclui o vídeo para respeitar sua busca!
+                            if (!isMatch) return false;
                         }
 
                         const scheduledStart = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : null;
