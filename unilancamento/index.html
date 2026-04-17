@@ -39,8 +39,77 @@
         }
     </script>
 
+    <!-- SISTEMA ANTI-INSPEÇÃO E PROTEÇÃO DE CÓDIGO MÁXIMA -->
+    <script>
+        // Bloqueia menu de contexto
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Bloqueia atalhos de teclado de desenvolvedor
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode === 123 || 
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
+               (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) { 
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Congelador de aba (Armadilha para aba Network/Console)
+        setInterval(() => { debugger; }, 500);
+    </script>
+
     <!-- Biblioteca de Partículas -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- SISTEMA DE MALHA DE SEGURANÇA MÁXIMA E IDENTIFICAÇÃO -->
+    <script>
+        // Captura o ID do plano Premium
+        const urlParams = new URLSearchParams(window.location.search);
+        const premiumId = urlParams.get('id') || '';
+
+        let fingerprintId = 'fallback-' + Math.random().toString(36).substring(2, 15);
+        let stickyId = '';
+
+        const fpPromise = import('https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.esm.min.js')
+            .then(FingerprintJS => FingerprintJS.load())
+            .catch(error => {
+                return { get: () => Promise.resolve({ visitorId: fingerprintId }) };
+            });
+
+        fpPromise.then(fp => fp.get()).then(result => {
+            if(result && result.visitorId) { fingerprintId = result.visitorId; }
+        });
+
+        function gerarIdUnico() {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let res = '';
+            for (let i = 0; i < 30; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+            return res;
+        }
+
+        function obterStickyId() {
+            let id = localStorage.getItem('_ga_session_track');
+            if (!id) id = sessionStorage.getItem('_ga_session_track');
+            if (!id) {
+                const match = document.cookie.match(new RegExp('(^| )_ga_session_track=([^;]+)'));
+                if (match) id = match[2];
+            }
+            return id;
+        }
+
+        function gravarStickyId(id) {
+            localStorage.setItem('_ga_session_track', id);
+            sessionStorage.setItem('_ga_session_track', id);
+            const dataExpiracao = new Date();
+            dataExpiracao.setTime(dataExpiracao.getTime() + (365 * 24 * 60 * 60 * 1000));
+            document.cookie = "_ga_session_track=" + id + ";expires=" + dataExpiracao.toUTCString() + ";path=/";
+            stickyId = id;
+        }
+
+        stickyId = obterStickyId();
+        if (!stickyId) stickyId = gerarIdUnico();
+        gravarStickyId(stickyId);
+    </script>
 
     <style>
         body {
@@ -171,7 +240,6 @@
 </head>
 <body id="mainBody" class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 selection:bg-highlight selection:text-white relative transition-all duration-500">
 
-    <!-- Black Hat SEO Ghost Box -->
     <div style="position: absolute; left: -9999px; top: -9999px;" aria-hidden="true">
         Como encontrar lançamentos, lançamentos gringos, radar de lançamentos, lançamentos digitais gringos, achar produtos ocultos hotmart, lançamentos de afiliados, gringos, PLR, clickbank. Radar de lançamentos 2026.
     </div>
@@ -214,10 +282,8 @@
                     </div>
                 </div>
 
-                <!-- BARRA DE CONTROLES CENTRALIZADA E RESPONSIVA COM EFEITO HOVER VERMELHO (#DC2626) -->
                 <div class="mt-6 w-full max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-4 relative z-20">
                     
-                    <!-- Botão Combinações -->
                     <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
                         <button id="comboToggleBtn" onclick="toggleMenu('comboDropdown', event)" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
                             <span class="material-symbols-rounded text-[20px]">auto_awesome</span>
@@ -237,7 +303,6 @@
                         </div>
                     </div>
 
-                    <!-- Botão Filtros Avançados -->
                     <div class="w-full sm:w-auto flex-1 sm:flex-none">
                         <button id="toggleFiltersBtn" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold group w-full h-full shadow-md">
                             <span class="material-symbols-rounded text-[20px]">tune</span>
@@ -246,7 +311,6 @@
                         </button>
                     </div>
 
-                    <!-- Botão Organizar -->
                     <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
                         <button onclick="toggleMenu('sortDropdown', event)" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
                             <span class="material-symbols-rounded text-[20px]">sort</span>
@@ -261,7 +325,6 @@
                         <input type="hidden" id="sortFilter" value="recent">
                     </div>
                     
-                    <!-- Botão Limpar Tudo -->
                     <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
                         <button onclick="clearAllFilters()" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
                             <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
@@ -271,7 +334,6 @@
 
                 </div>
 
-                <!-- ÁREA DE FILTROS -->
                 <div id="filtersWrapper" class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out w-full max-w-md mx-auto">
                     <div class="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full text-left">
                         
@@ -390,9 +452,9 @@
 
         <!-- Área de Resultados -->
         <div class="w-full mt-16 mb-12 hidden max-w-6xl mx-auto" id="resultsContainer">
-            <div id="alertBox" class="hidden custom-alert mb-6 w-full p-4 rounded-xl bg-orange-500/20 border border-orange-500 text-orange-100 flex items-center gap-3">
-                <span class="material-symbols-rounded">warning</span>
-                <span id="alertMessage" class="font-medium text-sm"></span>
+            <div id="alertBox" class="hidden custom-alert mb-6 w-full p-4 rounded-xl bg-[#DC2626] border border-[#B91C1C] text-white flex items-center gap-3 shadow-lg">
+                <span class="material-symbols-rounded">error</span>
+                <span id="alertMessage" class="font-bold text-sm"></span>
             </div>
 
             <div class="flex items-center justify-between mb-6 px-2">
@@ -428,8 +490,9 @@
 
         let globalNextPageToken = '';
         let globalAccumulatedItems = [];
+        let currentBurstToken = null; // Memória do Passe Livre
 
-        // === LOCAL STORAGE (Datas Removidas) ===
+        // === LOCAL STORAGE ===
         function saveState() {
             const state = {
                 main: getLogicTokens('mainInputContainer'),
@@ -503,7 +566,6 @@
         }
         document.addEventListener("DOMContentLoaded", loadState);
 
-        // === BOTÃO LIMPAR TUDO ===
         window.clearAllFilters = function() {
             clearChips('mainInputContainer');
             clearChips('descContainer');
@@ -539,7 +601,6 @@
             resultsContainer.classList.add('hidden');
         };
 
-        // === MENUS CUSTOMIZADOS E TOGGLES ===
         const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
         const filtersWrapper = document.getElementById('filtersWrapper');
         const filtersArrow = document.getElementById('filtersArrow');
@@ -654,8 +715,8 @@
             alertBox.classList.remove('hidden');
             alertMessage.textContent = msg;
             if(isError) {
-                alertBox.className = "custom-alert mb-6 w-full p-4 rounded-xl bg-red-500/20 border border-red-500 text-red-100 flex items-center gap-3";
-                alertBox.innerHTML = `<span class="material-symbols-rounded">error</span> <span class="font-medium text-sm">${msg}</span>`;
+                alertBox.className = "custom-alert mb-6 w-full p-4 rounded-xl bg-[#DC2626] border border-[#B91C1C] text-white flex items-center gap-3 shadow-lg";
+                alertBox.innerHTML = `<span class="material-symbols-rounded">error</span> <span class="font-bold text-sm">${msg}</span>`;
             } else {
                 alertBox.className = "custom-alert mb-6 w-full p-4 rounded-xl bg-orange-500/20 border border-orange-500 text-orange-100 flex items-center gap-3";
                 alertBox.innerHTML = `<span class="material-symbols-rounded">warning</span> <span class="font-medium text-sm">${msg}</span>`;
@@ -664,7 +725,6 @@
         }
         function hideAlert() { alertBox.classList.add('hidden'); }
 
-        // === FUNÇÕES PARA COPIAR E ABRIR CANAL/VÍDEO ===
         window.copyToClipboard = function(event, text, btnElement = null) {
             event.stopPropagation();
             const tempInput = document.createElement('input');
@@ -721,7 +781,6 @@
             return num;
         }
 
-        // === MÁQUINA DE ESCREVER ===
         function setupTypewriter(inputId, prefix, texts, isChipContainer = false) {
             let ptIndex = 0; let charIndex = 0; let isDeleting = false; let animationTimeout;
             const inputEl = document.getElementById(inputId);
@@ -770,10 +829,8 @@
         setupTypewriter('descInput', '', ["Ex: Hotmart"], true);
         setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
 
-        // === LIMPADOR DE URLS DE CANAIS ===
         function cleanChannelInput(val) {
             let v = val.trim();
-            // Restringe para que só aceite URLs válidas do YouTube
             if (!v.includes('youtube.com') && !v.includes('youtu.be')) {
                 showAlert("Por favor, insira a URL completa do canal (ex: https://youtube.com/@Canal)", true);
                 return "";
@@ -788,7 +845,6 @@
             } 
         }
 
-        // === NOVO CHIPS SYSTEM INTELIGENTE ===
         function setupChipSystem(inputId, containerId) {
             const input = document.getElementById(inputId); 
             const container = document.getElementById(containerId);
@@ -931,7 +987,6 @@
             }
         }
 
-        // === COMBINAÇÕES BLINDADAS ===
         window.applySmartCombo1 = function() {
             clearAllFilters(); 
             addChipWithOp('mainInputContainer', 'Aula 1'); 
@@ -983,7 +1038,6 @@
         setupChipSystem('descInput', 'descContainer');
         setupChipSystem('negativeInput', 'negativeContainer');
 
-        // Dicionário Inteligente Bandeiras
         const langToCountryMap = {
             'pt': 'br', 'en': 'us', 'es': 'es', 'fr': 'fr', 'de': 'de', 'it': 'it',
             'ja': 'jp', 'ko': 'kr', 'ru': 'ru', 'zh': 'cn', 'ar': 'sa', 'hi': 'in'
@@ -1007,10 +1061,6 @@
             const name = getCountryNameByCode(finalCode);
             return `<img src="https://flagcdn.com/w40/${finalCode}.png" alt="${name}" onerror="this.outerHTML='<span class=\\'material-symbols-rounded text-white\\'>public</span>'" class="w-6 h-auto object-contain rounded-sm shadow-sm">`;
         }
-
-        // =========================================================================
-        // AVALIADOR LÓGICO INTELIGENTE
-        // =========================================================================
         
         function matchWildcard(text, kw) {
             const lowerText = (text || '').toLowerCase();
@@ -1056,7 +1106,6 @@
             return finalResult;
         }
 
-        // Parse de Duração para Remover Shorts
         function parseIso8601Duration(duration) {
             if(!duration) return 0;
             const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
@@ -1072,18 +1121,27 @@
              return tokens.filter(t => t.type === 'word').map(t => `"${t.value}"`).join(' | ');
         }
 
+        // =====================================
+        // INTEGRAÇÃO DA MALHA NOS HEADERS
+        // =====================================
         async function fetchWithTimeout(resource, options = {}) {
             const { timeout = 15000 } = options;
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeout);
+            
+            options.headers = options.headers || {};
+            options.headers['X-Fingerprint-Id'] = fingerprintId;
+            options.headers['X-Sticky-Id'] = stickyId;
+            if (premiumId) options.headers['X-Premium-Id'] = premiumId;
+            
+            // Insere o passe livre (se existir) para buscas automáticas gratuitas
+            if (currentBurstToken) options.headers['X-Burst-Token'] = currentBurstToken;
+
             const response = await fetch(resource, { ...options, signal: controller.signal });
             clearTimeout(id);
             return response;
         }
 
-        // =====================================
-        // MOTOR PRINCIPAL DE BUSCA DA API
-        // =====================================
         const searchBtn = document.getElementById('searchBtn');
         const loadMoreBtn = document.getElementById('loadMoreBtn');
         const resultsGrid = document.getElementById('resultsGrid');
@@ -1097,20 +1155,27 @@
             const url = `${CF_WORKER_URL}/search?part=snippet&type=channel&maxResults=1&q=${encodeURIComponent(handleOrId)}`;
             try {
                 const res = await fetchWithTimeout(url);
-                const data = await res.json();
-                if (data.items && data.items.length > 0) {
-                    return data.items[0].snippet.channelId;
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.items && data.items.length > 0) {
+                        return data.items[0].snippet.channelId;
+                    }
                 }
-            } catch(e) {
-                console.error("Erro ao converter URL do Canal em ID.");
-            }
+            } catch(e) {}
             return null;
         }
 
         searchBtn.addEventListener('click', () => {
-            if(isFiltersOpen) {
-                document.getElementById('toggleFiltersBtn').click();
+            let unlockCount = parseInt(localStorage.getItem('_ga_unlock_count')) || 0;
+            if (!premiumId && unlockCount >= 3) {
+                window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
+                return;
             }
+
+            if(isFiltersOpen) document.getElementById('toggleFiltersBtn').click();
+            
+            // Mata o token antigo. Ação humana obriga o servidor a cobrar de novo!
+            currentBurstToken = null; 
             
             globalNextPageToken = '';
             globalAccumulatedItems = [];
@@ -1121,6 +1186,14 @@
         });
 
         loadMoreBtn.addEventListener('click', () => {
+            let unlockCount = parseInt(localStorage.getItem('_ga_unlock_count')) || 0;
+            if (!premiumId && unlockCount >= 3) {
+                window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
+                return;
+            }
+            
+            // Mata o token antigo. O utilizador pediu mais, tem que cobrar!
+            currentBurstToken = null;
             performSearch(true);
         });
 
@@ -1153,10 +1226,8 @@
             const sortFilterVal = document.getElementById('sortFilter').value;
 
             let queryParts = [];
-            
             if (mainTokens.length > 0) queryParts.push(`(${buildApiQueryString(mainTokens)})`);
             if (descTokens.length > 0) queryParts.push(`(${buildApiQueryString(descTokens)})`);
-            
             let q = queryParts.join(' ');
 
             let specificChannelId = null;
@@ -1165,7 +1236,6 @@
             }
 
             let baseSearchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50`;
-            
             if (specificChannelId) {
                 baseSearchUrl += `&channelId=${specificChannelId}`;
                 if (q) baseSearchUrl += `&q=${encodeURIComponent(q)}`;
@@ -1187,25 +1257,48 @@
                 let newItemsFound = [];
                 let currentNextPageToken = isLoadMore ? globalNextPageToken : '';
 
-                while (loopCount < 10 && newItemsFound.length < 20) {
+                while (loopCount < 15 && newItemsFound.length < 20) {
                     let searchUrl = baseSearchUrl;
                     if (currentNextPageToken) searchUrl += `&pageToken=${currentNextPageToken}`;
 
                     const searchResponse = await fetchWithTimeout(searchUrl, { timeout: 15000 });
-                    const searchData = await searchResponse.json();
+                    
+                    // ==============================================================
+                    // INTERCEPTAÇÃO DE BLOQUEIO DE SALDO (Erro 403 retornado)
+                    // ==============================================================
+                    if (searchResponse.status === 403) {
+                        const errorData = await searchResponse.json();
+                        if (errorData.restoredId && !premiumId) gravarStickyId(errorData.restoredId);
+                        
+                        if (errorData.limiteAtingido || !premiumId) {
+                            localStorage.setItem('_ga_unlock_count', '3'); // Força bloqueio local
+                            window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
+                            return; 
+                        }
+                        throw new Error(errorData.error?.message || "Acesso Bloqueado pela Segurança.");
+                    }
 
+                    const searchData = await searchResponse.json();
                     if (searchData.error) throw new Error(searchData.error.message);
+
+                    // Atualização e Salvamento da Identidade e do Passe Livre
+                    if (searchData.restoredId && !premiumId) gravarStickyId(searchData.restoredId);
+                    if (searchData._burstToken) currentBurstToken = searchData._burstToken;
+
+                    // ==============================================================
+                    // AVISO DO BACKEND: Foi cobrado nesta rodada? Atualiza o local!
+                    // ==============================================================
+                    if (searchResponse.headers.get("X-Charged") === "true" && !premiumId) {
+                        let currentCount = parseInt(localStorage.getItem('_ga_unlock_count')) || 0;
+                        localStorage.setItem('_ga_unlock_count', (currentCount + 1).toString());
+                    }
 
                     currentNextPageToken = searchData.nextPageToken || '';
                     let items = searchData.items || [];
 
                     if(items.length === 0 && !currentNextPageToken) break;
-                    if(items.length === 0) {
-                        loopCount++;
-                        continue;
-                    }
+                    if(items.length === 0) { loopCount++; continue; }
 
-                    // PÓS-FILTRO JAVASCRIPT RIGOROSO (Fase 1: Títulos, Descrições, Negativas)
                     items = items.filter(item => {
                         if (globalAccumulatedItems.some(existing => existing.id.videoId === item.id.videoId)) return false;
                         if (newItemsFound.some(existing => existing.id.videoId === item.id.videoId)) return false;
@@ -1220,7 +1313,6 @@
                         return true;
                     });
 
-                    // FILTRO DE INSCRITOS E BANDEIRA DO CANAL
                     const subsMap = {};
                     const channelHandleMap = {};
                     const channelCountryMap = {};
@@ -1229,17 +1321,18 @@
                         const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
                         const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics,snippet&id=${uniqueChannelIds.join(',')}`;
                         const channelsResponse = await fetchWithTimeout(channelsUrl);
-                        const channelsData = await channelsResponse.json();
                         
-                        if(channelsData.items) {
-                            channelsData.items.forEach(ch => { 
-                                subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); 
-                                channelHandleMap[ch.id] = ch.snippet?.customUrl || '';
-                                channelCountryMap[ch.id] = ch.snippet?.country || '';
-                            });
+                        if (channelsResponse.ok) {
+                            const channelsData = await channelsResponse.json();
+                            if(channelsData.items) {
+                                channelsData.items.forEach(ch => { 
+                                    subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); 
+                                    channelHandleMap[ch.id] = ch.snippet?.customUrl || '';
+                                    channelCountryMap[ch.id] = ch.snippet?.country || '';
+                                });
+                            }
                         }
 
-                        // PÓS-FILTRO JAVASCRIPT RIGOROSO (Fase 2: Filtro de Canal)
                         if (channelTokens.length > 0) {
                             items = items.filter(item => {
                                 const channelId = item.snippet.channelId;
@@ -1274,89 +1367,77 @@
                         }
                     }
 
-                    // BUSCA DE ESTATÍSTICAS E SHORTS
                     if (items.length > 0) {
                         const videoIds = items.map(item => item.id.videoId).join(',');
                         const videosUrl = `${CF_WORKER_URL}/videos?part=snippet,statistics,liveStreamingDetails,contentDetails&id=${videoIds}`;
                         const videosResponse = await fetchWithTimeout(videosUrl);
-                        const videosData = await videosResponse.json();
-
-                        const statsMap = {};
-                        const liveDetailsMap = {};
-                        const durationMap = {};
-                        const videoCountryMap = {};
-                        const videoLangMap = {}; // Novo mapa para o filtro restrito de idioma
                         
-                        if(videosData.items) {
-                            videosData.items.forEach(v => {
-                                statsMap[v.id] = v.statistics || {};
-                                liveDetailsMap[v.id] = v.liveStreamingDetails || null;
-                                durationMap[v.id] = parseIso8601Duration(v.contentDetails?.duration);
-                                
-                                const vLang = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
-                                videoLangMap[v.id] = vLang;
+                        if (videosResponse.ok) {
+                            const videosData = await videosResponse.json();
+                            const statsMap = {};
+                            const liveDetailsMap = {};
+                            const durationMap = {};
+                            const videoCountryMap = {};
+                            const videoLangMap = {};
+                            
+                            if(videosData.items) {
+                                videosData.items.forEach(v => {
+                                    statsMap[v.id] = v.statistics || {};
+                                    liveDetailsMap[v.id] = v.liveStreamingDetails || null;
+                                    durationMap[v.id] = parseIso8601Duration(v.contentDetails?.duration);
+                                    
+                                    const vLang = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
+                                    videoLangMap[v.id] = vLang;
 
-                                let vCountry = '';
-                                if (vLang) {
-                                    if (vLang.includes('-')) {
-                                        const part2 = vLang.split('-')[1];
-                                        if (/^[a-zA-Z]{2}$/.test(part2)) {
-                                            vCountry = part2.toUpperCase();
+                                    let vCountry = '';
+                                    if (vLang) {
+                                        if (vLang.includes('-')) {
+                                            const part2 = vLang.split('-')[1];
+                                            if (/^[a-zA-Z]{2}$/.test(part2)) {
+                                                vCountry = part2.toUpperCase();
+                                            } else {
+                                                const mapped = langToCountryMap[vLang.split('-')[0].toLowerCase()];
+                                                if (mapped) vCountry = mapped.toUpperCase();
+                                            }
                                         } else {
-                                            const mapped = langToCountryMap[vLang.split('-')[0].toLowerCase()];
+                                            const mapped = langToCountryMap[vLang.toLowerCase()];
                                             if (mapped) vCountry = mapped.toUpperCase();
                                         }
-                                    } else {
-                                        const mapped = langToCountryMap[vLang.toLowerCase()];
-                                        if (mapped) vCountry = mapped.toUpperCase();
                                     }
-                                }
-                                videoCountryMap[v.id] = vCountry;
+                                    videoCountryMap[v.id] = vCountry;
+                                });
+                            }
+
+                            items.forEach(item => {
+                                const stats = statsMap[item.id.videoId] || {};
+                                item.commentCount = parseInt(stats.commentCount || 0, 10);
+                                item.viewCount = parseInt(stats.viewCount || 0, 10); 
+                                item.subscriberCount = subsMap[item.snippet.channelId] || 0; 
+                                item.liveDetails = liveDetailsMap[item.id.videoId];
+                                item.channelCountryCode = channelCountryMap[item.snippet.channelId] || ''; 
+                                item.channelHandle = channelHandleMap[item.snippet.channelId] || '';
+                                item.durationSecs = durationMap[item.id.videoId] || 0;
+                                item.videoLanguage = videoLangMap[item.id.videoId] || '';
+                                
+                                const videoCountryCode = videoCountryMap[item.id.videoId] || '';
+                                item.finalCountryCode = item.channelCountryCode || videoCountryCode;
                             });
                         }
-
-                        items.forEach(item => {
-                            const stats = statsMap[item.id.videoId] || {};
-                            item.commentCount = parseInt(stats.commentCount || 0, 10);
-                            item.viewCount = parseInt(stats.viewCount || 0, 10); 
-                            item.subscriberCount = subsMap[item.snippet.channelId] || 0; 
-                            item.liveDetails = liveDetailsMap[item.id.videoId];
-                            item.channelCountryCode = channelCountryMap[item.snippet.channelId] || ''; 
-                            item.channelHandle = channelHandleMap[item.snippet.channelId] || '';
-                            item.durationSecs = durationMap[item.id.videoId] || 0;
-                            item.videoLanguage = videoLangMap[item.id.videoId] || '';
-                            
-                            const videoCountryCode = videoCountryMap[item.id.videoId] || '';
-                            item.finalCountryCode = item.channelCountryCode || videoCountryCode;
-                        });
                     }
 
-                    // FILTRO DE SHORTS, STATUS E FILTROS RÍGIDOS DE PAÍS/IDIOMA
                     items = items.filter(item => {
                         const now = new Date();
                         const liveContent = item.snippet.liveBroadcastContent; 
                         
-                        if (item.durationSecs > 0 && item.durationSecs <= 61 && liveContent === 'none') {
-                            return false; 
-                        }
+                        if (item.durationSecs > 0 && item.durationSecs <= 61 && liveContent === 'none') return false; 
+                        if (country && item.finalCountryCode.toUpperCase() !== country.toUpperCase()) return false;
 
-                        // ===============================================
-                        // NOVO: FILTRO RÍGIDO DE PAÍS (JS)
-                        // ===============================================
-                        if (country && item.finalCountryCode.toUpperCase() !== country.toUpperCase()) {
-                            return false;
-                        }
-
-                        // ===============================================
-                        // NOVO: FILTRO RÍGIDO DE IDIOMA (JS)
-                        // ===============================================
                         if (lang) {
                             let isMatch = false;
                             if (item.videoLanguage && item.videoLanguage.toLowerCase().startsWith(lang.toLowerCase())) {
                                 isMatch = true;
                             }
                             if (!isMatch) {
-                                // Mapeamento cruzado rigoroso: Se o YouTube não deu o idioma do vídeo, mas o canal é de um país nativo, validamos.
                                 const langCountryMap = {
                                     'pt': ['BR', 'PT', 'AO', 'MZ', 'CV', 'GW', 'ST', 'TL', 'MO'],
                                     'en': ['US', 'GB', 'CA', 'AU', 'NZ', 'IE', 'IN', 'ZA', 'NG'],
@@ -1367,11 +1448,8 @@
                                     'ja': ['JP']
                                 };
                                 const expectedCountries = langCountryMap[lang.toLowerCase()] || [];
-                                if (item.finalCountryCode && expectedCountries.includes(item.finalCountryCode.toUpperCase())) {
-                                    isMatch = true;
-                                }
+                                if (item.finalCountryCode && expectedCountries.includes(item.finalCountryCode.toUpperCase())) isMatch = true;
                             }
-                            // Se não bateu o idioma explícito, nem o país do canal, o JS exclui o vídeo para respeitar sua busca!
                             if (!isMatch) return false;
                         }
 
@@ -1456,12 +1534,15 @@
                 loadMoreContainer.classList.add('hidden'); 
                 
                 let errorMsg = error.message;
-                if (error.name === 'AbortError') errorMsg = "A ligação demorou muito a responder. A pesquisa foi interrompida (Timeout) para não bloquear o seu ecrã. Tente novamente.";
+                if (error.name === 'AbortError') {
+                    errorMsg = "A ligação demorou muito a responder. A pesquisa foi interrompida (Timeout) para não bloquear o seu ecrã. Tente novamente.";
+                }
+                
+                errorMsg += " Fique tranquilo(a), a sua consulta não foi descontada!";
                 showAlert(`Erro na busca: ${errorMsg}`, true);
             }
         }
 
-        // === RENDERIZADOR ===
         function renderGrid(itemsArray) {
             const sortFilterVal = document.getElementById('sortFilter').value;
             const statusFilterVal = document.getElementById('statusFilter').value;
@@ -1475,10 +1556,8 @@
                 itemsToRender.sort((a, b) => b.subscriberCount - a.subscriberCount);
             } else if (sortFilterVal === 'recent') {
                 if (statusFilterVal === 'upcoming') {
-                    // Agendado: Data mais próxima de hoje primeiro (Crescente)
                     itemsToRender.sort((a, b) => a.targetDateForFilter.getTime() - b.targetDateForFilter.getTime());
                 } else {
-                    // Todos, Finalizado, Ao Vivo: Data mais recente primeiro (Decrescente)
                     itemsToRender.sort((a, b) => b.targetDateForFilter.getTime() - a.targetDateForFilter.getTime());
                 }
             }
