@@ -437,7 +437,7 @@
 
             let unlockCount = parseInt(localStorage.getItem('_ga_unlock_count')) || 0;
             if (!premiumId && unlockCount >= 3) {
-                window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
+                window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
                 return;
             }
 
@@ -480,7 +480,7 @@
 
                 if (response.status === 403 || data.limiteAtingido) {
                     if (!premiumId) { localStorage.setItem('_ga_unlock_count', '3'); }
-                    window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
+                    window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
                     return;
                 }
 

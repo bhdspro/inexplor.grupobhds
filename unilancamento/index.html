@@ -1168,7 +1168,7 @@
         searchBtn.addEventListener('click', () => {
             let unlockCount = parseInt(localStorage.getItem('_ga_unlock_count')) || 0;
             if (!premiumId && unlockCount >= 3) {
-                window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
+                window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
                 return;
             }
 
@@ -1188,7 +1188,7 @@
         loadMoreBtn.addEventListener('click', () => {
             let unlockCount = parseInt(localStorage.getItem('_ga_unlock_count')) || 0;
             if (!premiumId && unlockCount >= 3) {
-                window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
+                window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
                 return;
             }
             
@@ -1272,7 +1272,7 @@
                         
                         if (errorData.limiteAtingido || !premiumId) {
                             localStorage.setItem('_ga_unlock_count', '3'); // Força bloqueio local
-                            window.location.href = 'https://pagamento.grupobhds.com/inexplor/desbloqueioprodutooculto';
+                            window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
                             return; 
                         }
                         throw new Error(errorData.error?.message || "Acesso Bloqueado pela Segurança.");
@@ -1613,7 +1613,7 @@
                 let iconsHtml = '';
                 
                 if (hotmartMatch && hotmartMatch[1]) {
-                    const inexplorUrl = `https://inexplor.grupobhds.com/desbloqueio-produto-oculto/hotmart?po=${encodeURIComponent(hotmartMatch[1])}`;
+                    const inexplorUrl = `https://inexplor.grupobhds.com/desbloqueio-produto-oculto?po=${encodeURIComponent(hotmartMatch[1])}`;
                     iconsHtml += `<button onclick="window.open('${inexplorUrl}', '_blank'); event.stopPropagation();" title="Afiliar-se na Hotmart" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0"><span class="material-symbols-rounded text-[18px]">attach_money</span></button>`;
                 }
                 
