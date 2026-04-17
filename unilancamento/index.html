@@ -766,22 +766,27 @@
         }
 
         setupTypewriter('urlInput', '', ["Digite a sua palavra-chave...", "Ex: masterclass", "Ex: workshop"], true);
-        setupTypewriter('channelInput', '', ["Ex: inexploroficial", "Ex: https://youtube.com/@Canal"], true);
+        setupTypewriter('channelInput', '', ["Ex: https://youtube.com/@Canal"], true);
         setupTypewriter('descInput', '', ["Ex: Hotmart"], true);
         setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
 
         // === LIMPADOR DE URLS DE CANAIS ===
         function cleanChannelInput(val) {
             let v = val.trim();
+            // Restringe para que só aceite URLs válidas do YouTube
+            if (!v.includes('youtube.com') && !v.includes('youtu.be')) {
+                showAlert("Por favor, insira a URL completa do canal (ex: https://youtube.com/@Canal)", true);
+                return "";
+            }
             try {
-                if (v.includes('youtube.com') || v.includes('youtu.be')) {
-                    const urlObj = new URL(v.startsWith('http') ? v : 'https://' + v);
-                    const pathParts = urlObj.pathname.split('/').filter(Boolean);
-                    v = pathParts[pathParts.length - 1]; 
-                }
-            } catch(e) {} 
-            if (v.startsWith('@')) v = v.substring(1);
-            return v;
+                const urlObj = new URL(v.startsWith('http') ? v : 'https://' + v);
+                const pathParts = urlObj.pathname.split('/').filter(Boolean);
+                let lastPart = pathParts[pathParts.length - 1]; 
+                // CRUCIAL: Parei de apagar o "@" daqui. O YouTube precisa dele para encontrar o canal.
+                return lastPart;
+            } catch(e) {
+                return "";
+            } 
         }
 
         // === NOVO CHIPS SYSTEM INTELIGENTE ===
@@ -796,7 +801,10 @@
                     for(let i=0; i < parts.length - 1; i++) {
                         let val = parts[i].trim();
                         if (val) {
-                            if (containerId === 'channelContainer') val = cleanChannelInput(val);
+                            if (containerId === 'channelContainer') {
+                                val = cleanChannelInput(val);
+                                if (!val) continue;
+                            }
                             createChipAndOp(val, container, input);
                         }
                     }
@@ -809,7 +817,10 @@
                     e.preventDefault(); 
                     let value = input.value.trim(); 
                     if (value) { 
-                        if (containerId === 'channelContainer') value = cleanChannelInput(value);
+                        if (containerId === 'channelContainer') {
+                            value = cleanChannelInput(value);
+                            if (!value) { input.value = ''; return; }
+                        }
                         createChipAndOp(value, container, input); 
                         input.value = ''; 
                     }
@@ -828,7 +839,10 @@
             input.addEventListener('blur', function() {
                 let value = input.value.trim().replace(/,$/, '');
                 if (value) { 
-                    if (containerId === 'channelContainer') value = cleanChannelInput(value);
+                    if (containerId === 'channelContainer') {
+                        value = cleanChannelInput(value);
+                        if (!value) { input.value = ''; return; }
+                    }
                     createChipAndOp(value, container, input); 
                     input.value = ''; 
                 }
@@ -890,7 +904,8 @@
             });
 
             container.insertBefore(chip, input);
-            if(input) input.scrollIntoView({ behavior: "smooth", inline: "start" });
+            // CORREÇÃO SCROLL: block: "nearest" evita que a página pule para baixo!
+            if(input) input.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
             saveState();
         }
 
@@ -1060,6 +1075,24 @@
         const loadingIndicator = document.getElementById('loadingIndicator');
         const loadMoreContainer = document.getElementById('loadMoreContainer');
 
+        // FUNÇÃO DE OURO: Converte a URL do canal no ID real do YouTube antes de buscar os vídeos
+        async function resolveChannelId(handleOrId) {
+            if (!handleOrId) return null;
+            if (handleOrId.startsWith('UC') && handleOrId.length === 24) return handleOrId;
+            
+            const url = `${CF_WORKER_URL}/search?part=snippet&type=channel&maxResults=1&q=${encodeURIComponent(handleOrId)}`;
+            try {
+                const res = await fetchWithTimeout(url);
+                const data = await res.json();
+                if (data.items && data.items.length > 0) {
+                    return data.items[0].snippet.channelId;
+                }
+            } catch(e) {
+                console.error("Erro ao converter URL do Canal em ID.");
+            }
+            return null;
+        }
+
         searchBtn.addEventListener('click', () => {
             if(isFiltersOpen) {
                 document.getElementById('toggleFiltersBtn').click();
@@ -1109,29 +1142,41 @@
             
             if (mainTokens.length > 0) queryParts.push(`(${buildApiQueryString(mainTokens)})`);
             if (descTokens.length > 0) queryParts.push(`(${buildApiQueryString(descTokens)})`);
-            if (channelTokens.length > 0) queryParts.push(`(${buildApiQueryString(channelTokens)})`);
             
-            const q = queryParts.join(' ');
+            let q = queryParts.join(' ');
 
-            let baseSearchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50&q=${encodeURIComponent(q)}`;
+            // ===============================================
+            // BUSCA CIRÚRGICA DE CANAL (A Solução Principal)
+            // ===============================================
+            let specificChannelId = null;
+            if (channelTokens.length === 1 && channelTokens[0].type === 'word') {
+                // Descobre o ID do Canal primeiro para obrigar o YouTube a buscar APENAS lá
+                specificChannelId = await resolveChannelId(channelTokens[0].value);
+            }
+
+            let baseSearchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50`;
+            
+            if (specificChannelId) {
+                baseSearchUrl += `&channelId=${specificChannelId}`;
+                if (q) baseSearchUrl += `&q=${encodeURIComponent(q)}`;
+            } else {
+                if (channelTokens.length > 0) {
+                    const channelStr = channelTokens.filter(t => t.type === 'word').map(t => t.value).join(' | ');
+                    q += (q ? ' ' : '') + channelStr;
+                }
+                if (q) baseSearchUrl += `&q=${encodeURIComponent(q)}`;
+            }
+
             if (lang) baseSearchUrl += `&relevanceLanguage=${lang}`;
             if (country) baseSearchUrl += `&regionCode=${country}`;
-            
-            // INJEÇÃO DA API PARA 'Ao Vivo' e 'Agendado'
-            if (status === 'live' || status === 'upcoming') {
-                baseSearchUrl += `&eventType=${status}`;
-            }
-
-            if (sortFilterVal === 'recent') {
-                baseSearchUrl += `&order=date`;
-            }
+            if (status === 'live' || status === 'upcoming') baseSearchUrl += `&eventType=${status}`;
+            if (sortFilterVal === 'recent') baseSearchUrl += `&order=date`;
             
             try {
                 let loopCount = 0;
                 let newItemsFound = [];
                 let currentNextPageToken = isLoadMore ? globalNextPageToken : '';
 
-                // LIMITE DE 10 PÁGINAS COM PARADA INTELIGENTE
                 while (loopCount < 10 && newItemsFound.length < 20) {
                     let searchUrl = baseSearchUrl;
                     if (currentNextPageToken) searchUrl += `&pageToken=${currentNextPageToken}`;
@@ -1150,30 +1195,17 @@
                         continue;
                     }
 
-                    // PÓS-FILTRO JAVASCRIPT RIGOROSO
+                    // PÓS-FILTRO JAVASCRIPT RIGOROSO (Fase 1)
                     items = items.filter(item => {
                         if (globalAccumulatedItems.some(existing => existing.id.videoId === item.id.videoId)) return false;
                         if (newItemsFound.some(existing => existing.id.videoId === item.id.videoId)) return false;
 
                         const title = (item.snippet.title || '');
                         const desc = (item.snippet.description || '');
-                        const channelTitle = (item.snippet.channelTitle || '');
-                        const channelId = item.snippet.channelId;
 
                         if (!evaluateLogicCustom(mainTokens, (kw) => matchWildcard(title, kw))) return false;
                         if (!evaluateLogicCustom(descTokens, (kw) => matchWildcard(desc, kw))) return false;
                         if (negativeTokens.length > 0 && evaluateLogicCustom(negativeTokens, (kw) => matchWildcard(title, kw) || matchWildcard(desc, kw))) return false;
-
-                        if (!evaluateLogicCustom(channelTokens, (kw) => {
-                            const lowKw = kw.toLowerCase();
-                            const cTitleNoSpace = channelTitle.toLowerCase().replace(/\s+/g, '');
-                            const kwNoSpace = lowKw.replace(/\s+/g, '');
-                            
-                            if (lowKw.includes('*')) {
-                                return matchWildcard(channelId, kw) || matchWildcard(channelTitle, kw) || matchWildcard(cTitleNoSpace, kwNoSpace);
-                            }
-                            return channelId.toLowerCase() === lowKw || channelTitle.toLowerCase().includes(lowKw) || cTitleNoSpace.includes(kwNoSpace) || kwNoSpace.includes(cTitleNoSpace);
-                        })) return false;
 
                         return true;
                     });
@@ -1194,6 +1226,31 @@
                                 subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); 
                                 channelHandleMap[ch.id] = ch.snippet?.customUrl || '';
                                 channelCountryMap[ch.id] = ch.snippet?.country || '';
+                            });
+                        }
+
+                        // PÓS-FILTRO JAVASCRIPT RIGOROSO (Fase 2)
+                        if (channelTokens.length > 0) {
+                            items = items.filter(item => {
+                                const channelId = item.snippet.channelId;
+                                const channelTitle = item.snippet.channelTitle || '';
+                                let handle = channelHandleMap[channelId] || '';
+
+                                return evaluateLogicCustom(channelTokens, (kw) => {
+                                    const lowKw = kw.toLowerCase();
+                                    const cTitleNoSpace = channelTitle.toLowerCase().replace(/\s+/g, '');
+                                    const kwNoSpace = lowKw.replace(/\s+/g, '');
+                                    
+                                    if (lowKw.includes('*')) {
+                                        return matchWildcard(channelId, kw) || matchWildcard(handle, kw) || matchWildcard(channelTitle, kw) || matchWildcard(cTitleNoSpace, kwNoSpace);
+                                    }
+                                    
+                                    return channelId.toLowerCase() === lowKw || 
+                                           handle.toLowerCase() === lowKw || 
+                                           channelTitle.toLowerCase().includes(lowKw.replace('@', '')) || 
+                                           cTitleNoSpace.includes(kwNoSpace.replace('@', '')) || 
+                                           kwNoSpace.replace('@', '').includes(cTitleNoSpace);
+                                });
                             });
                         }
 
@@ -1218,7 +1275,7 @@
                         const statsMap = {};
                         const liveDetailsMap = {};
                         const durationMap = {};
-                        const videoCountryMap = {}; // Novo mapa para guardar o país inferido pelo vídeo
+                        const videoCountryMap = {};
                         
                         if(videosData.items) {
                             videosData.items.forEach(v => {
@@ -1226,7 +1283,6 @@
                                 liveDetailsMap[v.id] = v.liveStreamingDetails || null;
                                 durationMap[v.id] = parseIso8601Duration(v.contentDetails?.duration);
                                 
-                                // Extrai o país do vídeo com base no idioma de áudio/padrão fornecido pela API
                                 const lang = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
                                 let vCountry = '';
                                 if (lang) {
@@ -1257,7 +1313,6 @@
                             item.channelHandle = channelHandleMap[item.snippet.channelId] || '';
                             item.durationSecs = durationMap[item.id.videoId] || 0;
                             
-                            // Aplica a regra principal: País do Canal. Se não houver, País do Vídeo.
                             const videoCountryCode = videoCountryMap[item.id.videoId] || '';
                             item.finalCountryCode = item.channelCountryCode || videoCountryCode;
                         });
@@ -1389,7 +1444,6 @@
                 const commentCount = item.commentCount || 0;
                 const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
                 
-                // Utilizando a nova propriedade 'finalCountryCode' que tem a hierarquia País do Canal -> País do Vídeo
                 const flagImg = getFlagImg(item.finalCountryCode);
                 const countryName = getCountryNameByCode(item.finalCountryCode || '');
                 
