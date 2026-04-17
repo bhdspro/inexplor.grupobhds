@@ -496,7 +496,12 @@
 
             if (!urlInput || !btnText || !extractBtn || !resultArea) return;
 
-            const url = urlInput.value.trim();
+            let url = urlInput.value.trim();
+
+            // Lógica para converter "go.hotmart.com" para "pay.hotmart.com"
+            if (url.startsWith('https://go.hotmart.com/')) {
+                url = url.replace('https://go.hotmart.com/', 'https://pay.hotmart.com/');
+            }
 
             if (!url) { mostrarErro('Por favor, cole uma URL.'); return; }
             if (!url.startsWith('https://pay.hotmart.com/') && !url.startsWith('https://hotmart.com/')) {
@@ -513,7 +518,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        url: url,
+                        url: url, // A URL enviada já estará convertida se era um link "go."
                         fingerprintId: fingerprintId,
                         stickyId: stickyId,
                         premiumId: premiumId
