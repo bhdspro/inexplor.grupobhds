@@ -201,7 +201,7 @@
         /* ANIMAÇÃO DO TEXTO SUPERIOR */
         @keyframes pointRight {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); } /* Alterado para flutuar ao invés de pular pro lado, mais elegante */
+            50% { transform: translateY(-4px); } 
         }
         .animate-float {
             animation: pointRight 3s ease-in-out infinite;
@@ -232,7 +232,6 @@
         <!-- BOTÃO DE ID E TEXTO SUPERIOR -->
         <div class="flex items-center justify-center z-50 gap-4 mb-10 sm:mb-14">
             
-            <!-- Fundo escuro fosco adicionado ao texto para leitura perfeita -->
             <div class="flex items-center cursor-pointer animate-float bg-[#0F172A]/90 backdrop-blur-md border border-[rgb(185,28,28)]/40 px-6 py-3 rounded-full shadow-[0_10px_25px_rgba(0,0,0,0.5)] transition-transform hover:scale-105" onclick="abrirModal()">
                 <span id="welcomeText" class="font-bold text-sm sm:text-base tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-[#DC2626] via-red-300 to-[#DC2626] bg-[length:200%_auto] animate-shimmer uppercase drop-shadow-sm">
                     Entre com sua ID
@@ -316,6 +315,15 @@
             </div>
 
             <div class="space-y-5">
+                <!-- Status de Consultas -->
+                <div id="consultasInfo" class="hidden bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-inner">
+                    <div class="flex items-center gap-2">
+                        <i class="material-symbols-rounded text-[rgb(220,38,38)]">database</i>
+                        <span class="text-sm font-semibold text-slate-200">Consultas:</span>
+                    </div>
+                    <span id="consultasText" class="text-sm font-extrabold text-white bg-[rgb(220,38,38)]/20 border border-[rgb(220,38,38)]/50 px-4 py-1.5 rounded-full text-center">...</span>
+                </div>
+
                 <!-- Campo Nome Social -->
                 <div>
                     <input type="text" id="nomeInput" class="w-full px-5 py-4 input-glass font-semibold text-center text-lg placeholder-slate-400/80" autocomplete="off" placeholder="Como quer ser chamado?">
@@ -342,13 +350,26 @@
                     </button>
                 </div>
                 
-                <p id="modalSuccess" class="text-[rgb(220,38,38)] font-bold text-base mt-4 hidden text-center animate-bounce">Dados Salvos com Sucesso!</p>
+                <p id="modalSuccess" class="font-bold text-base mt-4 hidden text-center"></p>
             </div>
         </div>
     </div>
 
     <!-- Scripts de Lógica e Efeitos -->
     <script>
+        // ==========================================
+        // URL DO SEU BACKEND (CLOUDFLARE WORKER / APPS SCRIPT)
+        // Substitua a URL abaixo pela sua URL final real do Cloudflare.
+        // ==========================================
+        const API_BACKEND_URL = 'https://smartapps-inexplor.grupo-bhds.workers.dev';
+
+        // Constantes do sistema de cache
+        const LOCAL_STORAGE_KEY_ID = '_inexplor_user_id';
+        const LOCAL_STORAGE_KEY_NOME = '_inexplor_user_nome';
+        const LIMIT_CHANGES_KEY = '_inexplor_id_changes';
+        const MAX_CHANGES = 3;
+
+        // Máquina de escrever
         const placeholderTexts = [
             "Digite seu CPF ou cole sua ID",
             "Ex: 12387945600",
@@ -360,9 +381,7 @@
         function animatePlaceholder() {
             const input = document.getElementById('idInput');
             if (!input) return;
-
             const currentText = placeholderTexts[ptIndex];
-            
             if (isDeletingPlaceholder) {
                 input.setAttribute('placeholder', currentText.substring(0, charIndex - 1));
                 charIndex--;
@@ -370,9 +389,7 @@
                 input.setAttribute('placeholder', currentText.substring(0, charIndex + 1));
                 charIndex++;
             }
-
             let typeSpeed = isDeletingPlaceholder ? 30 : 60;
-
             if (!isDeletingPlaceholder && charIndex === currentText.length) {
                 typeSpeed = 2500;
                 isDeletingPlaceholder = true;
@@ -381,14 +398,13 @@
                 ptIndex = (ptIndex + 1) % placeholderTexts.length;
                 typeSpeed = 500; 
             }
-
             clearTimeout(animationTimeout);
             animationTimeout = setTimeout(animatePlaceholder, typeSpeed);
         }
 
-        const LOCAL_STORAGE_KEY_ID = '_inexplor_user_id';
-        const LOCAL_STORAGE_KEY_NOME = '_inexplor_user_nome';
-
+        // ==========================================
+        // SISTEMA DE REDUNDÂNCIA (Cookie, LS, SS) PARA PROTEÇÃO CONTRA ABUSOS
+        // ==========================================
         function setCookie(name, value, days) {
             let expires = "";
             if (days) {
@@ -410,31 +426,126 @@
             return null;
         }
 
+        function sincronizarEObterLimite() {
+            let ls = parseInt(localStorage.getItem(LIMIT_CHANGES_KEY)) || 0;
+            let ck = parseInt(getCookie(LIMIT_CHANGES_KEY)) || 0;
+            let ss = parseInt(sessionStorage.getItem(LIMIT_CHANGES_KEY)) || 0;
+            // Pegamos o maior valor de tentativas para evitar que burlem deletando apenas o LocalStorage
+            let maxLim = Math.max(ls, ck, ss);
+            
+            // Restaura o valor máximo em todos os lugares para garantir a blindagem
+            localStorage.setItem(LIMIT_CHANGES_KEY, maxLim);
+            sessionStorage.setItem(LIMIT_CHANGES_KEY, maxLim);
+            setCookie(LIMIT_CHANGES_KEY, maxLim, 365);
+            return maxLim;
+        }
+
+        function incrementarLimite() {
+            let current = sincronizarEObterLimite();
+            let newLimit = current + 1;
+            localStorage.setItem(LIMIT_CHANGES_KEY, newLimit);
+            sessionStorage.setItem(LIMIT_CHANGES_KEY, newLimit);
+            setCookie(LIMIT_CHANGES_KEY, newLimit, 365);
+            return newLimit;
+        }
+
+        // ==========================================
+        // SISTEMA DE CONSULTA AO BACKEND
+        // ==========================================
+        let lastApiCall = 0; // Prevenção de Force Brute em requests
+        
+        async function buscarConsultas(id, silent = false) {
+            const consultasInfo = document.getElementById('consultasInfo');
+            const consultasText = document.getElementById('consultasText');
+
+            if (!id) {
+                if(consultasInfo) consultasInfo.classList.add('hidden');
+                return;
+            }
+
+            // Evitar chamadas em massa (1 chamada a cada 5 segundos no máximo)
+            const now = Date.now();
+            if (now - lastApiCall < 5000 && !silent) {
+                return; 
+            }
+            lastApiCall = now;
+
+            if(consultasInfo && !silent) {
+                consultasInfo.classList.remove('hidden');
+                consultasText.textContent = 'Buscando...';
+                consultasText.classList.add('animate-pulse');
+            }
+
+            try {
+                const cacheBuster = silent ? `&_t=${now}` : '';
+                const response = await fetch(`${API_BACKEND_URL}?id=${encodeURIComponent(id)}${cacheBuster}`);
+                
+                if (!response.ok) throw new Error('Erro servidor');
+
+                const data = await response.json();
+                
+                // Formato exigido: Consultas: 30 / 100 (válido até 31/04/2026)
+                if (data.encontrado) {
+                    consultasText.textContent = `${data.realizadas} / ${data.total} (válido até ${data.dataLimite})`;
+                } else {
+                    consultasText.textContent = 'ID Inválida ou não encontrada';
+                }
+            } catch (error) {
+                console.error("Falha ao buscar consultas:", error);
+                if (!silent) consultasText.textContent = 'Indisponível no momento';
+            } finally {
+                if (!silent) consultasText.classList.remove('animate-pulse');
+            }
+        }
+
+        // ATUALIZAÇÃO AUTOMÁTICA DE 1 EM 1 HORA (Background Sync)
+        setInterval(() => {
+            const currentId = localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID);
+            if (currentId) {
+                buscarConsultas(currentId, true); // true = modo silencioso
+            }
+        }, 3600000); // 1 hora
+
+        // ==========================================
+        // LÓGICA PRINCIPAL (CARREGAMENTO E SALVAMENTO)
+        // ==========================================
         function iniciarSistemaId() {
+            // Sincroniza qualquer tentativa de fraude de limpar apenas localStorage
+            sincronizarEObterLimite();
+
             const urlParams = new URLSearchParams(window.location.search);
             const idDaUrl = urlParams.get('id');
             const nomeDaUrl = urlParams.get('nm');
             
-            // Prioridade para extrair ID e Nome da URL e salvar automaticamente
-            if (idDaUrl) {
-                localStorage.setItem(LOCAL_STORAGE_KEY_ID, idDaUrl);
-                setCookie(LOCAL_STORAGE_KEY_ID, idDaUrl, 365);
+            let savedId = localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID) || '';
+            let savedNome = localStorage.getItem(LOCAL_STORAGE_KEY_NOME) || getCookie(LOCAL_STORAGE_KEY_NOME) || '';
+
+            // Se o usuário passou um ID na URL e é DIFERENTE do salvo
+            if (idDaUrl && idDaUrl !== savedId) {
+                let limit = sincronizarEObterLimite();
+                if (limit >= MAX_CHANGES) {
+                    console.warn("Bloqueado: Limite de alterações de ID excedido via URL.");
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } else {
+                    incrementarLimite();
+                    localStorage.setItem(LOCAL_STORAGE_KEY_ID, idDaUrl);
+                    setCookie(LOCAL_STORAGE_KEY_ID, idDaUrl, 365);
+                    savedId = idDaUrl;
+                }
             }
             
             if (nomeDaUrl) {
-                // Decodifica a URL (ex: Bruno%20H%20Santos para Bruno H Santos)
                 const nomeDecodificado = decodeURIComponent(nomeDaUrl);
                 localStorage.setItem(LOCAL_STORAGE_KEY_NOME, nomeDecodificado);
                 setCookie(LOCAL_STORAGE_KEY_NOME, nomeDecodificado, 365);
+                savedNome = nomeDecodificado;
             }
 
-            // Tenta pegar os dados salvos
-            const savedId = localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID) || '';
-            const savedNome = localStorage.getItem(LOCAL_STORAGE_KEY_NOME) || getCookie(LOCAL_STORAGE_KEY_NOME) || '';
-            
+            // Povoa campos com dados válidos
             if (savedId) {
                 document.getElementById('idInput').value = savedId;
                 atualizarLinks(savedId);
+                buscarConsultas(savedId); 
             }
             if (savedNome) {
                 document.getElementById('nomeInput').value = savedNome;
@@ -443,11 +554,67 @@
             atualizarBoasVindasEBotao(savedNome, savedId);
         }
 
+        function salvarDados() {
+            const idInput = document.getElementById('idInput').value.trim();
+            const nomeInput = document.getElementById('nomeInput').value.trim();
+            const successMsg = document.getElementById('modalSuccess');
+            
+            const savedId = localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID) || '';
+
+            // Verificar se houve mudança real no ID (seja adicionando, alterando ou limpando)
+            if (idInput !== savedId) {
+                let limit = sincronizarEObterLimite();
+                if (limit >= MAX_CHANGES) {
+                    successMsg.textContent = "Limite excedido! Contate o suporte.";
+                    successMsg.className = "font-bold text-base mt-4 text-center animate-bounce text-red-500";
+                    successMsg.classList.remove('hidden');
+                    setTimeout(() => successMsg.classList.add('hidden'), 3000);
+                    
+                    document.getElementById('idInput').value = savedId;
+                    return; 
+                }
+                incrementarLimite();
+            }
+
+            // Processa a limpeza ou salvamento do ID
+            if(idInput) {
+                localStorage.setItem(LOCAL_STORAGE_KEY_ID, idInput);
+                setCookie(LOCAL_STORAGE_KEY_ID, idInput, 365);
+                atualizarLinks(idInput);
+                if(idInput !== savedId) buscarConsultas(idInput);
+            } else {
+                localStorage.removeItem(LOCAL_STORAGE_KEY_ID);
+                setCookie(LOCAL_STORAGE_KEY_ID, '', -1); 
+                atualizarLinks('');
+                const consultasInfo = document.getElementById('consultasInfo');
+                if(consultasInfo) consultasInfo.classList.add('hidden');
+            }
+
+            // Processa o Nome
+            if(nomeInput) {
+                localStorage.setItem(LOCAL_STORAGE_KEY_NOME, nomeInput);
+                setCookie(LOCAL_STORAGE_KEY_NOME, nomeInput, 365);
+            } else {
+                localStorage.removeItem(LOCAL_STORAGE_KEY_NOME);
+                setCookie(LOCAL_STORAGE_KEY_NOME, '', -1); 
+            }
+
+            atualizarBoasVindasEBotao(nomeInput, idInput);
+            
+            successMsg.textContent = "Dados Salvos com Sucesso!";
+            successMsg.className = "font-bold text-base mt-4 text-center animate-bounce text-[rgb(220,38,38)]";
+            successMsg.classList.remove('hidden');
+            
+            setTimeout(() => {
+                fecharModal();
+                successMsg.classList.add('hidden');
+            }, 1500);
+        }
+
         function atualizarBoasVindasEBotao(nome, id) {
             const welcomeText = document.getElementById('welcomeText');
             const textAcaoComprar = document.getElementById('textAcaoComprar');
             
-            // Lógica de saudação (Texto superior)
             if (welcomeText) {
                 if (nome) {
                     welcomeText.textContent = `Bem-vindo(a) ${nome}`;
@@ -458,7 +625,6 @@
                 }
             }
             
-            // Lógica do botão Comprar/Gerenciar
             if(textAcaoComprar) {
                 if(id) {
                     textAcaoComprar.textContent = 'Gerenciar';
@@ -482,50 +648,11 @@
             });
         }
 
-        function salvarDados() {
-            const idInput = document.getElementById('idInput').value.trim();
-            const nomeInput = document.getElementById('nomeInput').value.trim();
-            
-            // Limpa ou salva ID
-            if(idInput) {
-                localStorage.setItem(LOCAL_STORAGE_KEY_ID, idInput);
-                setCookie(LOCAL_STORAGE_KEY_ID, idInput, 365);
-                atualizarLinks(idInput);
-            } else {
-                localStorage.removeItem(LOCAL_STORAGE_KEY_ID);
-                setCookie(LOCAL_STORAGE_KEY_ID, '', -1); // Deleta o cookie
-                atualizarLinks('');
-            }
-
-            // Limpa ou salva Nome
-            if(nomeInput) {
-                localStorage.setItem(LOCAL_STORAGE_KEY_NOME, nomeInput);
-                setCookie(LOCAL_STORAGE_KEY_NOME, nomeInput, 365);
-            } else {
-                localStorage.removeItem(LOCAL_STORAGE_KEY_NOME);
-                setCookie(LOCAL_STORAGE_KEY_NOME, '', -1); // Deleta o cookie
-            }
-
-            // Atualiza Interface (Textos e Botões)
-            atualizarBoasVindasEBotao(nomeInput, idInput);
-            
-            const successMsg = document.getElementById('modalSuccess');
-            successMsg.classList.remove('hidden');
-            
-            setTimeout(() => {
-                fecharModal();
-                successMsg.classList.add('hidden');
-            }, 1500);
-        }
-
-        // Lógica Dinâmica do Botão Comprar/Gerenciar
         function acaoComprarGerenciar() {
             const currentId = localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID) || '';
             if(currentId) {
-                // Se existe ID, vai para gerenciar
                 window.open('https://consumer.hotmart.com/main/3144777', '_blank');
             } else {
-                // Se não existe ID, vai para comprar
                 window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
             }
         }
