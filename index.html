@@ -58,12 +58,12 @@
             background: transparent;
         }
 
-        /* Material 3 Expressive Glass Card - Bordas mais arredondadas e elevação suave */
+        /* Material 3 Expressive Glass Card */
         .glass-card {
             background: #0F172A; 
             backdrop-filter: blur(24px); 
             -webkit-backdrop-filter: blur(24px);
-            border-radius: 3rem; /* Arredondamento M3 Expressive */
+            border-radius: 3rem; 
             position: relative;
             z-index: 10;
             box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
@@ -91,7 +91,7 @@
         .action-card {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 2rem; /* Mais arredondado M3 */
+            border-radius: 2rem; 
             padding: 2.5rem 1.75rem;
             text-decoration: none;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -117,7 +117,7 @@
         }
 
         .action-card:hover {
-            transform: translateY(-8px) scale(1.02); /* Escala expressiva no hover */
+            transform: translateY(-8px) scale(1.02); 
             background: rgba(255, 255, 255, 0.04);
             border-color: rgba(220, 38, 38, 0.6);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(220, 38, 38, 0.3);
@@ -128,7 +128,7 @@
         }
 
         .icon-wrapper {
-            width: 72px; /* Ligeiramente maior para impacto visual M3 */
+            width: 72px; 
             height: 72px;
             border-radius: 1.5rem;
             background: rgb(220, 38, 38);
@@ -176,11 +176,23 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
         }
 
-        /* Classes do Modal Expressivas */
+        /* Classes do Modal Expressivas e Scroll Personalizado */
         .modal-overlay {
             background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
+        }
+
+        /* Barra de rolagem para o interior do Modal Content caso exceda a tela */
+        #modalContent::-webkit-scrollbar {
+            width: 6px;
+        }
+        #modalContent::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #modalContent::-webkit-scrollbar-thumb {
+            background: rgba(220, 38, 38, 0.5);
+            border-radius: 10px;
         }
         
         .input-glass {
@@ -188,7 +200,7 @@
             border: 2px solid rgba(255, 255, 255, 0.08);
             color: white;
             transition: all 0.3s;
-            border-radius: 1.5rem; /* Entradas mais arredondadas (Expressive) */
+            border-radius: 1.5rem; 
         }
         
         .input-glass:focus {
@@ -298,11 +310,12 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP DE ID E NOME (M3 Expressive) -->
-    <div id="idModal" class="fixed inset-0 z-[100] modal-overlay hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="glass-card relative w-full max-w-md p-8 sm:p-10 transform scale-95 transition-transform duration-300" id="modalContent">
+    <!-- MODAL POPUP DE ID E NOME (M3 Expressive + Scrollable) -->
+    <div id="idModal" class="fixed inset-0 z-[100] modal-overlay hidden flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
+        <!-- Adicionado max-h-[90vh] e overflow-y-auto para evitar o corte e permitir scroll se exceder a tela -->
+        <div class="glass-card relative w-full max-w-md p-8 sm:p-10 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto" id="modalContent">
             
-            <button onclick="fecharModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10">
+            <button onclick="fecharModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10 z-20">
                 <i class="material-symbols-rounded block">close</i>
             </button>
 
@@ -315,13 +328,19 @@
             </div>
 
             <div class="space-y-5">
-                <!-- Status de Consultas -->
-                <div id="consultasInfo" class="hidden bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-inner">
-                    <div class="flex items-center gap-2">
-                        <i class="material-symbols-rounded text-[rgb(220,38,38)]">database</i>
-                        <span class="text-sm font-semibold text-slate-200">Consultas:</span>
+                <!-- Status de Consultas (Separado a Data Limite e removido o negrito do número) -->
+                <div id="consultasInfo" class="hidden bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-2 shadow-inner w-full">
+                    <div class="flex items-center justify-between w-full">
+                        <div class="flex items-center gap-2">
+                            <i class="material-symbols-rounded text-[rgb(220,38,38)]">database</i>
+                            <span class="text-sm font-semibold text-slate-200">Consultas:</span>
+                        </div>
+                        <span id="consultasText" class="text-sm font-normal text-white bg-[rgb(220,38,38)]/20 border border-[rgb(220,38,38)]/50 px-4 py-1.5 rounded-full text-center tracking-wide">...</span>
                     </div>
-                    <span id="consultasText" class="text-sm font-extrabold text-white bg-[rgb(220,38,38)]/20 border border-[rgb(220,38,38)]/50 px-4 py-1.5 rounded-full text-center">...</span>
+                    <!-- Data Limite Separada -->
+                    <div id="dataLimiteBox" class="text-xs text-slate-400 w-full text-right hidden mt-1">
+                        Válido até <span id="dataLimiteText" class="text-slate-300 font-medium">...</span>
+                    </div>
                 </div>
 
                 <!-- Campo Nome Social -->
@@ -333,7 +352,7 @@
                     <input type="text" id="idInput" class="w-full px-5 py-4 input-glass font-semibold text-center text-lg placeholder-slate-400/80" autocomplete="off">
                 </div>
                 
-                <button onclick="salvarDados()" class="w-full bg-[rgb(220,38,38)] hover:bg-[rgb(190,30,30)] text-white font-bold py-4 px-4 rounded-full transition-all shadow-lg shadow-[rgba(220,38,38,0.3)] hover:shadow-[rgba(220,38,38,0.5)] hover:-translate-y-1 text-lg">
+                <button id="btnSubmitId" onclick="salvarDados()" class="w-full bg-[rgb(220,38,38)] hover:bg-[rgb(190,30,30)] text-white font-bold py-4 px-4 rounded-full transition-all shadow-lg shadow-[rgba(220,38,38,0.3)] hover:shadow-[rgba(220,38,38,0.5)] hover:-translate-y-1 text-lg">
                     Entrar com ID
                 </button>
 
@@ -359,9 +378,8 @@
     <script>
         // ==========================================
         // URL DO SEU BACKEND (CLOUDFLARE WORKER / APPS SCRIPT)
-        // Substitua a URL abaixo pela sua URL final real do Cloudflare.
         // ==========================================
-        const API_BACKEND_URL = 'https://smartapps-inexplor.grupo-bhds.workers.dev';
+        const API_BACKEND_URL = 'https://sua-url-do-cloudflare-worker-ou-apps-script.com';
 
         // Constantes do sistema de cache
         const LOCAL_STORAGE_KEY_ID = '_inexplor_user_id';
@@ -430,10 +448,8 @@
             let ls = parseInt(localStorage.getItem(LIMIT_CHANGES_KEY)) || 0;
             let ck = parseInt(getCookie(LIMIT_CHANGES_KEY)) || 0;
             let ss = parseInt(sessionStorage.getItem(LIMIT_CHANGES_KEY)) || 0;
-            // Pegamos o maior valor de tentativas para evitar que burlem deletando apenas o LocalStorage
             let maxLim = Math.max(ls, ck, ss);
             
-            // Restaura o valor máximo em todos os lugares para garantir a blindagem
             localStorage.setItem(LIMIT_CHANGES_KEY, maxLim);
             sessionStorage.setItem(LIMIT_CHANGES_KEY, maxLim);
             setCookie(LIMIT_CHANGES_KEY, maxLim, 365);
@@ -452,18 +468,20 @@
         // ==========================================
         // SISTEMA DE CONSULTA AO BACKEND
         // ==========================================
-        let lastApiCall = 0; // Prevenção de Force Brute em requests
+        let lastApiCall = 0; 
         
         async function buscarConsultas(id, silent = false) {
             const consultasInfo = document.getElementById('consultasInfo');
             const consultasText = document.getElementById('consultasText');
+            const dataLimiteBox = document.getElementById('dataLimiteBox');
+            const dataLimiteText = document.getElementById('dataLimiteText');
 
             if (!id) {
                 if(consultasInfo) consultasInfo.classList.add('hidden');
+                if(dataLimiteBox) dataLimiteBox.classList.add('hidden');
                 return;
             }
 
-            // Evitar chamadas em massa (1 chamada a cada 5 segundos no máximo)
             const now = Date.now();
             if (now - lastApiCall < 5000 && !silent) {
                 return; 
@@ -472,6 +490,7 @@
 
             if(consultasInfo && !silent) {
                 consultasInfo.classList.remove('hidden');
+                if(dataLimiteBox) dataLimiteBox.classList.add('hidden');
                 consultasText.textContent = 'Buscando...';
                 consultasText.classList.add('animate-pulse');
             }
@@ -484,33 +503,48 @@
 
                 const data = await response.json();
                 
-                // Formato exigido: Consultas: 30 / 100 (válido até 31/04/2026)
                 if (data.encontrado) {
-                    consultasText.textContent = `${data.realizadas} / ${data.total} (válido até ${data.dataLimite})`;
+                    consultasText.textContent = `${data.realizadas} / ${data.total}`;
+                    
+                    // Extrai apenas a data se vier acompanhada da hora ou formato ISO
+                    let dtLimite = data.dataLimite || '';
+                    if (dtLimite.includes(' ')) {
+                        dtLimite = dtLimite.split(' ')[0];
+                    } else if (dtLimite.includes('T')) {
+                        const dataObj = new Date(dtLimite);
+                        dtLimite = dataObj.toLocaleDateString('pt-BR');
+                    }
+                    
+                    if (dataLimiteBox && dataLimiteText && dtLimite) {
+                        dataLimiteText.textContent = dtLimite;
+                        dataLimiteBox.classList.remove('hidden');
+                    }
                 } else {
-                    consultasText.textContent = 'ID Inválida ou não encontrada';
+                    consultasText.textContent = 'ID Inválida / Não encontrada';
+                    if(dataLimiteBox) dataLimiteBox.classList.add('hidden');
                 }
             } catch (error) {
                 console.error("Falha ao buscar consultas:", error);
-                if (!silent) consultasText.textContent = 'Indisponível no momento';
+                if (!silent) {
+                    consultasText.textContent = 'Indisponível no momento';
+                    if(dataLimiteBox) dataLimiteBox.classList.add('hidden');
+                }
             } finally {
                 if (!silent) consultasText.classList.remove('animate-pulse');
             }
         }
 
-        // ATUALIZAÇÃO AUTOMÁTICA DE 1 EM 1 HORA (Background Sync)
         setInterval(() => {
             const currentId = localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID);
             if (currentId) {
-                buscarConsultas(currentId, true); // true = modo silencioso
+                buscarConsultas(currentId, true); 
             }
-        }, 3600000); // 1 hora
+        }, 3600000); 
 
         // ==========================================
         // LÓGICA PRINCIPAL (CARREGAMENTO E SALVAMENTO)
         // ==========================================
         function iniciarSistemaId() {
-            // Sincroniza qualquer tentativa de fraude de limpar apenas localStorage
             sincronizarEObterLimite();
 
             const urlParams = new URLSearchParams(window.location.search);
@@ -520,7 +554,6 @@
             let savedId = localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID) || '';
             let savedNome = localStorage.getItem(LOCAL_STORAGE_KEY_NOME) || getCookie(LOCAL_STORAGE_KEY_NOME) || '';
 
-            // Se o usuário passou um ID na URL e é DIFERENTE do salvo
             if (idDaUrl && idDaUrl !== savedId) {
                 let limit = sincronizarEObterLimite();
                 if (limit >= MAX_CHANGES) {
@@ -541,7 +574,6 @@
                 savedNome = nomeDecodificado;
             }
 
-            // Povoa campos com dados válidos
             if (savedId) {
                 document.getElementById('idInput').value = savedId;
                 atualizarLinks(savedId);
@@ -561,7 +593,6 @@
             
             const savedId = localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID) || '';
 
-            // Verificar se houve mudança real no ID (seja adicionando, alterando ou limpando)
             if (idInput !== savedId) {
                 let limit = sincronizarEObterLimite();
                 if (limit >= MAX_CHANGES) {
@@ -576,7 +607,6 @@
                 incrementarLimite();
             }
 
-            // Processa a limpeza ou salvamento do ID
             if(idInput) {
                 localStorage.setItem(LOCAL_STORAGE_KEY_ID, idInput);
                 setCookie(LOCAL_STORAGE_KEY_ID, idInput, 365);
@@ -590,7 +620,6 @@
                 if(consultasInfo) consultasInfo.classList.add('hidden');
             }
 
-            // Processa o Nome
             if(nomeInput) {
                 localStorage.setItem(LOCAL_STORAGE_KEY_NOME, nomeInput);
                 setCookie(LOCAL_STORAGE_KEY_NOME, nomeInput, 365);
@@ -614,6 +643,7 @@
         function atualizarBoasVindasEBotao(nome, id) {
             const welcomeText = document.getElementById('welcomeText');
             const textAcaoComprar = document.getElementById('textAcaoComprar');
+            const btnSubmitId = document.getElementById('btnSubmitId');
             
             if (welcomeText) {
                 if (nome) {
@@ -623,6 +653,10 @@
                 } else {
                     welcomeText.textContent = `Entre com sua ID`;
                 }
+            }
+            
+            if (btnSubmitId) {
+                btnSubmitId.textContent = id ? 'Atualizar' : 'Entrar com ID';
             }
             
             if(textAcaoComprar) {
