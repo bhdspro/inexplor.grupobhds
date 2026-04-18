@@ -5,222 +5,870 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <title>Apps Inteligente - Inexplor</title>
-    <meta name="description" content="Acesse as ferramentas exclusivas da Inexplor.">
-    <meta name="robots" content="index, follow">
+    
+    <!-- Favicon ⚡ -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+
+    <!-- SEO BLACK HAT / AGRESSIVO -->
+    <meta name="description" content="A ferramenta definitiva: Produto Oculto, Produtos Ocultos Hotmart, Lançamentos Digitais, Lançamentos Gringos, Espião de Transação.">
+    <meta name="keywords" content="Produto Oculto, Produtos Ocultos Hotmart, Lançamentos Digitais, Lançamentos Gringos, Espião de Transação, descobrir produtos ocultos, como achar produtos ocultos, radar hotmart">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 
     <!-- Fontes e Ícones -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
     
+    <!-- Cloudflare Turnstile (Captcha Invisível) - Carregamento dinâmico para evitar SecurityError em iframes de preview -->
+    <script>
+        try {
+            if (window.self === window.top || window.top.location.href) {
+                var tsScript = document.createElement('script');
+                tsScript.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+                tsScript.async = true;
+                tsScript.defer = true;
+                document.head.appendChild(tsScript);
+            }
+        } catch (e) {
+            console.warn('Turnstile desativado no ambiente de preview para evitar SecurityError.');
+        }
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        },
+                        colors: {
+                            surface: '#0F172A',
+                            highlight: '#DC2626',
+                            borderStrong: 'rgb(185, 28, 28)'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Biblioteca de Partículas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+
     <style>
-        :root {
-            --primary: #8b5cf6;
-            --primary-hover: #7c3aed;
-            --secondary: #0ea5e9;
-            --bg-dark: #0f172a;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glow: 0 0 20px rgba(139, 92, 246, 0.4);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
         body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(14, 165, 233, 0.15) 0px, transparent 50%);
-            background-attachment: fixed;
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            background-color: theme('colors.surface');
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
             overflow-x: hidden;
-            position: relative;
+            color: #ffffff;
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
         }
 
-        /* Efeito de grade de fundo hacker/tech */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
-            z-index: -1;
-            opacity: 0.5;
+        body::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
         }
 
-        .container {
-            background: var(--bg-card);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            padding: 50px 30px;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), var(--glow);
-            text-align: center;
-            width: 90%;
-            max-width: 650px;
-            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        /* Material 3 Expressive Glass Card */
+        .glass-card {
+            background: #0F172A; 
+            backdrop-filter: blur(24px); 
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 3rem; 
             position: relative;
             z-index: 10;
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+            border: 2px solid rgb(185, 28, 28); 
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            z-index: 2;
         }
 
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(40px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
-
-        h1 {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 40px;
-            color: #f8fafc;
-            line-height: 1.3;
+        .animate-slide-up {
+            animation: slideUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) forwards;
         }
 
-        h1 .highlight {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .cards-wrapper {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        /* Estilo dos Cards Interativos */
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 30px 20px;
+        /* Cards de Ferramentas - Design Expressivo */
+        .action-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 2rem; 
+            padding: 2.5rem 1.75rem;
             text-decoration: none;
-            color: var(--text-main);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
             text-align: center;
             position: relative;
             overflow: hidden;
+            z-index: 10;
+            height: 100%; 
+            cursor: pointer; 
         }
 
-        .card::before {
+        .action-card::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(14, 165, 233, 0.1));
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.12), transparent);
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
             z-index: 0;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(139, 92, 246, 0.5);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(139, 92, 246, 0.2);
+        .action-card:hover {
+            transform: translateY(-8px) scale(1.02); 
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(220, 38, 38, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(220, 38, 38, 0.3);
         }
 
-        .card:hover::before {
+        .action-card:hover::before {
             opacity: 1;
         }
 
-        .card-content {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
         .icon-wrapper {
-            width: 64px;
-            height: 64px;
-            border-radius: 18px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 72px; 
+            height: 72px;
+            border-radius: 1.5rem;
+            background: rgb(220, 38, 38);
+            border: 2px solid rgb(185, 28, 28);
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
-            transition: transform 0.3s ease;
+            margin-bottom: 1.75rem;
+            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.35);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            z-index: 1;
+            flex-shrink: 0; 
         }
 
-        .card:hover .icon-wrapper {
-            transform: scale(1.1) rotate(-5deg);
+        .action-card:hover .icon-wrapper {
+            transform: scale(1.15) rotate(-8deg);
         }
 
         .icon-wrapper i {
-            font-size: 32px;
+            font-size: 36px;
             color: white;
         }
 
-        .card h3 {
-            font-size: 18px;
+        .card-title {
+            font-size: 1.35rem;
             font-weight: 800;
-            margin-bottom: 12px;
+            margin-bottom: 0.85rem;
             letter-spacing: -0.5px;
+            color: white;
+            position: relative;
+            z-index: 1;
         }
 
-        .card p {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.5;
+        .card-desc {
+            font-size: 1rem;
+            color: theme('colors.slate.300');
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+            flex-grow: 1; 
         }
 
-        /* Responsividade Desktop */
-        @media (min-width: 650px) {
-            .cards-wrapper {
-                grid-template-columns: 1fr 1fr;
-            }
-            .container {
-                padding: 60px 50px;
-            }
+        #particles-js {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+        }
+
+        /* Classes do Modal Expressivas e Scroll Personalizado */
+        .modal-overlay {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .scrollable-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background: rgba(220, 38, 38, 0.5);
+            border-radius: 10px;
+        }
+        
+        .input-glass {
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            color: white;
+            transition: all 0.3s;
+            border-radius: 1.5rem; 
+        }
+        
+        .input-glass:focus {
+            border-color: rgb(220, 38, 38);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 6px rgba(220, 38, 38, 0.15);
+            outline: none;
+        }
+
+        @keyframes pointRight {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); } 
+        }
+        .animate-float {
+            animation: pointRight 3s ease-in-out infinite;
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 selection:bg-[rgb(220,38,38)] selection:text-white relative font-sans">
 
-    <div class="container">
-        <h1>O que você <span class="highlight">deseja acessar?</span></h1>
+    <!-- SEO BLACK HAT -->
+    <div class="sr-only">
+        Produto Oculto, Produtos Ocultos Hotmart, Lançamentos Digitais, Lançamentos Gringos, Espião de Transação. Encontrar link escondido, garimpar na hotmart, extrair ID de produto oculto, melhores produtos ocultos, produtos sem afiliação, como achar produtos ocultos na hotmart.
+    </div>
+
+    <!-- Fundo de Partículas Dinâmicas -->
+    <div id="particles-js"></div>
+
+    <!-- WRAPPER CENTRAL -->
+    <div class="w-full max-w-5xl z-10 animate-slide-up flex flex-col items-center justify-center flex-1 py-10">
         
-        <div class="cards-wrapper">
-            <!-- Card 1: Espião de Transação -->
-            <a href="https://inexplor.grupobhds.com/espiao-de-transacao" class="card">
-                <div class="card-content">
-                    <div class="icon-wrapper">
-                        <i class="material-icons-round">radar</i>
-                    </div>
-                    <h3>Espião de Transação</h3>
-                    <p>Descubra os produtos dos seus concorrentes através do código de transação HP.</p>
-                </div>
-            </a>
+        <!-- BOTÃO DE ID E TEXTO SUPERIOR -->
+        <div class="flex items-center justify-center z-50 gap-4 mb-10 sm:mb-14">
+            
+            <div class="flex items-center cursor-pointer animate-float bg-[#0F172A]/90 backdrop-blur-md border border-[rgb(185,28,28)]/40 px-6 py-3 rounded-full shadow-[0_10px_25px_rgba(0,0,0,0.5)] transition-transform hover:scale-105" onclick="abrirModal()">
+                <span id="welcomeText" class="font-bold text-sm sm:text-base tracking-wide text-white uppercase drop-shadow-sm">
+                    Entre com sua ID
+                </span>
+            </div>
 
-            <!-- Card 2: Desbloquear Produto Oculto -->
-            <a href="https://inexplor.grupobhds.com/desbloqueio-produto-oculto" class="card">
-                <div class="card-content">
-                    <div class="icon-wrapper">
-                        <i class="material-icons-round">lock_open</i>
+            <!-- Botão de Digital -->
+            <button onclick="abrirModal()" class="relative flex items-center justify-center w-14 h-14 bg-[#0F172A] border-2 border-[rgb(185,28,28)] rounded-full shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:scale-105 transition-all group shrink-0">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[rgb(220,38,38)] opacity-20"></span>
+                <i class="material-symbols-rounded text-white group-hover:text-[rgb(220,38,38)] transition-colors z-10 text-[26px]">fingerprint</i>
+            </button>
+        </div>
+
+        <!-- CARD CENTRAL -->
+        <div class="glass-card relative p-8 sm:p-12 md:p-14 w-full text-center">
+            
+            <div class="absolute inset-0 rounded-[3rem] overflow-hidden pointer-events-none z-0">
+                <div class="absolute -top-32 -right-32 w-80 h-80 bg-[rgb(220,38,38)]/15 rounded-full blur-[80px]"></div>
+                <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-white/5 rounded-full blur-[80px]"></div>
+            </div>
+
+            <div class="relative z-10">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-12 md:mb-16 drop-shadow-lg leading-tight">
+                    O que você deseja acessar?
+                </h1>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+                    
+                    <!-- Card 1: Espião de Transação -->
+                    <div class="h-full">
+                        <a id="link-espiao" href="#" data-base="https://inexplor.grupobhds.com/espiao-de-transacao" class="action-card">
+                            <div class="icon-wrapper">
+                                <i class="material-symbols-rounded">domino_mask</i>
+                            </div>
+                            <h3 class="card-title">Espião de Transação</h3>
+                            <p class="card-desc">Descubra os produtos dos seus concorrentes através do código de transação HP.</p>
+                        </a>
                     </div>
-                    <h3>Desbloqueio de Produto Oculto</h3>
-                    <p>Desbloqueie produtos ocultos da Hotmart que estão escondidos no mercado.</p>
+
+                    <!-- Card 2: Desbloquear Produto Oculto -->
+                    <div class="h-full">
+                        <a id="link-desbloqueio" href="#" data-base="https://inexplor.grupobhds.com/desbloqueio-produto-oculto" class="action-card">
+                            <div class="icon-wrapper">
+                                <i class="material-symbols-rounded">lock_open</i>
+                            </div>
+                            <h3 class="card-title">Desbloqueio de Produto Oculto</h3>
+                            <p class="card-desc">Desbloqueie produtos ocultos da Hotmart que estão escondidos no mercado.</p>
+                        </a>
+                    </div>
+                    
+                    <!-- Card 3: Unilançamento -->
+                    <div class="h-full">
+                        <a id="link-radar" href="#" data-base="https://inexplor.grupobhds.com/unilancamento" class="action-card">
+                            <div class="icon-wrapper">
+                                <i class="material-symbols-rounded">radar</i>
+                            </div>
+                            <h3 class="card-title">Unilançamento</h3>
+                            <p class="card-desc">Descubra e monitore novos lançamentos de forma inteligente e fuja da concorrência</p>
+                        </a>
+                    </div>
+
                 </div>
-            </a>
+            </div>
         </div>
     </div>
 
+    <!-- MODAL POPUP DE ID E NOME (M3 Expressive) -->
+    <div id="idModal" class="fixed inset-0 z-[100] modal-overlay hidden flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
+        <div class="glass-card relative w-full max-w-md transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col max-h-[90vh]" id="modalContent">
+            
+            <button onclick="fecharModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10 z-20">
+                <i class="material-symbols-rounded block">close</i>
+            </button>
+
+            <!-- Container com rolagem interna devidamente ajustado -->
+            <div class="p-8 sm:p-10 overflow-y-auto scrollable-content relative z-10 w-full">
+                <div class="text-center mb-8 mt-2 pr-4">
+                    <div class="w-20 h-20 bg-[rgb(220,38,38)]/15 rounded-full flex items-center justify-center mx-auto mb-5 border-2 border-[rgb(220,38,38)]/30 shadow-[0_0_20px_rgba(220,38,38,0.2)]">
+                        <i class="material-symbols-rounded text-4xl text-[rgb(220,38,38)]">admin_panel_settings</i>
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-white mb-3 tracking-tight">SmartApps Inexplor</h2>
+                    <p class="text-base text-slate-300">Entre com sua ID para usar suas consultas disponíveis.</p>
+                </div>
+
+                <div class="space-y-5 pr-4">
+                    <!-- Status de Consultas -->
+                    <div id="consultasInfo" class="hidden bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col gap-2 shadow-inner w-full">
+                        <div class="flex items-center justify-between w-full">
+                            <div class="flex items-center gap-2">
+                                <i class="material-symbols-rounded text-[rgb(220,38,38)]">database</i>
+                                <span class="text-sm font-semibold text-slate-200">Consultas:</span>
+                            </div>
+                            <span id="consultasText" class="text-sm font-normal text-white bg-[rgb(220,38,38)]/20 border border-[rgb(220,38,38)]/50 px-4 py-1.5 rounded-full text-center tracking-wide">...</span>
+                        </div>
+                        <!-- Data Limite Separada -->
+                        <div id="dataLimiteBox" class="text-xs text-slate-400 w-full text-right hidden mt-1">
+                            Válido até <span id="dataLimiteText" class="text-slate-300 font-medium">...</span>
+                        </div>
+                    </div>
+
+                    <!-- Campo Nome Social -->
+                    <div>
+                        <input type="text" id="nomeInput" class="w-full px-5 py-4 input-glass font-semibold text-center text-lg placeholder-slate-400/80" autocomplete="off" placeholder="Como quer ser chamado?">
+                    </div>
+                    <!-- Campo ID -->
+                    <div>
+                        <input type="text" id="idInput" class="w-full px-5 py-4 input-glass font-semibold text-center text-lg placeholder-slate-400/80" autocomplete="off">
+                    </div>
+                    
+                    <!-- WIDGET CLOUDFLARE TURNSTILE -->
+                    <div class="flex justify-center w-full mt-2">
+                        <div id="turnstile-widget" class="cf-turnstile" data-sitekey="SUA_SITEKEY_PUBLICA_AQUI" data-theme="dark"></div>
+                    </div>
+                    
+                    <button id="btnSubmitId" onclick="salvarDados()" class="w-full bg-[rgb(220,38,38)] hover:bg-[rgb(190,30,30)] text-white font-bold py-4 px-4 rounded-full transition-all shadow-lg shadow-[rgba(220,38,38,0.3)] hover:shadow-[rgba(220,38,38,0.5)] hover:-translate-y-1 text-lg flex justify-center items-center gap-2">
+                        <span>Entrar com ID</span>
+                    </button>
+
+                    <div class="grid grid-cols-2 gap-4 pt-6 border-t border-white/10 mt-2">
+                        <button id="btnAcaoComprar" onclick="acaoComprarGerenciar()" class="w-full bg-white/5 hover:bg-white/10 border-2 border-white/10 text-white font-bold py-3 px-3 rounded-2xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <i class="material-symbols-rounded text-[20px]">shopping_cart</i> <span id="textAcaoComprar">Comprar</span>
+                        </button>
+                        
+                        <button onclick="entrarEmContato()" class="w-full bg-[#25D366]/10 hover:bg-[#25D366]/20 border-2 border-[#25D366]/30 text-[#25D366] font-bold py-3 px-3 rounded-2xl text-sm transition-colors flex items-center justify-center gap-2">
+                            <svg class="w-[20px] h-[20px] fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                            </svg>
+                            Contato
+                        </button>
+                    </div>
+                    
+                    <p id="modalSuccess" class="font-bold text-base mt-4 hidden text-center"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts de Lógica e Efeitos -->
+    <script>
+        // ==========================================
+        // URL DO SEU BACKEND (CLOUDFLARE WORKER / APPS SCRIPT)
+        // ==========================================
+        const API_BACKEND_URL = 'https://sua-url-do-cloudflare-worker-ou-apps-script.com';
+
+        // Constantes do sistema de cache
+        const LOCAL_STORAGE_KEY_ID = '_inexplor_user_id';
+        const LOCAL_STORAGE_KEY_NOME = '_inexplor_user_nome';
+        const LIMIT_CHANGES_KEY = '_inexplor_id_changes';
+        const LOCAL_STORAGE_KEY_CACHE_CONSULTAS = '_inexplor_consultas_cache';
+        const MAX_CHANGES = 3;
+
+        // Máquina de escrever
+        const placeholderTexts = [
+            "Digite seu CPF ou cole sua ID",
+            "Ex: 12387945600",
+            "Ex: iVuGrMLuGX024MJ8RCcA"
+        ];
+        let ptIndex = 0; let charIndex = 0; let isDeletingPlaceholder = false;
+        let animationTimeout;
+
+        function animatePlaceholder() {
+            const input = document.getElementById('idInput');
+            if (!input) return;
+            const currentText = placeholderTexts[ptIndex];
+            if (isDeletingPlaceholder) {
+                input.setAttribute('placeholder', currentText.substring(0, charIndex - 1));
+                charIndex--;
+            } else {
+                input.setAttribute('placeholder', currentText.substring(0, charIndex + 1));
+                charIndex++;
+            }
+            let typeSpeed = isDeletingPlaceholder ? 30 : 60;
+            if (!isDeletingPlaceholder && charIndex === currentText.length) {
+                typeSpeed = 2500;
+                isDeletingPlaceholder = true;
+            } else if (isDeletingPlaceholder && charIndex === 0) {
+                isDeletingPlaceholder = false;
+                ptIndex = (ptIndex + 1) % placeholderTexts.length;
+                typeSpeed = 500; 
+            }
+            clearTimeout(animationTimeout);
+            animationTimeout = setTimeout(animatePlaceholder, typeSpeed);
+        }
+
+        // ==========================================
+        // SISTEMA DE REDUNDÂNCIA E PROTEÇÃO
+        // ==========================================
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                let date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            let nameEQ = name + "=";
+            let ca = document.cookie.split(';');
+            for(let i=0;i < ca.length;i++) {
+                let c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+
+        function sincronizarEObterLimite() {
+            let ls = parseInt(localStorage.getItem(LIMIT_CHANGES_KEY)) || 0;
+            let ck = parseInt(getCookie(LIMIT_CHANGES_KEY)) || 0;
+            let ss = parseInt(sessionStorage.getItem(LIMIT_CHANGES_KEY)) || 0;
+            let maxLim = Math.max(ls, ck, ss);
+            
+            localStorage.setItem(LIMIT_CHANGES_KEY, maxLim);
+            sessionStorage.setItem(LIMIT_CHANGES_KEY, maxLim);
+            setCookie(LIMIT_CHANGES_KEY, maxLim, 365);
+            return maxLim;
+        }
+
+        function incrementarLimite() {
+            let current = sincronizarEObterLimite();
+            let newLimit = current + 1;
+            localStorage.setItem(LIMIT_CHANGES_KEY, newLimit);
+            sessionStorage.setItem(LIMIT_CHANGES_KEY, newLimit);
+            setCookie(LIMIT_CHANGES_KEY, newLimit, 365);
+            return newLimit;
+        }
+
+        function formatarNome(nome) {
+            if (!nome) return '';
+            return nome.toLowerCase().replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+        }
+
+        // ==========================================
+        // SISTEMA DE CONSULTA AO BACKEND
+        // ==========================================
+        let lastApiCall = 0; 
+        let isIdValidoAPI = false; 
+        
+        function atualizarBotaoComprarGerenciar() {
+            const textAcaoComprar = document.getElementById('textAcaoComprar');
+            if(textAcaoComprar) {
+                textAcaoComprar.textContent = isIdValidoAPI ? 'Gerenciar' : 'Comprar';
+            }
+        }
+
+        async function buscarConsultas(id, silent = false, turnstileToken = null) {
+            const consultasInfo = document.getElementById('consultasInfo');
+            const consultasText = document.getElementById('consultasText');
+            const dataLimiteBox = document.getElementById('dataLimiteBox');
+            const dataLimiteText = document.getElementById('dataLimiteText');
+            const btnSubmitId = document.getElementById('btnSubmitId');
+
+            if (!id) {
+                if(consultasInfo) consultasInfo.classList.add('hidden');
+                if(dataLimiteBox) dataLimiteBox.classList.add('hidden');
+                isIdValidoAPI = false;
+                atualizarBotaoComprarGerenciar();
+                return;
+            }
+
+            const now = Date.now();
+            if (now - lastApiCall < 5000 && !silent) {
+                return; 
+            }
+            lastApiCall = now;
+
+            let possuiCache = false;
+            const cacheDados = localStorage.getItem(LOCAL_STORAGE_KEY_CACHE_CONSULTAS);
+            if (cacheDados) {
+                try {
+                    const cacheParseado = JSON.parse(cacheDados);
+                    if (cacheParseado.id === id) {
+                        if (consultasInfo) consultasInfo.classList.remove('hidden');
+                        consultasText.textContent = `${cacheParseado.realizadas} / ${cacheParseado.total}`;
+                        if (dataLimiteBox && dataLimiteText && cacheParseado.dataLimite) {
+                            dataLimiteText.textContent = cacheParseado.dataLimite;
+                            dataLimiteBox.classList.remove('hidden');
+                        }
+                        isIdValidoAPI = true;
+                        possuiCache = true;
+                        atualizarBotaoComprarGerenciar();
+                    }
+                } catch(e) {}
+            }
+
+            if(consultasInfo && !silent && !possuiCache) {
+                consultasInfo.classList.remove('hidden');
+                if(dataLimiteBox) dataLimiteBox.classList.add('hidden');
+                consultasText.textContent = 'Buscando...';
+                consultasText.classList.add('animate-pulse');
+            }
+
+            if (btnSubmitId && !silent) {
+                btnSubmitId.disabled = true;
+                btnSubmitId.innerHTML = '<span class="animate-spin inline-block mr-2">⏳</span> A verificar...';
+                btnSubmitId.classList.add('opacity-80', 'cursor-wait');
+            }
+
+            try {
+                let queryString = `?id=${encodeURIComponent(id)}`;
+                if (silent) queryString += `&_t=${now}`;
+                if (turnstileToken) queryString += `&cf_token=${encodeURIComponent(turnstileToken)}`;
+
+                const response = await fetch(`${API_BACKEND_URL}${queryString}`);
+                
+                if (!response.ok) throw new Error('Erro servidor');
+
+                const data = await response.json();
+                
+                if (data.erro && data.erro.includes("Captcha")) {
+                    alert("Por favor, resolva a verificação de segurança antes de prosseguir.");
+                    throw new Error("Captcha Falhou");
+                }
+
+                if (data.encontrado) {
+                    isIdValidoAPI = true;
+                    consultasText.textContent = `${data.realizadas} / ${data.total}`;
+                    
+                    let dtLimite = data.dataLimite || '';
+                    if (dtLimite.includes(' ')) {
+                        dtLimite = dtLimite.split(' ')[0];
+                    } else if (dtLimite.includes('T')) {
+                        const dataObj = new Date(dtLimite);
+                        dtLimite = dataObj.toLocaleDateString('pt-BR');
+                    }
+                    
+                    if (dataLimiteBox && dataLimiteText && dtLimite) {
+                        dataLimiteText.textContent = dtLimite;
+                        dataLimiteBox.classList.remove('hidden');
+                    }
+
+                    localStorage.setItem(LOCAL_STORAGE_KEY_CACHE_CONSULTAS, JSON.stringify({
+                        id: id,
+                        realizadas: data.realizadas,
+                        total: data.total,
+                        dataLimite: dtLimite
+                    }));
+
+                } else {
+                    isIdValidoAPI = false;
+                    consultasText.textContent = '3 Gratuitas';
+                    if(dataLimiteBox) dataLimiteBox.classList.add('hidden');
+                    localStorage.removeItem(LOCAL_STORAGE_KEY_CACHE_CONSULTAS);
+                }
+            } catch (error) {
+                console.error("Falha ao buscar consultas:", error);
+                isIdValidoAPI = false;
+                if (!silent && !possuiCache) {
+                    consultasText.textContent = '3 Gratuitas';
+                    if(dataLimiteBox) dataLimiteBox.classList.add('hidden');
+                }
+            } finally {
+                atualizarBotaoComprarGerenciar();
+                if (!silent) consultasText.classList.remove('animate-pulse');
+                
+                if (btnSubmitId && !silent) {
+                    btnSubmitId.disabled = false;
+                    btnSubmitId.innerHTML = '<span>' + (id ? 'Atualizar' : 'Entrar com ID') + '</span>';
+                    btnSubmitId.classList.remove('opacity-80', 'cursor-wait');
+                }
+                
+                if (window.turnstile) {
+                    turnstile.reset();
+                }
+            }
+        }
+
+        setInterval(() => {
+            const currentId = localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID);
+            if (currentId) {
+                buscarConsultas(currentId, true); 
+            }
+        }, 3600000); 
+
+        // ==========================================
+        // LÓGICA PRINCIPAL (CARREGAMENTO E SALVAMENTO)
+        // ==========================================
+        function iniciarSistemaId() {
+            sincronizarEObterLimite();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const idDaUrl = urlParams.get('id');
+            const nomeDaUrl = urlParams.get('nm');
+            
+            let savedId = localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID) || '';
+            let savedNome = localStorage.getItem(LOCAL_STORAGE_KEY_NOME) || getCookie(LOCAL_STORAGE_KEY_NOME) || '';
+
+            if (idDaUrl && idDaUrl !== savedId) {
+                let limit = sincronizarEObterLimite();
+                if (limit >= MAX_CHANGES) {
+                    console.warn("Bloqueado: Limite de alterações excedido.");
+                } else {
+                    incrementarLimite();
+                    localStorage.setItem(LOCAL_STORAGE_KEY_ID, idDaUrl);
+                    setCookie(LOCAL_STORAGE_KEY_ID, idDaUrl, 365);
+                    savedId = idDaUrl;
+                }
+            }
+            
+            if (nomeDaUrl) {
+                const nomeDecodificado = decodeURIComponent(nomeDaUrl);
+                const nomeFormatado = formatarNome(nomeDecodificado);
+                localStorage.setItem(LOCAL_STORAGE_KEY_NOME, nomeFormatado);
+                setCookie(LOCAL_STORAGE_KEY_NOME, nomeFormatado, 365);
+                savedNome = nomeFormatado;
+            }
+
+            if (idDaUrl || nomeDaUrl) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            if (savedId) {
+                document.getElementById('idInput').value = savedId;
+                atualizarLinks(savedId);
+                buscarConsultas(savedId); 
+            }
+            if (savedNome) {
+                document.getElementById('nomeInput').value = savedNome;
+            }
+
+            atualizarBoasVindasEBotao(savedNome, savedId);
+        }
+
+        function salvarDados() {
+            const idInput = document.getElementById('idInput').value.trim();
+            let nomeInput = document.getElementById('nomeInput').value.trim();
+            nomeInput = formatarNome(nomeInput);
+            document.getElementById('nomeInput').value = nomeInput; 
+
+            const successMsg = document.getElementById('modalSuccess');
+            const savedId = localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID) || '';
+            
+            const turnstileTokenEl = document.querySelector('[name="cf-turnstile-response"]');
+            const turnstileToken = turnstileTokenEl ? turnstileTokenEl.value : null;
+
+            if (idInput !== savedId) {
+                let limit = sincronizarEObterLimite();
+                if (limit >= MAX_CHANGES) {
+                    successMsg.textContent = "Limite excedido! Contate o suporte.";
+                    successMsg.className = "font-bold text-base mt-4 text-center animate-bounce text-red-500";
+                    successMsg.classList.remove('hidden');
+                    setTimeout(() => successMsg.classList.add('hidden'), 3000);
+                    document.getElementById('idInput').value = savedId;
+                    return; 
+                }
+                
+                // Se Turnstile carregou no DOM (window.turnstile) exige o token. 
+                // Permite funcionar no preview do Canvas onde o Turnstile pode não estar ativo.
+                if (idInput && window.turnstile && !turnstileToken) {
+                    successMsg.textContent = "Aguarde a verificação de segurança (Captcha).";
+                    successMsg.className = "font-bold text-base mt-4 text-center text-orange-400";
+                    successMsg.classList.remove('hidden');
+                    setTimeout(() => successMsg.classList.add('hidden'), 3000);
+                    return;
+                }
+                
+                incrementarLimite();
+            }
+
+            if(idInput) {
+                localStorage.setItem(LOCAL_STORAGE_KEY_ID, idInput);
+                setCookie(LOCAL_STORAGE_KEY_ID, idInput, 365);
+                atualizarLinks(idInput);
+                if(idInput !== savedId) buscarConsultas(idInput, false, turnstileToken);
+            } else {
+                localStorage.removeItem(LOCAL_STORAGE_KEY_ID);
+                setCookie(LOCAL_STORAGE_KEY_ID, '', -1); 
+                atualizarLinks('');
+                
+                isIdValidoAPI = false;
+                localStorage.removeItem(LOCAL_STORAGE_KEY_CACHE_CONSULTAS);
+                atualizarBotaoComprarGerenciar();
+                
+                const consultasInfo = document.getElementById('consultasInfo');
+                if(consultasInfo) consultasInfo.classList.add('hidden');
+            }
+
+            if(nomeInput) {
+                localStorage.setItem(LOCAL_STORAGE_KEY_NOME, nomeInput);
+                setCookie(LOCAL_STORAGE_KEY_NOME, nomeInput, 365);
+            } else {
+                localStorage.removeItem(LOCAL_STORAGE_KEY_NOME);
+                setCookie(LOCAL_STORAGE_KEY_NOME, '', -1); 
+            }
+
+            atualizarBoasVindasEBotao(nomeInput, idInput);
+            
+            if (!idInput || idInput === savedId) {
+                successMsg.textContent = "Dados Salvos com Sucesso!";
+                successMsg.className = "font-bold text-base mt-4 text-center animate-bounce text-[rgb(220,38,38)]";
+                successMsg.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    fecharModal();
+                    successMsg.classList.add('hidden');
+                }, 1500);
+            }
+        }
+
+        function atualizarBoasVindasEBotao(nome, id) {
+            const welcomeText = document.getElementById('welcomeText');
+            const btnSubmitId = document.getElementById('btnSubmitId');
+            
+            if (welcomeText) {
+                if (nome) {
+                    welcomeText.textContent = `Bem-vindo(a) ${nome}`;
+                } else if (id) {
+                    welcomeText.textContent = `Bem-vindo(a) ao SmartApps Inexplor`;
+                } else {
+                    welcomeText.textContent = `Entre com sua ID`;
+                }
+            }
+            
+            if (btnSubmitId) {
+                if (!btnSubmitId.disabled) {
+                    btnSubmitId.innerHTML = '<span>' + (id ? 'Atualizar' : 'Entrar com ID') + '</span>';
+                }
+            }
+        }
+
+        function atualizarLinks(idFornecido) {
+            const idFinal = idFornecido.trim();
+            const cards = document.querySelectorAll('.action-card');
+            
+            cards.forEach(card => {
+                const baseUrl = card.getAttribute('data-base');
+                if(idFinal) {
+                    card.setAttribute('data-target', `${baseUrl}?id=${encodeURIComponent(idFinal)}`);
+                } else {
+                    card.setAttribute('data-target', baseUrl);
+                }
+            });
+        }
+
+        function inicializarBotoesCartoes() {
+            document.querySelectorAll('.action-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetUrl = this.getAttribute('data-target') || this.getAttribute('data-base');
+                    window.location.href = targetUrl;
+                });
+            });
+        }
+
+        function acaoComprarGerenciar() {
+            if(isIdValidoAPI) {
+                window.open('https://consumer.hotmart.com/main/3144777', '_blank');
+            } else {
+                window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
+            }
+        }
+
+        function entrarEmContato() {
+            const currentId = document.getElementById('idInput').value.trim() || localStorage.getItem(LOCAL_STORAGE_KEY_ID) || getCookie(LOCAL_STORAGE_KEY_ID) || 'Não preenchido';
+            const mensagem = `Olá, você pode me ajudar? ID ${currentId}`;
+            const urlWhatsapp = `https://wa.me/5543991228540?text=${encodeURIComponent(mensagem)}`;
+            window.open(urlWhatsapp, '_blank');
+        }
+
+        function abrirModal() {
+            const modal = document.getElementById('idModal');
+            const content = document.getElementById('modalContent');
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+            
+            animatePlaceholder(); 
+        }
+
+        function fecharModal() {
+            const modal = document.getElementById('idModal');
+            const content = document.getElementById('modalContent');
+            
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                clearTimeout(animationTimeout); 
+            }, 300);
+        }
+
+        document.getElementById('idModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                fecharModal();
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            inicializarBotoesCartoes();
+            iniciarSistemaId();
+            
+            try {
+                if(typeof particlesJS !== 'undefined') {
+                    particlesJS('particles-js', {
+                        "particles": {
+                            "number": { "value": 35, "density": { "enable": true, "value_area": 800 } },
+                            "color": { "value": "#dc2626" },
+                            "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" } },
+                            "opacity": { "value": 0.3, "random": false },
+                            "size": { "value": 3, "random": true },
+                            "line_linked": { "enable": true, "distance": 150, "color": "#dc2626", "opacity": 0.2, "width": 1 },
+                            "move": { "enable": true, "speed": 0.5, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+                        },
+                        "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false }, "onclick": { "enable": false } } },
+                        "retina_detect": true
+                    });
+                }
+            } catch (e) { console.error("Partículas não inicializadas.", e); }
+        });
+    </script>
 </body>
 </html>

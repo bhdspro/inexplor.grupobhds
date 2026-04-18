@@ -20,22 +20,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
     
-    <!-- Cloudflare Turnstile (Captcha Invisível) -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <!-- Cloudflare Turnstile (Captcha Invisível) - Carregamento dinâmico para evitar SecurityError em iframes de preview -->
+    <script>
+        try {
+            if (window.self === window.top || window.top.location.href) {
+                var tsScript = document.createElement('script');
+                tsScript.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+                tsScript.async = true;
+                tsScript.defer = true;
+                document.head.appendChild(tsScript);
+            }
+        } catch (e) {
+            console.warn('Turnstile desativado no ambiente de preview para evitar SecurityError.');
+        }
+    </script>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    },
-                    colors: {
-                        surface: '#0F172A',
-                        highlight: '#DC2626',
-                        borderStrong: 'rgb(185, 28, 28)'
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        },
+                        colors: {
+                            surface: '#0F172A',
+                            highlight: '#DC2626',
+                            borderStrong: 'rgb(185, 28, 28)'
+                        }
                     }
                 }
             }
@@ -43,7 +57,7 @@
     </script>
 
     <!-- Biblioteca de Partículas -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 
     <style>
         body {
@@ -107,7 +121,7 @@
             overflow: hidden;
             z-index: 10;
             height: 100%; 
-            cursor: pointer; /* Assegura o cursor de clique */
+            cursor: pointer; 
         }
 
         .action-card::before {
@@ -306,14 +320,14 @@
 
     <!-- MODAL POPUP DE ID E NOME (M3 Expressive) -->
     <div id="idModal" class="fixed inset-0 z-[100] modal-overlay hidden flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
-        <div class="glass-card relative w-full max-w-md transform scale-95 transition-transform duration-300" id="modalContent">
+        <div class="glass-card relative w-full max-w-md transform scale-95 transition-transform duration-300 overflow-hidden flex flex-col max-h-[90vh]" id="modalContent">
             
             <button onclick="fecharModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors bg-white/5 p-2 rounded-full hover:bg-white/10 z-20">
                 <i class="material-symbols-rounded block">close</i>
             </button>
 
-            <!-- Container com rolagem interna -->
-            <div class="p-8 sm:p-10 max-h-[85vh] overflow-y-auto scrollable-content pr-4 sm:pr-6 -mr-4 sm:-mr-6">
+            <!-- Container com rolagem interna devidamente ajustado -->
+            <div class="p-8 sm:p-10 overflow-y-auto scrollable-content relative z-10 w-full">
                 <div class="text-center mb-8 mt-2 pr-4">
                     <div class="w-20 h-20 bg-[rgb(220,38,38)]/15 rounded-full flex items-center justify-center mx-auto mb-5 border-2 border-[rgb(220,38,38)]/30 shadow-[0_0_20px_rgba(220,38,38,0.2)]">
                         <i class="material-symbols-rounded text-4xl text-[rgb(220,38,38)]">admin_panel_settings</i>
@@ -349,7 +363,7 @@
                     
                     <!-- WIDGET CLOUDFLARE TURNSTILE -->
                     <div class="flex justify-center w-full mt-2">
-                        <div id="turnstile-widget" class="cf-turnstile" data-sitekey="0x4AAAAAAC_N9OPRYD8-gb3-" data-theme="dark"></div>
+                        <div id="turnstile-widget" class="cf-turnstile" data-sitekey="SUA_SITEKEY_PUBLICA_AQUI" data-theme="dark"></div>
                     </div>
                     
                     <button id="btnSubmitId" onclick="salvarDados()" class="w-full bg-[rgb(220,38,38)] hover:bg-[rgb(190,30,30)] text-white font-bold py-4 px-4 rounded-full transition-all shadow-lg shadow-[rgba(220,38,38,0.3)] hover:shadow-[rgba(220,38,38,0.5)] hover:-translate-y-1 text-lg flex justify-center items-center gap-2">
@@ -380,7 +394,7 @@
         // ==========================================
         // URL DO SEU BACKEND (CLOUDFLARE WORKER / APPS SCRIPT)
         // ==========================================
-        const API_BACKEND_URL = 'https://smartapps-inexplor.grupo-bhds.workers.dev';
+        const API_BACKEND_URL = 'https://sua-url-do-cloudflare-worker-ou-apps-script.com';
 
         // Constantes do sistema de cache
         const LOCAL_STORAGE_KEY_ID = '_inexplor_user_id';
@@ -647,7 +661,6 @@
                 savedNome = nomeFormatado;
             }
 
-            // Oculta a URL mascarando a barra de endereços (Opção 2 - Ativada)
             if (idDaUrl || nomeDaUrl) {
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
@@ -687,7 +700,9 @@
                     return; 
                 }
                 
-                if (idInput && !turnstileToken) {
+                // Se Turnstile carregou no DOM (window.turnstile) exige o token. 
+                // Permite funcionar no preview do Canvas onde o Turnstile pode não estar ativo.
+                if (idInput && window.turnstile && !turnstileToken) {
                     successMsg.textContent = "Aguarde a verificação de segurança (Captcha).";
                     successMsg.className = "font-bold text-base mt-4 text-center text-orange-400";
                     successMsg.classList.remove('hidden');
@@ -763,8 +778,6 @@
             const idFinal = idFornecido.trim();
             const cards = document.querySelectorAll('.action-card');
             
-            // Em vez de alterar o "href", guardamos o destino no "data-target".
-            // O "href" fica como "#" para que o navegador não exiba a URL no rodapé da página.
             cards.forEach(card => {
                 const baseUrl = card.getAttribute('data-base');
                 if(idFinal) {
@@ -775,12 +788,10 @@
             });
         }
 
-        // Adiciona a funcionalidade de clique aos cartões para lidarem com o redirecionamento oculto
         function inicializarBotoesCartoes() {
             document.querySelectorAll('.action-card').forEach(card => {
                 card.addEventListener('click', function(e) {
                     e.preventDefault();
-                    // Lê a URL final escondida
                     const targetUrl = this.getAttribute('data-target') || this.getAttribute('data-base');
                     window.location.href = targetUrl;
                 });
