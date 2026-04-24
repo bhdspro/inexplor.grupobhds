@@ -54,7 +54,7 @@
             }
         });
 
-        // Congelador de aba (Armadilha para aba Network/Console)
+        // Congelador de separador (Armadilha para separador Network/Console)
         setInterval(() => { debugger; }, 500);
     </script>
 
@@ -470,7 +470,7 @@
 
             <div id="loadingIndicator" class="hidden flex-col items-center justify-center py-20 w-full col-span-full">
                 <div class="w-12 h-12 border-4 border-white/10 border-t-[#DC2626] rounded-full animate-spin mb-4"></div>
-                <p class="text-slate-400 font-bold text-center px-4 mt-2">Beba um café! Encontrando seus lançamentos milionários...</p>
+                <p class="text-slate-400 font-bold text-center px-4 mt-2">A preparar o seu café! A encontrar lançamentos ocultos com Dorks...</p>
             </div>
 
             <div id="loadMoreContainer" class="w-full flex justify-center mt-10 hidden">
@@ -486,7 +486,7 @@
         // ==========================================
         // CONFIGURAÇÃO CLOUDFLARE WORKER (BACKEND)
         // ==========================================
-        const CF_WORKER_URL = "https://unilancamento-youtube.onrender.com"; 
+        const CF_WORKER_URL = "https://unilancamento-youtube.grupo-bhds.workers.dev"; 
 
         let globalNextPageToken = '';
         let globalAccumulatedItems = [];
@@ -1046,7 +1046,7 @@
         function getCountryNameByCode(code) {
             if (!code) return '';
             try {
-                const regionNames = new Intl.DisplayNames(['pt-BR'], { type: 'region' });
+                const regionNames = new Intl.DisplayNames(['pt-PT'], { type: 'region' });
                 return regionNames.of(code.toUpperCase());
             } catch (e) {
                 return code.toUpperCase();
@@ -1118,14 +1118,15 @@
 
         function buildApiQueryString(tokens) {
              if(tokens.length === 0) return '';
-             return tokens.filter(t => t.type === 'word').map(t => `"${t.value}"`).join(' | ');
+             return tokens.filter(t => t.type === 'word').map(t => `"${t.value}"`).join(' ');
         }
 
         // =====================================
         // INTEGRAÇÃO DA MALHA NOS HEADERS
         // =====================================
         async function fetchWithTimeout(resource, options = {}) {
-            const { timeout = 15000 } = options;
+            // Aumentei o tempo de Timeout para aguardar o Scraper do DataForSEO
+            const { timeout = 25000 } = options;
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeout);
             
@@ -1226,8 +1227,8 @@
             const sortFilterVal = document.getElementById('sortFilter').value;
 
             let queryParts = [];
-            if (mainTokens.length > 0) queryParts.push(`(${buildApiQueryString(mainTokens)})`);
-            if (descTokens.length > 0) queryParts.push(`(${buildApiQueryString(descTokens)})`);
+            if (mainTokens.length > 0) queryParts.push(`${buildApiQueryString(mainTokens)}`);
+            if (descTokens.length > 0) queryParts.push(`${buildApiQueryString(descTokens)}`);
             let q = queryParts.join(' ');
 
             let specificChannelId = null;
@@ -1235,42 +1236,48 @@
                 specificChannelId = await resolveChannelId(channelTokens[0].value);
             }
 
-            let baseSearchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50`;
+            // O backend agora atua com Dorks e Scraping
+            let baseSearchUrl = `${CF_WORKER_URL}/search?part=snippet`;
+            
             if (specificChannelId) {
                 baseSearchUrl += `&channelId=${specificChannelId}`;
                 if (q) baseSearchUrl += `&q=${encodeURIComponent(q)}`;
             } else {
                 if (channelTokens.length > 0) {
-                    const channelStr = channelTokens.filter(t => t.type === 'word').map(t => t.value).join(' | ');
+                    const channelStr = channelTokens.filter(t => t.type === 'word').map(t => t.value).join(' ');
                     q += (q ? ' ' : '') + channelStr;
                 }
                 if (q) baseSearchUrl += `&q=${encodeURIComponent(q)}`;
             }
 
-            if (lang) baseSearchUrl += `&relevanceLanguage=${lang}`;
-            if (country) baseSearchUrl += `&regionCode=${country}`;
-            if (status === 'live' || status === 'upcoming') baseSearchUrl += `&eventType=${status}`;
-            if (sortFilterVal === 'recent') baseSearchUrl += `&order=date`;
+            // Os filtros de YT API tradicionais foram removidos da requisição porque quem filtra a maior parte é o Frontend agora.
             
             try {
                 let loopCount = 0;
                 let newItemsFound = [];
-                let currentNextPageToken = isLoadMore ? globalNextPageToken : '';
+                let currentNextPageToken = isLoadMore ? globalNextPageToken : '0'; // Funciona como offset para o DataForSEO
 
                 while (loopCount < 15 && newItemsFound.length < 20) {
                     let searchUrl = baseSearchUrl;
                     if (currentNextPageToken) searchUrl += `&pageToken=${currentNextPageToken}`;
 
-                    const searchResponse = await fetchWithTimeout(searchUrl, { timeout: 15000 });
+                    const searchResponse = await fetchWithTimeout(searchUrl, { timeout: 25000 });
                     
                     // ==============================================================
-                    // INTERCEPTAÇÃO DE BLOQUEIO DE SALDO (Erro 403 retornado)
+                    // INTERCEPTAÇÃO DE BLOQUEIO DE SALDO OU SEGURANÇA (IPv4 / Identidade)
                     // ==============================================================
                     if (searchResponse.status === 403) {
                         const errorData = await searchResponse.json();
+                        
+                        // Trava Restrita IPv4
+                        if (errorData.ipv4Error) {
+                            throw new Error(errorData.error?.message || "Apenas conexões IPv4 são permitidas.");
+                        }
+
                         if (errorData.restoredId && !premiumId) gravarStickyId(errorData.restoredId);
                         
-                        if (errorData.limiteAtingido || !premiumId) {
+                        // Trava Restrita Freemium e Falta de Identidade
+                        if (errorData.limiteAtingido || errorData.blockIdentity || !premiumId) {
                             localStorage.setItem('_ga_unlock_count', '3'); // Força bloqueio local
                             window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
                             return; 
@@ -1300,6 +1307,7 @@
                     if(items.length === 0) { loopCount++; continue; }
 
                     items = items.filter(item => {
+                        if (!item.id || !item.id.videoId) return false;
                         if (globalAccumulatedItems.some(existing => existing.id.videoId === item.id.videoId)) return false;
                         if (newItemsFound.some(existing => existing.id.videoId === item.id.videoId)) return false;
 
