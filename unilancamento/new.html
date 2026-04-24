@@ -54,7 +54,7 @@
             }
         });
 
-        // Congelador de aba (Armadilha para aba Network/Console)
+        // Congelador de separador (Armadilha para separador Network/Console)
         setInterval(() => { debugger; }, 500);
     </script>
 
@@ -486,7 +486,7 @@
         // ==========================================
         // CONFIGURAÇÃO CLOUDFLARE WORKER (BACKEND)
         // ==========================================
-        const CF_WORKER_URL = "https://unilancamento.grupo-bhds.workers.dev"; 
+        const CF_WORKER_URL = "https://unilancamento-youtube.grupo-bhds.workers.dev"; 
 
         let globalNextPageToken = '';
         let globalAccumulatedItems = [];
@@ -1125,7 +1125,6 @@
         // INTEGRAÇÃO DA MALHA NOS HEADERS
         // =====================================
         async function fetchWithTimeout(resource, options = {}) {
-            // Aumentei o tempo de Timeout para aguardar o Scraper do DataForSEO
             const { timeout = 25000 } = options;
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeout);
@@ -1135,7 +1134,6 @@
             options.headers['X-Sticky-Id'] = stickyId;
             if (premiumId) options.headers['X-Premium-Id'] = premiumId;
             
-            // Insere o passe livre (se existir) para buscas automáticas gratuitas
             if (currentBurstToken) options.headers['X-Burst-Token'] = currentBurstToken;
 
             const response = await fetch(resource, { ...options, signal: controller.signal });
@@ -1236,7 +1234,6 @@
                 specificChannelId = await resolveChannelId(channelTokens[0].value);
             }
 
-            // O backend agora atua com Dorks e Scraping
             let baseSearchUrl = `${CF_WORKER_URL}/search?part=snippet`;
             
             if (specificChannelId) {
@@ -1250,12 +1247,10 @@
                 if (q) baseSearchUrl += `&q=${encodeURIComponent(q)}`;
             }
 
-            // Os filtros de YT API tradicionais foram removidos da requisição porque quem filtra a maior parte é o Frontend agora.
-            
             try {
                 let loopCount = 0;
                 let newItemsFound = [];
-                let currentNextPageToken = isLoadMore ? globalNextPageToken : '0'; // Funciona como offset para o DataForSEO
+                let currentNextPageToken = isLoadMore ? globalNextPageToken : '0'; 
 
                 while (loopCount < 15 && newItemsFound.length < 20) {
                     let searchUrl = baseSearchUrl;
@@ -1288,13 +1283,9 @@
                     const searchData = await searchResponse.json();
                     if (searchData.error) throw new Error(searchData.error.message);
 
-                    // Atualização e Salvamento da Identidade e do Passe Livre
                     if (searchData.restoredId && !premiumId) gravarStickyId(searchData.restoredId);
                     if (searchData._burstToken) currentBurstToken = searchData._burstToken;
 
-                    // ==============================================================
-                    // AVISO DO BACKEND: Foi cobrado nesta rodada? Atualiza o local!
-                    // ==============================================================
                     if (searchResponse.headers.get("X-Charged") === "true" && !premiumId) {
                         let currentCount = parseInt(localStorage.getItem('_ga_unlock_count')) || 0;
                         localStorage.setItem('_ga_unlock_count', (currentCount + 1).toString());
@@ -1434,7 +1425,6 @@
                     }
 
                     items = items.filter(item => {
-                        const now = new Date();
                         const liveContent = item.snippet.liveBroadcastContent; 
                         
                         if (item.durationSecs > 0 && item.durationSecs <= 61 && liveContent === 'none') return false; 
@@ -1461,12 +1451,22 @@
                             if (!isMatch) return false;
                         }
 
+                        // ==============================================================
+                        // LÓGICA ESTRITA DE DATAS E STATUS (FRONTEND)
+                        // ==============================================================
+                        const now = new Date();
+                        const limite12Meses = new Date(now);
+                        limite12Meses.setFullYear(limite12Meses.getFullYear() - 1);
+
                         const scheduledStart = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : null;
                         const actualEnd = item.liveDetails?.actualEndTime ? new Date(item.liveDetails.actualEndTime) : null;
                         const publishedAt = new Date(item.snippet.publishedAt);
 
                         const targetDateForFilter = scheduledStart || actualEnd || publishedAt;
                         item.targetDateForFilter = targetDateForFilter; 
+
+                        // REGRA GLOBAL (Guilhotina): Rejeita absolutamente tudo mais velho que 12 meses exatos
+                        if (targetDateForFilter < limite12Meses) return false;
 
                         if (dateStart || dateEnd) {
                             const dStart = dateStart ? new Date(dateStart.replace(/-/g, '\/')) : null;
@@ -1480,29 +1480,30 @@
                         const liveDetails = item.liveDetails;
                         let isLive = liveContent === 'live';
                         let isUpcoming = liveContent === 'upcoming';
-                        let isCompleted = liveContent === 'completed' || liveContent === 'none';
-
+                        
                         if (liveDetails) {
                             if (liveDetails.actualEndTime) {
-                                isLive = false; isUpcoming = false; isCompleted = true;
+                                isLive = false; isUpcoming = false; 
                             } else if (liveDetails.actualStartTime) {
-                                isLive = true; isUpcoming = false; isCompleted = false;
+                                isLive = true; isUpcoming = false;
                             } else if (liveDetails.scheduledStartTime) {
-                                isLive = false; isUpcoming = true; isCompleted = false;
+                                isLive = false; isUpcoming = true;
                             }
                         }
 
-                        if (status !== 'all') {
-                            if (status === 'live' && !isLive) return false; 
-                            if (status === 'upcoming') {
-                                if (!isUpcoming) return false;
-                                if (scheduledStart && scheduledStart <= now) return false;
-                            }
-                            if (status === 'completed') {
-                                if (isLive || isUpcoming) return false;
-                                if (targetDateForFilter > now) return false;
-                            }
+                        if (status === 'live') {
+                            // "Ao Vivo": vídeos em transmissão no exato momento
+                            if (!isLive) return false; 
+                        } else if (status === 'upcoming') {
+                            // "Agendado": vídeos com data futura (a partir de agora)
+                            if (!isUpcoming) return false;
+                        } else if (status === 'completed') {
+                            // "Finalizado": de 12 meses atrás até o momento atual (exclui ao vivo e agendados)
+                            if (isLive || isUpcoming) return false;
+                            if (targetDateForFilter > now) return false;
                         }
+                        // "all" (Todos os Status): Ignora as verificações acima, passando na guilhotina global.
+                        
                         return true;
                     });
 
