@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unilançamento - Descubra e Monitore Lançamentos</title>
+    
+    <!-- SEO e Black Hat Text (Invisível para utilizadores, legível para crawlers) -->
+    <meta name="description" content="A melhor ferramenta de Radar de Lançamentos. Descubra como encontrar lançamentos digitais gringos, PLR e produtos ocultos antes de todo mundo.">
+    <meta name="keywords" content="Como encontrar lançamentos, lançamentos gringos, radar de lançamentos, lançamentos digitais gringos, produtos ocultos hotmart, lançamentos PLR, descobrir lançamentos">
+    
+    <!-- Favicon ⚡ -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+    
+    <!-- Tipografia Moderna (Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        surface: '#0F172A',
+                        highlight: '#DC2626',
+                        borderStrong: 'rgb(185, 28, 28)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- SISTEMA ANTI-INSPEÇÃO E PROTEÇÃO DE CÓDIGO MÁXIMA -->
+    <script>
+        // Bloqueia menu de contexto
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Bloqueia atalhos de teclado de desenvolvedor
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode === 123 || 
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
+               (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) { 
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Congelador de aba (Armadilha para aba Network/Console)
+        setInterval(() => { debugger; }, 500);
+    </script>
+
+    <!-- Biblioteca de Partículas -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <!-- SISTEMA DE MALHA DE SEGURANÇA MÁXIMA E IDENTIFICAÇÃO -->
+    <script>
+        // Captura o ID do plano Premium
+        const urlParams = new URLSearchParams(window.location.search);
+        const premiumId = urlParams.get('id') || '';
+
+        let fingerprintId = 'fallback-' + Math.random().toString(36).substring(2, 15);
+        let stickyId = '';
+
+        const fpPromise = import('https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.esm.min.js')
+            .then(FingerprintJS => FingerprintJS.load())
+            .catch(error => {
+                return { get: () => Promise.resolve({ visitorId: fingerprintId }) };
+            });
+
+        fpPromise.then(fp => fp.get()).then(result => {
+            if(result && result.visitorId) { fingerprintId = result.visitorId; }
+        });
+
+        function gerarIdUnico() {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let res = '';
+            for (let i = 0; i < 30; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+            return res;
+        }
+
+        function obterStickyId() {
+            let id = localStorage.getItem('_ga_session_track');
+            if (!id) id = sessionStorage.getItem('_ga_session_track');
+            if (!id) {
+                const match = document.cookie.match(new RegExp('(^| )_ga_session_track=([^;]+)'));
+                if (match) id = match[2];
+            }
+            return id;
+        }
+
+        function gravarStickyId(id) {
+            localStorage.setItem('_ga_session_track', id);
+            sessionStorage.setItem('_ga_session_track', id);
+            const dataExpiracao = new Date();
+            dataExpiracao.setTime(dataExpiracao.getTime() + (365 * 24 * 60 * 60 * 1000));
+            document.cookie = "_ga_session_track=" + id + ";expires=" + dataExpiracao.toUTCString() + ";path=/";
+            stickyId = id;
+        }
+
+        stickyId = obterStickyId();
+        if (!stickyId) stickyId = gerarIdUnico();
+        gravarStickyId(stickyId);
+    </script>
+
+    <style>
+        body {
+            background-color: theme('colors.surface');
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            overflow-x: hidden;
+            color: #ffffff;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            overflow-y: hidden; 
+        }
+
+        input, select, textarea, a {
+            user-select: auto;
+            -webkit-user-select: auto;
+            -moz-user-select: auto;
+        }
+
+        .glass-card {
+            background: #0F172A; 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 2.5rem;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            border: 2px solid rgb(185, 28, 28); 
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            z-index: 2;
+        }
+
+        .info-field-wrapper {
+            background: #ffffff;
+            border-radius: 1.5rem; 
+            border: 2px solid transparent;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 20;
+            transition: all 0.3s ease;
+        }
+
+        .info-field-wrapper:focus-within {
+            border-color: rgba(220, 38, 38, 0.5);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+        }
+
+        @media (min-width: 768px) {
+            .info-field-wrapper { border-radius: 9999px; }
+        }
+
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+        
+        #particles-js {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+        }
+
+        .video-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(220, 38, 38, 0.2);
+            border-color: theme('colors.highlight');
+        }
+
+        .chip {
+            animation: popIn 0.2s ease-out forwards;
+        }
+        .chip-op {
+            animation: popIn 0.15s ease-out forwards;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .custom-alert {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        @keyframes slideDown {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .channel-hover-effect {
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .group\/channel:hover .channel-hover-effect {
+            max-width: 400px;
+            background-color: #0F172A;
+            padding-right: 12px;
+            padding-bottom: 4px;
+            z-index: 50;
+            overflow: visible;
+            box-shadow: 10px 0 15px -5px rgba(15, 23, 42, 0.9);
+            border-radius: 4px;
+        }
+
+        .custom-select-menu {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .custom-select-menu::-webkit-scrollbar { width: 6px; }
+        .custom-select-menu::-webkit-scrollbar-track { background: #0F172A; border-radius: 8px; }
+        .custom-select-menu::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 8px; }
+        .custom-select-menu::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+    </style>
+</head>
+<body id="mainBody" class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 selection:bg-highlight selection:text-white relative transition-all duration-500">
+
+    <div style="position: absolute; left: -9999px; top: -9999px;" aria-hidden="true">
+        Como encontrar lançamentos, lançamentos gringos, radar de lançamentos, lançamentos digitais gringos, achar produtos ocultos hotmart, lançamentos de afiliados, gringos, PLR, clickbank. Radar de lançamentos 2026.
+    </div>
+
+    <div id="particles-js"></div>
+
+    <header class="absolute top-8 w-full max-w-4xl flex items-center justify-between z-10 px-8">
+        <div class="flex items-center gap-2">
+            <span class="text-xl font-bold tracking-wide text-white">Unilançamento</span>
+        </div>
+    </header>
+
+    <div id="heroSection" class="w-full max-w-4xl z-10 flex flex-col items-center transition-all duration-500">
+        <div class="glass-card relative w-full text-center p-6 sm:p-8 md:p-12 mx-auto">
+            <div class="relative z-10">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-4 drop-shadow-md leading-tight">
+                    Descubra e Monitore Lançamentos
+                </h1>
+                <p class="text-base sm:text-lg md:text-xl text-slate-300 font-medium max-w-3xl mx-auto mb-2 drop-shadow-sm text-balance">
+                    Descubra novos lançamentos de forma inteligente e fuja da concorrência
+                </p>
+
+                <div class="info-field-wrapper mt-8 md:mt-10 p-2 md:p-2.5 w-full mx-auto">
+                    <div class="flex flex-col md:flex-row items-stretch gap-3 md:gap-0">
+                        <div id="mainInputContainer" class="w-full flex-1 flex flex-nowrap items-center justify-start bg-slate-50 md:bg-transparent rounded-xl md:rounded-l-full px-6 py-4 relative z-20 cursor-text min-h-[60px] overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide" onclick="document.getElementById('urlInput').focus()">
+                            <svg class="w-6 h-6 text-slate-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <input 
+                                type="text" 
+                                id="urlInput" 
+                                class="flex-grow bg-transparent text-base md:text-lg outline-none text-slate-900 placeholder-slate-500 font-bold min-w-[10px] w-auto text-left m-0 p-0"
+                            >
+                        </div>
+                        <button 
+                            id="searchBtn" 
+                            class="w-full md:w-auto bg-[#DC2626] border border-borderStrong hover:bg-[rgb(190,30,30)] text-white font-bold text-base md:text-lg px-8 py-4 rounded-xl md:rounded-full transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all shadow-lg shadow-[rgba(220,38,38,0.4)] flex items-center justify-center gap-2 z-20 relative whitespace-nowrap flex-shrink-0"
+                        >
+                            <span class="material-symbols-rounded">manage_search</span>
+                            <span>Buscar Lançamento</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-6 w-full max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-4 relative z-20">
+                    
+                    <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
+                        <button id="comboToggleBtn" onclick="toggleMenu('comboDropdown', event)" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
+                            <span class="material-symbols-rounded text-[20px]">auto_awesome</span>
+                            Combinações
+                        </button>
+                        <div id="comboDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-[calc(100vw-3rem)] sm:w-80 bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50 max-h-[300px] overflow-y-auto text-left">
+                            <button onclick="applySmartCombo1(); toggleMenu('comboDropdown', event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">
+                                "Aula 1" <span class="text-orange-400 font-bold">OU</span> "Evento" <span class="text-orange-400 font-bold">OU</span> "Workshop" <span class="text-blue-400 font-bold">E</span> Gratuito <span class="text-blue-400 font-bold">E</span> Online <br><br>
+                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas:</span>
+                                minicurso <span class="text-orange-400 font-bold">OU</span> mini-curso
+                            </button>
+                            <button onclick="applySmartCombo2(); toggleMenu('comboDropdown', event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                                "aula" <span class="text-orange-400 font-bold">OU</span> "evento" <span class="text-orange-400 font-bold">OU</span> "semana do" <span class="text-orange-400 font-bold">OU</span> "semana da" <span class="text-orange-400 font-bold">OU</span> "semana de" <span class="text-blue-400 font-bold">E</span> "grátis" <span class="text-orange-400 font-bold">OU</span> "gratis" <span class="text-orange-400 font-bold">OU</span> "gratuito" <span class="text-orange-400 font-bold">OU</span> "gratuita" <span class="text-blue-400 font-bold">E</span> "100% online" <span class="text-orange-400 font-bold">OU</span> "online" <br><br>
+                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas:</span>
+                                "lista de espera" <span class="text-orange-400 font-bold">OU</span> "encerrado" <span class="text-orange-400 font-bold">OU</span> "encerrada"
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="w-full sm:w-auto flex-1 sm:flex-none">
+                        <button id="toggleFiltersBtn" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold group w-full h-full shadow-md">
+                            <span class="material-symbols-rounded text-[20px]">tune</span>
+                            <span>Filtros Avançados</span>
+                            <span id="filtersArrow" class="material-symbols-rounded text-[20px] transition-transform duration-300">expand_more</span>
+                        </button>
+                    </div>
+
+                    <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
+                        <button onclick="toggleMenu('sortDropdown', event)" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
+                            <span class="material-symbols-rounded text-[20px]">sort</span>
+                            <span id="sortActiveText">Data Mais Recente</span>
+                        </button>
+                        <div id="sortDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-[calc(100vw-3rem)] sm:w-56 bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50 overflow-hidden text-left">
+                            <button onclick="selectCustomOption('sort', 'recent', 'Data Mais Recente', event); handleSort();" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Data Mais Recente</button>
+                            <button onclick="selectCustomOption('sort', 'views', 'Nº de Visualizações', event); handleSort();" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Nº de Visualizações</button>
+                            <button onclick="selectCustomOption('sort', 'comments', 'Nº de Comentários', event); handleSort();" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Nº de Comentários</button>
+                            <button onclick="selectCustomOption('sort', 'subs', 'Nº de Inscritos', event); handleSort();" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">Nº de Inscritos</button>
+                        </div>
+                        <input type="hidden" id="sortFilter" value="recent">
+                    </div>
+                    
+                    <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
+                        <button onclick="clearAllFilters()" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
+                            <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
+                            <span>Limpar Tudo</span>
+                        </button>
+                    </div>
+
+                </div>
+
+                <div id="filtersWrapper" class="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out w-full max-w-md mx-auto">
+                    <div class="pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full text-left">
+                        
+                        <div class="flex flex-col gap-1.5 relative">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Idioma</label>
+                            <button onclick="toggleMenu('langDropdown', event)" class="w-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 flex items-center justify-between transition-colors text-sm font-semibold text-left">
+                                <span id="langActiveText" class="truncate">Qualquer Idioma</span>
+                                <span class="material-symbols-rounded text-[18px]">expand_more</span>
+                            </button>
+                            <div id="langDropdown" class="custom-select-menu absolute top-full left-0 mt-2 w-full bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50">
+                                <button onclick="selectCustomOption('lang', '', 'Qualquer Idioma', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Qualquer Idioma</button>
+                                <button onclick="selectCustomOption('lang', 'pt', 'Português', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Português</button>
+                                <button onclick="selectCustomOption('lang', 'en', 'Inglês', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Inglês</button>
+                                <button onclick="selectCustomOption('lang', 'es', 'Espanhol', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Espanhol</button>
+                                <button onclick="selectCustomOption('lang', 'fr', 'Francês', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Francês</button>
+                                <button onclick="selectCustomOption('lang', 'de', 'Alemão', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Alemão</button>
+                                <button onclick="selectCustomOption('lang', 'it', 'Italiano', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Italiano</button>
+                                <button onclick="selectCustomOption('lang', 'ja', 'Japonês', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">Japonês</button>
+                            </div>
+                            <input type="hidden" id="langFilter" value="">
+                        </div>
+                        
+                        <div class="flex flex-col gap-1.5 relative">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">País</label>
+                            <button onclick="toggleMenu('countryDropdown', event)" class="w-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 flex items-center justify-between transition-colors text-sm font-semibold text-left">
+                                <span id="countryActiveText" class="truncate">Qualquer País</span>
+                                <span class="material-symbols-rounded text-[18px]">expand_more</span>
+                            </button>
+                            <div id="countryDropdown" class="custom-select-menu absolute top-full left-0 mt-2 w-full bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50">
+                                <button onclick="selectCustomOption('country', '', 'Qualquer País', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Qualquer País</button>
+                                <button onclick="selectCustomOption('country', 'BR', 'Brasil', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Brasil</button>
+                                <button onclick="selectCustomOption('country', 'PT', 'Portugal', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Portugal</button>
+                                <button onclick="selectCustomOption('country', 'US', 'Estados Unidos', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Estados Unidos</button>
+                                <button onclick="selectCustomOption('country', 'ES', 'Espanha', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Espanha</button>
+                                <button onclick="selectCustomOption('country', 'FR', 'França', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">França</button>
+                                <button onclick="selectCustomOption('country', 'IT', 'Itália', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Itália</button>
+                                <button onclick="selectCustomOption('country', 'DE', 'Alemanha', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Alemanha</button>
+                                <button onclick="selectCustomOption('country', 'JP', 'Japão', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Japão</button>
+                                <button onclick="selectCustomOption('country', 'IN', 'Índia', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">Índia</button>
+                            </div>
+                            <input type="hidden" id="countryFilter" value="">
+                        </div>
+
+                        <div class="flex flex-col gap-1.5 relative">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Status</label>
+                            <button onclick="toggleMenu('statusDropdown', event)" class="w-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 flex items-center justify-between transition-colors text-sm font-semibold text-left">
+                                <span id="statusActiveText" class="truncate">Todos os Status</span>
+                                <span class="material-symbols-rounded text-[18px]">expand_more</span>
+                            </button>
+                            <div id="statusDropdown" class="custom-select-menu absolute top-full left-0 mt-2 w-full bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50">
+                                <button onclick="selectCustomOption('status', 'all', 'Todos os Status', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Todos os Status</button>
+                                <button onclick="selectCustomOption('status', 'live', 'Ao Vivo', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Ao Vivo</button>
+                                <button onclick="selectCustomOption('status', 'upcoming', 'Agendado', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Agendado</button>
+                                <button onclick="selectCustomOption('status', 'completed', 'Finalizado', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">Finalizado</button>
+                            </div>
+                            <input type="hidden" id="statusFilter" value="all">
+                        </div>
+                        
+                        <div class="flex flex-col gap-1.5 relative">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Inscritos</label>
+                            <button onclick="toggleMenu('subsDropdown', event)" class="w-full min-h-[48px] bg-surface/50 border border-white/10 hover:border-highlight/50 text-slate-300 rounded-xl px-4 py-3 flex items-center justify-between transition-colors text-sm font-semibold text-left">
+                                <span id="subsActiveText" class="truncate">Todos os Tamanhos</span>
+                                <span class="material-symbols-rounded text-[18px]">expand_more</span>
+                            </button>
+                            <div id="subsDropdown" class="custom-select-menu absolute top-full left-0 mt-2 w-full bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50">
+                                <button onclick="selectCustomOption('subs', 'all', 'Todos os Tamanhos', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Todos os Tamanhos</button>
+                                <button onclick="selectCustomOption('subs', 'small', 'Até 10 mil Inscritos', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Até 10 mil Inscritos</button>
+                                <button onclick="selectCustomOption('subs', 'medium', 'De 10 mil a 100 mil', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">De 10 mil a 100 mil</button>
+                                <button onclick="selectCustomOption('subs', 'large', 'Mais de 100 mil', event)" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">Mais de 100 mil</button>
+                            </div>
+                            <input type="hidden" id="subsFilter" value="all">
+                        </div>
+
+                        <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
+                            <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Intervalo de Datas</label>
+                            <div class="w-full min-h-[48px] flex items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 transition-colors focus-within:border-highlight overflow-hidden">
+                                <span class="text-slate-400 text-xs font-semibold whitespace-nowrap">De:</span>
+                                <input type="date" id="dateStart" onchange="saveState()" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                                <span class="text-slate-400 text-xs font-semibold whitespace-nowrap ml-1">Até:</span>
+                                <input type="date" id="dateEnd" onchange="saveState()" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                            </div>
+                        </div>
+
+                        <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
+                            <div class="flex items-center justify-between ml-1">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Filtro de Canais</label>
+                            </div>
+                            <div id="channelContainer" class="w-full min-h-[48px] relative flex flex-nowrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text overflow-x-auto scrollbar-hide" onclick="document.getElementById('channelInput').focus()">
+                                <input type="text" id="channelInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1 text-left m-0 p-0">
+                            </div>
+                        </div>
+
+                        <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
+                            <div class="flex items-center justify-between ml-1">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave na Descrição</label>
+                            </div>
+                            <div id="descContainer" class="w-full min-h-[48px] relative flex flex-nowrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text overflow-x-auto scrollbar-hide" onclick="document.getElementById('descInput').focus()">
+                                <input type="text" id="descInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1 text-left m-0 p-0">
+                            </div>
+                        </div>
+
+                        <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
+                            <div class="flex items-center justify-between ml-1">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Palavras-chave Negativas</label>
+                            </div>
+                            <div id="negativeContainer" class="w-full min-h-[48px] relative flex flex-nowrap items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 py-2 transition-colors focus-within:border-highlight cursor-text overflow-x-auto scrollbar-hide" onclick="document.getElementById('negativeInput').focus()">
+                                <input type="text" id="negativeInput" class="flex-grow bg-transparent border-none outline-none text-slate-300 placeholder-slate-500 text-sm font-semibold min-w-[150px] py-1 text-left m-0 p-0">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Área de Resultados -->
+        <div class="w-full mt-16 mb-12 hidden max-w-6xl mx-auto" id="resultsContainer">
+            <div id="alertBox" class="hidden custom-alert mb-6 w-full p-4 rounded-xl bg-[#DC2626] border border-[#B91C1C] text-white flex items-center gap-3 shadow-lg">
+                <span class="material-symbols-rounded">error</span>
+                <span id="alertMessage" class="font-bold text-sm"></span>
+            </div>
+
+            <div class="flex items-center justify-between mb-6 px-2">
+                <!-- Contador Real de Resultados -->
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#DC2626] flex flex-wrap items-center gap-2 sm:gap-3 drop-shadow-md leading-tight w-full">
+                    <span>Lançamentos Encontrados</span>
+                    <span id="resultsCount" class="text-sm sm:text-base bg-[#DC2626] text-white py-1 px-4 rounded-full shadow-lg whitespace-nowrap">0</span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4" id="resultsGrid">
+            </div>
+
+            <div id="loadingIndicator" class="hidden flex-col items-center justify-center py-20 w-full col-span-full">
+                <div class="w-12 h-12 border-4 border-white/10 border-t-[#DC2626] rounded-full animate-spin mb-4"></div>
+                <p class="text-slate-400 font-bold text-center px-4 mt-2">Beba um café! Encontrando seus lançamentos milionários...</p>
+            </div>
+
+            <div id="loadMoreContainer" class="w-full flex justify-center mt-10 hidden">
+                <button id="loadMoreBtn" class="bg-[#DC2626] hover:bg-[rgb(190,30,30)] border border-[#B91C1C] text-white font-bold text-sm px-8 py-3 rounded-full transition-all flex items-center gap-2 shadow-lg">
+                    <span class="material-symbols-rounded">refresh</span>
+                    Carregar Mais Lançamentos
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // CONFIGURAÇÃO CLOUDFLARE WORKER (BACKEND)
+        // ==========================================
+        const CF_WORKER_URL = "https://unilancamento-youtube.onrender.com"; 
+
+        let globalNextPageToken = '';
+        let globalAccumulatedItems = [];
+        let currentBurstToken = null; // Memória do Passe Livre
+
+        // === LOCAL STORAGE ===
+        function saveState() {
+            const state = {
+                main: getLogicTokens('mainInputContainer'),
+                desc: getLogicTokens('descContainer'),
+                neg: getLogicTokens('negativeContainer'),
+                channel: getLogicTokens('channelContainer'),
+                lang: document.getElementById('langFilter').value,
+                country: document.getElementById('countryFilter').value,
+                status: document.getElementById('statusFilter').value,
+                subs: document.getElementById('subsFilter').value,
+                sort: document.getElementById('sortFilter').value,
+                filtersOpen: isFiltersOpen
+            };
+            localStorage.setItem('unilancamento_state', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('unilancamento_state');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    
+                    if(state.lang) { document.getElementById('langFilter').value = state.lang; document.getElementById('langActiveText').textContent = getCustomOptionText('lang', state.lang); }
+                    if(state.country) { document.getElementById('countryFilter').value = state.country; document.getElementById('countryActiveText').textContent = getCustomOptionText('country', state.country); }
+                    if(state.status) { document.getElementById('statusFilter').value = state.status; document.getElementById('statusActiveText').textContent = getCustomOptionText('status', state.status); }
+                    if(state.subs) { document.getElementById('subsFilter').value = state.subs; document.getElementById('subsActiveText').textContent = getCustomOptionText('subs', state.subs); }
+                    
+                    if(state.sort) {
+                        document.getElementById('sortFilter').value = state.sort;
+                        document.getElementById('sortActiveText').textContent = getCustomOptionText('sort', state.sort);
+                    } else {
+                        document.getElementById('sortFilter').value = 'recent';
+                        document.getElementById('sortActiveText').textContent = 'Data Mais Recente';
+                    }
+                    
+                    if(state.filtersOpen && !isFiltersOpen) {
+                        document.getElementById('toggleFiltersBtn').click();
+                    }
+
+                    const recreateChips = (containerId, tokens) => {
+                        const container = document.getElementById(containerId);
+                        const input = document.getElementById(containerId.replace('Container', 'Input'));
+                        if(!container || !input || !tokens) return;
+                        
+                        clearChips(containerId);
+                        tokens.forEach(t => {
+                            if(t.type === 'word') {
+                                createChipAndOp(t.value, container, input);
+                            } else if (t.type === 'op') {
+                                const ops = container.querySelectorAll('.chip-op');
+                                if(ops.length > 0) {
+                                    const lastOp = ops[ops.length - 1];
+                                    if(lastOp.getAttribute('data-op') !== t.value) {
+                                        lastOp.click();
+                                    }
+                                }
+                            }
+                        });
+                    };
+
+                    recreateChips('mainInputContainer', state.main);
+                    recreateChips('descContainer', state.desc);
+                    recreateChips('negativeContainer', state.neg);
+                    recreateChips('channelContainer', state.channel);
+                    
+                } catch(e) {}
+            } else {
+                document.getElementById('sortFilter').value = 'recent';
+                document.getElementById('sortActiveText').textContent = 'Data Mais Recente';
+            }
+        }
+        document.addEventListener("DOMContentLoaded", loadState);
+
+        window.clearAllFilters = function() {
+            clearChips('mainInputContainer');
+            clearChips('descContainer');
+            clearChips('negativeContainer');
+            clearChips('channelContainer');
+
+            document.getElementById('langFilter').value = '';
+            document.getElementById('langActiveText').textContent = 'Qualquer Idioma';
+            
+            document.getElementById('countryFilter').value = '';
+            document.getElementById('countryActiveText').textContent = 'Qualquer País';
+            
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('statusActiveText').textContent = 'Todos os Status';
+            
+            document.getElementById('subsFilter').value = 'all';
+            document.getElementById('subsActiveText').textContent = 'Todos os Tamanhos';
+            
+            document.getElementById('dateStart').value = '';
+            document.getElementById('dateEnd').value = '';
+
+            document.getElementById('sortFilter').value = 'recent';
+            document.getElementById('sortActiveText').textContent = 'Data Mais Recente';
+
+            saveState();
+            showAlert("Filtros limpos com sucesso!", false);
+            
+            resultsGrid.innerHTML = '';
+            document.getElementById('resultsCount').textContent = '0';
+            globalNextPageToken = '';
+            globalAccumulatedItems = [];
+            loadMoreContainer.classList.add('hidden');
+            resultsContainer.classList.add('hidden');
+        };
+
+        const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
+        const filtersWrapper = document.getElementById('filtersWrapper');
+        const filtersArrow = document.getElementById('filtersArrow');
+        const mainBody = document.getElementById('mainBody');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const alertBox = document.getElementById('alertBox');
+        const alertMessage = document.getElementById('alertMessage');
+        
+        let isFiltersOpen = false;
+        let activeMenuId = null;
+
+        function updateScrollState() {
+            const isResultsVisible = !resultsContainer.classList.contains('hidden');
+            if (isFiltersOpen || isResultsVisible || activeMenuId) {
+                mainBody.style.overflowY = 'auto';
+                mainBody.classList.remove('justify-center');
+                mainBody.classList.add('pt-32'); 
+            } else {
+                mainBody.style.overflowY = 'hidden';
+                mainBody.classList.add('justify-center');
+                mainBody.classList.remove('pt-32');
+                window.scrollTo(0, 0);
+            }
+        }
+
+        toggleFiltersBtn.addEventListener('click', () => {
+            isFiltersOpen = !isFiltersOpen;
+            if(isFiltersOpen) {
+                filtersWrapper.classList.remove('max-h-0', 'opacity-0');
+                filtersWrapper.classList.add('max-h-[2000px]', 'opacity-100');
+                filtersArrow.classList.add('rotate-180');
+            } else {
+                filtersWrapper.classList.add('max-h-0', 'opacity-0');
+                filtersWrapper.classList.remove('max-h-[2000px]', 'opacity-100');
+                filtersArrow.classList.remove('rotate-180');
+            }
+            updateScrollState();
+            saveState();
+        });
+
+        function toggleMenu(menuId, e) {
+            e.stopPropagation();
+            if (activeMenuId && activeMenuId !== menuId) {
+                document.getElementById(activeMenuId).classList.add('hidden');
+            }
+            const menu = document.getElementById(menuId);
+            menu.classList.toggle('hidden');
+            activeMenuId = menu.classList.contains('hidden') ? null : menuId;
+            updateScrollState();
+        }
+
+        document.addEventListener('click', () => {
+            if (activeMenuId) {
+                document.getElementById(activeMenuId).classList.add('hidden');
+                activeMenuId = null;
+                updateScrollState();
+            }
+        });
+
+        function selectCustomOption(filterType, val, text, e) {
+            e.stopPropagation();
+            document.getElementById(`${filterType}ActiveText`).textContent = text;
+            document.getElementById(`${filterType}Filter`).value = val;
+            if(activeMenuId) {
+                document.getElementById(activeMenuId).classList.add('hidden');
+                activeMenuId = null;
+            }
+            updateScrollState();
+            saveState();
+        }
+
+        function getCustomOptionText(filterType, val) {
+            if(filterType === 'sort') {
+                if(val==='views') return 'Nº de Visualizações';
+                if(val==='comments') return 'Nº de Comentários';
+                if(val==='subs') return 'Nº de Inscritos';
+                if(val==='recent') return 'Data Mais Recente';
+            }
+            if(filterType === 'status') {
+                if(val==='all') return 'Todos os Status';
+                if(val==='live') return 'Ao Vivo';
+                if(val==='upcoming') return 'Agendado';
+                if(val==='completed') return 'Finalizado';
+            }
+            if(filterType === 'subs') {
+                if(val==='all') return 'Todos os Tamanhos';
+                if(val==='small') return 'Até 10 mil Inscritos';
+                if(val==='medium') return 'De 10 mil a 100 mil';
+                if(val==='large') return 'Mais de 100 mil';
+            }
+            if(filterType === 'lang') {
+                if(val==='') return 'Qualquer Idioma';
+                if(val==='pt') return 'Português';
+                if(val==='en') return 'Inglês';
+                if(val==='es') return 'Espanhol';
+                return val.toUpperCase();
+            }
+            if(filterType === 'country') {
+                if(val==='') return 'Qualquer País';
+                return val.toUpperCase();
+            }
+            return text;
+        }
+
+        window.handleSort = function() {
+            if (globalAccumulatedItems.length > 0) renderGrid(globalAccumulatedItems);
+            saveState();
+        };
+
+        // === SISTEMA DE ALERTA ===
+        function showAlert(msg, isError = false) {
+            alertBox.classList.remove('hidden');
+            alertMessage.textContent = msg;
+            if(isError) {
+                alertBox.className = "custom-alert mb-6 w-full p-4 rounded-xl bg-[#DC2626] border border-[#B91C1C] text-white flex items-center gap-3 shadow-lg";
+                alertBox.innerHTML = `<span class="material-symbols-rounded">error</span> <span class="font-bold text-sm">${msg}</span>`;
+            } else {
+                alertBox.className = "custom-alert mb-6 w-full p-4 rounded-xl bg-orange-500/20 border border-orange-500 text-orange-100 flex items-center gap-3";
+                alertBox.innerHTML = `<span class="material-symbols-rounded">warning</span> <span class="font-medium text-sm">${msg}</span>`;
+            }
+            if (!isError) setTimeout(hideAlert, 4000);
+        }
+        function hideAlert() { alertBox.classList.add('hidden'); }
+
+        window.copyToClipboard = function(event, text, btnElement = null) {
+            event.stopPropagation();
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            if(btnElement) {
+                const icon = btnElement.querySelector('.material-symbols-rounded');
+                if(icon) {
+                    const originalText = icon.textContent;
+                    icon.textContent = 'check';
+                    btnElement.classList.add('bg-green-500/20', 'text-green-400', 'border-green-500');
+                    btnElement.classList.remove('border-white/10', 'text-slate-300', 'text-slate-400');
+                    
+                    setTimeout(() => {
+                        icon.textContent = originalText;
+                        btnElement.classList.remove('bg-green-500/20', 'text-green-400', 'border-green-500');
+                        btnElement.classList.add('border-white/10');
+                        if(btnElement.classList.contains('w-fit')) btnElement.classList.add('text-slate-400');
+                        else btnElement.classList.add('text-slate-300');
+                    }, 2000);
+                }
+            }
+        };
+
+        window.openChannelAndCopy = function(event, handle, id, element) {
+            event.stopPropagation();
+            let rawHandle = handle || '';
+            if (rawHandle && rawHandle.startsWith('@')) rawHandle = rawHandle.substring(1);
+            
+            const textToCopy = rawHandle ? '@' + rawHandle : id;
+            
+            const tempInput = document.createElement('input');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            
+            const url = rawHandle ? `https://www.youtube.com/@${rawHandle}` : `https://www.youtube.com/channel/${id}`;
+            window.open(url, '_blank');
+            
+            element.classList.add('text-green-400');
+            setTimeout(() => { element.classList.remove('text-green-400'); }, 2000);
+        };
+
+        function formatSubs(num) {
+            if (!num) return '0';
+            if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+            return num;
+        }
+
+        function setupTypewriter(inputId, prefix, texts, isChipContainer = false) {
+            let ptIndex = 0; let charIndex = 0; let isDeleting = false; let animationTimeout;
+            const inputEl = document.getElementById(inputId);
+            if (!inputEl) return;
+            function shouldHidePlaceholder() {
+                if (inputEl.value.length > 0) return true;
+                if (isChipContainer) {
+                    const container = inputEl.parentElement;
+                    if (container.querySelectorAll('.chip').length > 0) return true;
+                }
+                return false;
+            }
+            function type() {
+                if (shouldHidePlaceholder()) {
+                    inputEl.setAttribute('placeholder', '');
+                    clearTimeout(animationTimeout); return;
+                }
+                const currentText = texts[ptIndex];
+                if (isDeleting) {
+                    inputEl.setAttribute('placeholder', prefix + currentText.substring(0, charIndex - 1));
+                    charIndex--;
+                } else {
+                    inputEl.setAttribute('placeholder', prefix + currentText.substring(0, charIndex + 1));
+                    charIndex++;
+                }
+                let typeSpeed = isDeleting ? 30 : 60;
+                if (!isDeleting && charIndex === currentText.length) {
+                    typeSpeed = 2500; isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false; ptIndex = (ptIndex + 1) % texts.length; typeSpeed = 500; 
+                }
+                clearTimeout(animationTimeout); animationTimeout = setTimeout(type, typeSpeed);
+            }
+            inputEl.addEventListener('input', () => {
+                if (shouldHidePlaceholder()) {
+                    inputEl.setAttribute('placeholder', ''); clearTimeout(animationTimeout);
+                } else {
+                    charIndex = 0; isDeleting = false; clearTimeout(animationTimeout); type();
+                }
+            });
+            type();
+        }
+
+        setupTypewriter('urlInput', '', ["Digite a sua palavra-chave...", "Ex: masterclass", "Ex: workshop"], true);
+        setupTypewriter('channelInput', '', ["Ex: https://youtube.com/@Canal", "Ex: https://youtube.com/@InexplorOficial"], true);
+        setupTypewriter('descInput', '', ["Ex: Hotmart"], true);
+        setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
+
+        function cleanChannelInput(val) {
+            let v = val.trim();
+            if (!v.includes('youtube.com') && !v.includes('youtu.be')) {
+                showAlert("Por favor, insira a URL completa do canal (ex: https://youtube.com/@Canal)", true);
+                return "";
+            }
+            try {
+                const urlObj = new URL(v.startsWith('http') ? v : 'https://' + v);
+                const pathParts = urlObj.pathname.split('/').filter(Boolean);
+                let lastPart = pathParts[pathParts.length - 1]; 
+                return lastPart;
+            } catch(e) {
+                return "";
+            } 
+        }
+
+        function setupChipSystem(inputId, containerId) {
+            const input = document.getElementById(inputId); 
+            const container = document.getElementById(containerId);
+            if (!input || !container) return;
+            
+            input.addEventListener('input', function(e) {
+                if (this.value.includes(',')) {
+                    let parts = this.value.split(',');
+                    for(let i=0; i < parts.length - 1; i++) {
+                        let val = parts[i].trim();
+                        if (val) {
+                            if (containerId === 'channelContainer') {
+                                val = cleanChannelInput(val);
+                                if (!val) continue;
+                            }
+                            createChipAndOp(val, container, input);
+                        }
+                    }
+                    this.value = parts[parts.length - 1].trimStart();
+                }
+            });
+
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); 
+                    let value = input.value.trim(); 
+                    if (value) { 
+                        if (containerId === 'channelContainer') {
+                            value = cleanChannelInput(value);
+                            if (!value) { input.value = ''; return; }
+                        }
+                        createChipAndOp(value, container, input); 
+                        input.value = ''; 
+                    }
+                } else if ((e.key === 'Backspace' || e.key === 'Delete') && input.value === '') {
+                    const chips = container.querySelectorAll('.chip');
+                    if (chips.length > 0) {
+                        const lastChip = chips[chips.length - 1];
+                        const prevNode = lastChip.previousElementSibling;
+                        if (prevNode && prevNode.classList.contains('chip-op')) prevNode.remove();
+                        lastChip.remove();
+                        saveState();
+                    }
+                }
+            });
+            
+            input.addEventListener('blur', function() {
+                let value = input.value.trim().replace(/,$/, '');
+                if (value) { 
+                    if (containerId === 'channelContainer') {
+                        value = cleanChannelInput(value);
+                        if (!value) { input.value = ''; return; }
+                    }
+                    createChipAndOp(value, container, input); 
+                    input.value = ''; 
+                }
+            });
+        }
+
+        function createChipAndOp(text, container, input) {
+            if(input) input.value = '';
+            container.scrollLeft = 0;
+
+            if (container.querySelectorAll('.chip').length > 0) {
+                const isMain = container.id === 'mainInputContainer';
+                const op = document.createElement('span');
+                
+                const baseClasses = 'chip-op text-[10px] rounded px-2 py-0.5 cursor-pointer transition-colors select-none font-bold mx-0.5 flex items-center justify-center border flex-shrink-0';
+                const andClasses = isMain 
+                    ? 'bg-slate-200 border-slate-300 text-slate-600 hover:bg-slate-300 hover:text-slate-800' 
+                    : 'bg-white/10 border-white/20 text-slate-300 hover:bg-white/20 hover:text-white';
+                const orClasses = isMain
+                    ? 'bg-red-100 border-highlight/40 text-highlight hover:bg-red-200'
+                    : 'bg-highlight/20 border-highlight/50 text-highlight hover:bg-highlight/30';
+
+                op.className = `${baseClasses} ${andClasses}`;
+                op.setAttribute('data-op', 'AND'); 
+                op.innerText = 'E';
+                
+                op.onclick = function(e) {
+                    e.stopPropagation();
+                    if (this.getAttribute('data-op') === 'AND') {
+                        this.setAttribute('data-op', 'OR');
+                        this.innerText = 'OU';
+                        this.className = `${baseClasses} ${orClasses}`;
+                    } else {
+                        this.setAttribute('data-op', 'AND');
+                        this.innerText = 'E';
+                        this.className = `${baseClasses} ${andClasses}`;
+                    }
+                    saveState();
+                };
+                container.insertBefore(op, input);
+            }
+
+            const chip = document.createElement('span');
+            chip.className = 'chip bg-highlight text-white px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm whitespace-nowrap flex-shrink-0';
+            chip.setAttribute('data-value', text); 
+            chip.innerHTML = `${text} <span class="material-symbols-rounded text-[14px] cursor-pointer hover:text-black transition-colors">close</span>`;
+            
+            chip.querySelector('span').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const prevNode = chip.previousElementSibling;
+                const nextNode = chip.nextElementSibling;
+                
+                if (prevNode && prevNode.classList.contains('chip-op')) prevNode.remove();
+                else if (nextNode && nextNode.classList.contains('chip-op')) nextNode.remove();
+                
+                chip.remove();
+                saveState();
+                if(input) input.focus();
+            });
+
+            container.insertBefore(chip, input);
+            if(input) input.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+            saveState();
+        }
+
+        function clearChips(containerId) {
+            const container = document.getElementById(containerId);
+            const elements = container.querySelectorAll('.chip, .chip-op');
+            elements.forEach(el => el.remove());
+            const input = document.getElementById(containerId.replace('Container', 'Input'));
+            if(input) { input.value = ''; container.scrollLeft = 0; }
+        }
+
+        function addChipWithOp(containerId, text, opBefore = 'AND') {
+            const input = document.getElementById(containerId.replace('Container', 'Input'));
+            const container = document.getElementById(containerId);
+            createChipAndOp(text, container, input);
+            
+            const ops = container.querySelectorAll('.chip-op');
+            if (ops.length > 0) {
+                const lastOp = ops[ops.length - 1];
+                if (opBefore === 'OR' && lastOp.getAttribute('data-op') === 'AND') {
+                    lastOp.click();
+                } else if (opBefore === 'AND' && lastOp.getAttribute('data-op') === 'OR') {
+                    lastOp.click();
+                }
+            }
+        }
+
+        window.applySmartCombo1 = function() {
+            clearAllFilters(); 
+            addChipWithOp('mainInputContainer', 'Aula 1'); 
+            addChipWithOp('mainInputContainer', 'Evento', 'OR');
+            addChipWithOp('mainInputContainer', 'Workshop', 'OR');
+            addChipWithOp('mainInputContainer', 'Gratuito', 'AND');
+            addChipWithOp('mainInputContainer', 'Online', 'AND');
+            addChipWithOp('negativeContainer', 'minicurso');
+            addChipWithOp('negativeContainer', 'mini-curso', 'OR');
+            saveState();
+            showAlert("Combinação aplicada com sucesso!", false);
+        };
+
+        window.applySmartCombo2 = function() {
+            clearAllFilters(); 
+            addChipWithOp('mainInputContainer', 'aula'); 
+            addChipWithOp('mainInputContainer', 'evento', 'OR');
+            addChipWithOp('mainInputContainer', 'semana do', 'OR');
+            addChipWithOp('mainInputContainer', 'semana da', 'OR');
+            addChipWithOp('mainInputContainer', 'semana de', 'OR');
+            addChipWithOp('mainInputContainer', 'grátis', 'AND');
+            addChipWithOp('mainInputContainer', 'gratis', 'OR');
+            addChipWithOp('mainInputContainer', 'gratuito', 'OR');
+            addChipWithOp('mainInputContainer', 'gratuita', 'OR');
+            addChipWithOp('mainInputContainer', '100% online', 'AND');
+            addChipWithOp('mainInputContainer', 'online', 'OR');
+            addChipWithOp('negativeContainer', 'lista de espera');
+            addChipWithOp('negativeContainer', 'encerrado', 'OR');
+            addChipWithOp('negativeContainer', 'encerrada', 'OR');
+            saveState();
+            showAlert("Combinação aplicada com sucesso!", false);
+        };
+
+        function getLogicTokens(containerId) {
+            const container = document.getElementById(containerId);
+            const tokens = [];
+            container.childNodes.forEach(node => {
+                if (node.classList && node.classList.contains('chip')) {
+                    tokens.push({ type: 'word', value: node.getAttribute('data-value').trim() });
+                } else if (node.classList && node.classList.contains('chip-op')) {
+                    tokens.push({ type: 'op', value: node.getAttribute('data-op') });
+                }
+            });
+            return tokens;
+        }
+
+        setupChipSystem('urlInput', 'mainInputContainer');
+        setupChipSystem('channelInput', 'channelContainer');
+        setupChipSystem('descInput', 'descContainer');
+        setupChipSystem('negativeInput', 'negativeContainer');
+
+        const langToCountryMap = {
+            'pt': 'br', 'en': 'us', 'es': 'es', 'fr': 'fr', 'de': 'de', 'it': 'it',
+            'ja': 'jp', 'ko': 'kr', 'ru': 'ru', 'zh': 'cn', 'ar': 'sa', 'hi': 'in'
+        };
+
+        function getCountryNameByCode(code) {
+            if (!code) return '';
+            try {
+                const regionNames = new Intl.DisplayNames(['pt-BR'], { type: 'region' });
+                return regionNames.of(code.toUpperCase());
+            } catch (e) {
+                return code.toUpperCase();
+            }
+        }
+        
+        function getFlagImg(countryCode) {
+            let finalCode = countryCode.toLowerCase();
+            if (langToCountryMap[finalCode]) finalCode = langToCountryMap[finalCode];
+            if (!finalCode) return '';
+            
+            const name = getCountryNameByCode(finalCode);
+            return `<img src="https://flagcdn.com/w40/${finalCode}.png" alt="${name}" onerror="this.outerHTML='<span class=\\'material-symbols-rounded text-white\\'>public</span>'" class="w-6 h-auto object-contain rounded-sm shadow-sm">`;
+        }
+        
+        function matchWildcard(text, kw) {
+            const lowerText = (text || '').toLowerCase();
+            const lowerKw = (kw || '').toLowerCase();
+            const escapeRegex = (s) => s.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+
+            if (lowerKw.includes('*')) {
+                const regexStr = lowerKw.split('*').map(escapeRegex).join('.*');
+                const regex = new RegExp(regexStr, 'i');
+                return regex.test(lowerText);
+            } else {
+                const regexStr = `(?:^|[^a-zA-Z0-9À-ÿ_])` + escapeRegex(lowerKw) + `(?=[^a-zA-Z0-9À-ÿ_]|$)`;
+                const regex = new RegExp(regexStr, 'i');
+                return regex.test(lowerText);
+            }
+        }
+
+        function evaluateLogicCustom(tokens, matchFn) {
+            if (tokens.length === 0) return true;
+            let expr = tokens.map(t => t.type === 'word' ? matchFn(t.value) : t.value);
+
+            let andTokens = [];
+            let currentVal = expr[0];
+            for (let i = 1; i < expr.length; i += 2) {
+                let op = expr[i];
+                let nextVal = expr[i+1];
+                if (op === 'OR') {
+                    currentVal = currentVal || nextVal; 
+                } else if (op === 'AND') {
+                    andTokens.push(currentVal);
+                    andTokens.push('AND');
+                    currentVal = nextVal;
+                }
+            }
+            andTokens.push(currentVal);
+
+            let finalResult = andTokens[0];
+            for (let i = 1; i < andTokens.length; i += 2) {
+                if (andTokens[i] === 'AND') {
+                    finalResult = finalResult && andTokens[i+1];
+                }
+            }
+            return finalResult;
+        }
+
+        function parseIso8601Duration(duration) {
+            if(!duration) return 0;
+            const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+            if (!match) return 0;
+            const h = (parseInt(match[1]) || 0) * 3600;
+            const m = (parseInt(match[2]) || 0) * 60;
+            const s = (parseInt(match[3]) || 0);
+            return h + m + s;
+        }
+
+        function buildApiQueryString(tokens) {
+             if(tokens.length === 0) return '';
+             return tokens.filter(t => t.type === 'word').map(t => `"${t.value}"`).join(' | ');
+        }
+
+        // =====================================
+        // INTEGRAÇÃO DA MALHA NOS HEADERS
+        // =====================================
+        async function fetchWithTimeout(resource, options = {}) {
+            const { timeout = 15000 } = options;
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            
+            options.headers = options.headers || {};
+            options.headers['X-Fingerprint-Id'] = fingerprintId;
+            options.headers['X-Sticky-Id'] = stickyId;
+            if (premiumId) options.headers['X-Premium-Id'] = premiumId;
+            
+            // Insere o passe livre (se existir) para buscas automáticas gratuitas
+            if (currentBurstToken) options.headers['X-Burst-Token'] = currentBurstToken;
+
+            const response = await fetch(resource, { ...options, signal: controller.signal });
+            clearTimeout(id);
+            return response;
+        }
+
+        const searchBtn = document.getElementById('searchBtn');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const resultsGrid = document.getElementById('resultsGrid');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+        async function resolveChannelId(handleOrId) {
+            if (!handleOrId) return null;
+            if (handleOrId.startsWith('UC') && handleOrId.length === 24) return handleOrId;
+            
+            const url = `${CF_WORKER_URL}/search?part=snippet&type=channel&maxResults=1&q=${encodeURIComponent(handleOrId)}`;
+            try {
+                const res = await fetchWithTimeout(url);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.items && data.items.length > 0) {
+                        return data.items[0].snippet.channelId;
+                    }
+                }
+            } catch(e) {}
+            return null;
+        }
+
+        searchBtn.addEventListener('click', () => {
+            let unlockCount = parseInt(localStorage.getItem('_ga_unlock_count')) || 0;
+            if (!premiumId && unlockCount >= 3) {
+                window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
+                return;
+            }
+
+            if(isFiltersOpen) document.getElementById('toggleFiltersBtn').click();
+            
+            // Mata o token antigo. Ação humana obriga o servidor a cobrar de novo!
+            currentBurstToken = null; 
+            
+            globalNextPageToken = '';
+            globalAccumulatedItems = [];
+            resultsGrid.innerHTML = '';
+            document.getElementById('resultsCount').textContent = '0';
+            
+            performSearch(false);
+        });
+
+        loadMoreBtn.addEventListener('click', () => {
+            let unlockCount = parseInt(localStorage.getItem('_ga_unlock_count')) || 0;
+            if (!premiumId && unlockCount >= 3) {
+                window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
+                return;
+            }
+            
+            // Mata o token antigo. O utilizador pediu mais, tem que cobrar!
+            currentBurstToken = null;
+            performSearch(true);
+        });
+
+        async function performSearch(isLoadMore) {
+            hideAlert();
+            resultsContainer.classList.remove('hidden');
+            loadMoreContainer.classList.add('hidden');
+            
+            if (!isLoadMore) {
+                loadingIndicator.classList.remove('hidden');
+                loadingIndicator.classList.add('flex');
+            } else {
+                loadMoreBtn.innerHTML = `<span class="material-symbols-rounded animate-spin">autorenew</span> A carregar...`;
+                loadMoreBtn.classList.add('opacity-50', 'pointer-events-none');
+            }
+            
+            updateScrollState();
+
+            const mainTokens = getLogicTokens('mainInputContainer');
+            const descTokens = getLogicTokens('descContainer');
+            const negativeTokens = getLogicTokens('negativeContainer');
+            const channelTokens = getLogicTokens('channelContainer');
+            
+            const lang = document.getElementById('langFilter').value;
+            const country = document.getElementById('countryFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const subsSize = document.getElementById('subsFilter').value;
+            const dateStart = document.getElementById('dateStart').value;
+            const dateEnd = document.getElementById('dateEnd').value;
+            const sortFilterVal = document.getElementById('sortFilter').value;
+
+            let queryParts = [];
+            if (mainTokens.length > 0) queryParts.push(`(${buildApiQueryString(mainTokens)})`);
+            if (descTokens.length > 0) queryParts.push(`(${buildApiQueryString(descTokens)})`);
+            let q = queryParts.join(' ');
+
+            let specificChannelId = null;
+            if (channelTokens.length === 1 && channelTokens[0].type === 'word') {
+                specificChannelId = await resolveChannelId(channelTokens[0].value);
+            }
+
+            let baseSearchUrl = `${CF_WORKER_URL}/search?part=snippet&type=video&maxResults=50`;
+            if (specificChannelId) {
+                baseSearchUrl += `&channelId=${specificChannelId}`;
+                if (q) baseSearchUrl += `&q=${encodeURIComponent(q)}`;
+            } else {
+                if (channelTokens.length > 0) {
+                    const channelStr = channelTokens.filter(t => t.type === 'word').map(t => t.value).join(' | ');
+                    q += (q ? ' ' : '') + channelStr;
+                }
+                if (q) baseSearchUrl += `&q=${encodeURIComponent(q)}`;
+            }
+
+            if (lang) baseSearchUrl += `&relevanceLanguage=${lang}`;
+            if (country) baseSearchUrl += `&regionCode=${country}`;
+            if (status === 'live' || status === 'upcoming') baseSearchUrl += `&eventType=${status}`;
+            if (sortFilterVal === 'recent') baseSearchUrl += `&order=date`;
+            
+            try {
+                let loopCount = 0;
+                let newItemsFound = [];
+                let currentNextPageToken = isLoadMore ? globalNextPageToken : '';
+
+                while (loopCount < 15 && newItemsFound.length < 20) {
+                    let searchUrl = baseSearchUrl;
+                    if (currentNextPageToken) searchUrl += `&pageToken=${currentNextPageToken}`;
+
+                    const searchResponse = await fetchWithTimeout(searchUrl, { timeout: 15000 });
+                    
+                    // ==============================================================
+                    // INTERCEPTAÇÃO DE BLOQUEIO DE SALDO (Erro 403 retornado)
+                    // ==============================================================
+                    if (searchResponse.status === 403) {
+                        const errorData = await searchResponse.json();
+                        if (errorData.restoredId && !premiumId) gravarStickyId(errorData.restoredId);
+                        
+                        if (errorData.limiteAtingido || !premiumId) {
+                            localStorage.setItem('_ga_unlock_count', '3'); // Força bloqueio local
+                            window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
+                            return; 
+                        }
+                        throw new Error(errorData.error?.message || "Acesso Bloqueado pela Segurança.");
+                    }
+
+                    const searchData = await searchResponse.json();
+                    if (searchData.error) throw new Error(searchData.error.message);
+
+                    // Atualização e Salvamento da Identidade e do Passe Livre
+                    if (searchData.restoredId && !premiumId) gravarStickyId(searchData.restoredId);
+                    if (searchData._burstToken) currentBurstToken = searchData._burstToken;
+
+                    // ==============================================================
+                    // AVISO DO BACKEND: Foi cobrado nesta rodada? Atualiza o local!
+                    // ==============================================================
+                    if (searchResponse.headers.get("X-Charged") === "true" && !premiumId) {
+                        let currentCount = parseInt(localStorage.getItem('_ga_unlock_count')) || 0;
+                        localStorage.setItem('_ga_unlock_count', (currentCount + 1).toString());
+                    }
+
+                    currentNextPageToken = searchData.nextPageToken || '';
+                    let items = searchData.items || [];
+
+                    if(items.length === 0 && !currentNextPageToken) break;
+                    if(items.length === 0) { loopCount++; continue; }
+
+                    items = items.filter(item => {
+                        if (globalAccumulatedItems.some(existing => existing.id.videoId === item.id.videoId)) return false;
+                        if (newItemsFound.some(existing => existing.id.videoId === item.id.videoId)) return false;
+
+                        const title = (item.snippet.title || '');
+                        const desc = (item.snippet.description || '');
+
+                        if (!evaluateLogicCustom(mainTokens, (kw) => matchWildcard(title, kw))) return false;
+                        if (!evaluateLogicCustom(descTokens, (kw) => matchWildcard(desc, kw))) return false;
+                        if (negativeTokens.length > 0 && evaluateLogicCustom(negativeTokens, (kw) => matchWildcard(title, kw) || matchWildcard(desc, kw))) return false;
+
+                        return true;
+                    });
+
+                    const subsMap = {};
+                    const channelHandleMap = {};
+                    const channelCountryMap = {};
+                    
+                    if (items.length > 0) {
+                        const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
+                        const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics,snippet&id=${uniqueChannelIds.join(',')}`;
+                        const channelsResponse = await fetchWithTimeout(channelsUrl);
+                        
+                        if (channelsResponse.ok) {
+                            const channelsData = await channelsResponse.json();
+                            if(channelsData.items) {
+                                channelsData.items.forEach(ch => { 
+                                    subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); 
+                                    channelHandleMap[ch.id] = ch.snippet?.customUrl || '';
+                                    channelCountryMap[ch.id] = ch.snippet?.country || '';
+                                });
+                            }
+                        }
+
+                        if (channelTokens.length > 0) {
+                            items = items.filter(item => {
+                                const channelId = item.snippet.channelId;
+                                const channelTitle = item.snippet.channelTitle || '';
+                                let handle = channelHandleMap[channelId] || '';
+
+                                return evaluateLogicCustom(channelTokens, (kw) => {
+                                    const lowKw = kw.toLowerCase();
+                                    const cTitleNoSpace = channelTitle.toLowerCase().replace(/\s+/g, '');
+                                    const kwNoSpace = lowKw.replace(/\s+/g, '');
+                                    
+                                    if (lowKw.includes('*')) {
+                                        return matchWildcard(channelId, kw) || matchWildcard(handle, kw) || matchWildcard(channelTitle, kw) || matchWildcard(cTitleNoSpace, kwNoSpace);
+                                    }
+                                    
+                                    return channelId.toLowerCase() === lowKw || 
+                                           handle.toLowerCase() === lowKw || 
+                                           channelTitle.toLowerCase() === lowKw.replace('@', '') || 
+                                           cTitleNoSpace === kwNoSpace.replace('@', '');
+                                });
+                            });
+                        }
+
+                        if(subsSize !== 'all') {
+                            items = items.filter(item => {
+                                const count = subsMap[item.snippet.channelId] || 0;
+                                if (subsSize === 'small') return count <= 10000;
+                                if (subsSize === 'medium') return count > 10000 && count <= 100000;
+                                if (subsSize === 'large') return count > 100000;
+                                return true;
+                            });
+                        }
+                    }
+
+                    if (items.length > 0) {
+                        const videoIds = items.map(item => item.id.videoId).join(',');
+                        const videosUrl = `${CF_WORKER_URL}/videos?part=snippet,statistics,liveStreamingDetails,contentDetails&id=${videoIds}`;
+                        const videosResponse = await fetchWithTimeout(videosUrl);
+                        
+                        if (videosResponse.ok) {
+                            const videosData = await videosResponse.json();
+                            const statsMap = {};
+                            const liveDetailsMap = {};
+                            const durationMap = {};
+                            const videoCountryMap = {};
+                            const videoLangMap = {};
+                            
+                            if(videosData.items) {
+                                videosData.items.forEach(v => {
+                                    statsMap[v.id] = v.statistics || {};
+                                    liveDetailsMap[v.id] = v.liveStreamingDetails || null;
+                                    durationMap[v.id] = parseIso8601Duration(v.contentDetails?.duration);
+                                    
+                                    const vLang = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
+                                    videoLangMap[v.id] = vLang;
+
+                                    let vCountry = '';
+                                    if (vLang) {
+                                        if (vLang.includes('-')) {
+                                            const part2 = vLang.split('-')[1];
+                                            if (/^[a-zA-Z]{2}$/.test(part2)) {
+                                                vCountry = part2.toUpperCase();
+                                            } else {
+                                                const mapped = langToCountryMap[vLang.split('-')[0].toLowerCase()];
+                                                if (mapped) vCountry = mapped.toUpperCase();
+                                            }
+                                        } else {
+                                            const mapped = langToCountryMap[vLang.toLowerCase()];
+                                            if (mapped) vCountry = mapped.toUpperCase();
+                                        }
+                                    }
+                                    videoCountryMap[v.id] = vCountry;
+                                });
+                            }
+
+                            items.forEach(item => {
+                                const stats = statsMap[item.id.videoId] || {};
+                                item.commentCount = parseInt(stats.commentCount || 0, 10);
+                                item.viewCount = parseInt(stats.viewCount || 0, 10); 
+                                item.subscriberCount = subsMap[item.snippet.channelId] || 0; 
+                                item.liveDetails = liveDetailsMap[item.id.videoId];
+                                item.channelCountryCode = channelCountryMap[item.snippet.channelId] || ''; 
+                                item.channelHandle = channelHandleMap[item.snippet.channelId] || '';
+                                item.durationSecs = durationMap[item.id.videoId] || 0;
+                                item.videoLanguage = videoLangMap[item.id.videoId] || '';
+                                
+                                const videoCountryCode = videoCountryMap[item.id.videoId] || '';
+                                item.finalCountryCode = item.channelCountryCode || videoCountryCode;
+                            });
+                        }
+                    }
+
+                    items = items.filter(item => {
+                        const now = new Date();
+                        const liveContent = item.snippet.liveBroadcastContent; 
+                        
+                        if (item.durationSecs > 0 && item.durationSecs <= 61 && liveContent === 'none') return false; 
+                        if (country && item.finalCountryCode.toUpperCase() !== country.toUpperCase()) return false;
+
+                        if (lang) {
+                            let isMatch = false;
+                            if (item.videoLanguage && item.videoLanguage.toLowerCase().startsWith(lang.toLowerCase())) {
+                                isMatch = true;
+                            }
+                            if (!isMatch) {
+                                const langCountryMap = {
+                                    'pt': ['BR', 'PT', 'AO', 'MZ', 'CV', 'GW', 'ST', 'TL', 'MO'],
+                                    'en': ['US', 'GB', 'CA', 'AU', 'NZ', 'IE', 'IN', 'ZA', 'NG'],
+                                    'es': ['ES', 'MX', 'AR', 'CO', 'CL', 'PE', 'VE', 'EC', 'GT', 'CU', 'BO', 'DO', 'HN', 'PY', 'SV', 'NI', 'CR', 'PR', 'PA', 'UY', 'GQ'],
+                                    'fr': ['FR', 'CA', 'BE', 'CH', 'SN', 'CI', 'ML', 'CD', 'CM', 'MG', 'HT'],
+                                    'de': ['DE', 'AT', 'CH', 'LI', 'LU'],
+                                    'it': ['IT', 'CH', 'SM', 'VA'],
+                                    'ja': ['JP']
+                                };
+                                const expectedCountries = langCountryMap[lang.toLowerCase()] || [];
+                                if (item.finalCountryCode && expectedCountries.includes(item.finalCountryCode.toUpperCase())) isMatch = true;
+                            }
+                            if (!isMatch) return false;
+                        }
+
+                        const scheduledStart = item.liveDetails?.scheduledStartTime ? new Date(item.liveDetails.scheduledStartTime) : null;
+                        const actualEnd = item.liveDetails?.actualEndTime ? new Date(item.liveDetails.actualEndTime) : null;
+                        const publishedAt = new Date(item.snippet.publishedAt);
+
+                        const targetDateForFilter = scheduledStart || actualEnd || publishedAt;
+                        item.targetDateForFilter = targetDateForFilter; 
+
+                        if (dateStart || dateEnd) {
+                            const dStart = dateStart ? new Date(dateStart.replace(/-/g, '\/')) : null;
+                            const dEnd = dateEnd ? new Date(dateEnd.replace(/-/g, '\/')) : null;
+                            if (dEnd) dEnd.setHours(23, 59, 59, 999); 
+                            
+                            if (dStart && targetDateForFilter < dStart) return false;
+                            if (dEnd && targetDateForFilter > dEnd) return false;
+                        }
+
+                        const liveDetails = item.liveDetails;
+                        let isLive = liveContent === 'live';
+                        let isUpcoming = liveContent === 'upcoming';
+                        let isCompleted = liveContent === 'completed' || liveContent === 'none';
+
+                        if (liveDetails) {
+                            if (liveDetails.actualEndTime) {
+                                isLive = false; isUpcoming = false; isCompleted = true;
+                            } else if (liveDetails.actualStartTime) {
+                                isLive = true; isUpcoming = false; isCompleted = false;
+                            } else if (liveDetails.scheduledStartTime) {
+                                isLive = false; isUpcoming = true; isCompleted = false;
+                            }
+                        }
+
+                        if (status !== 'all') {
+                            if (status === 'live' && !isLive) return false; 
+                            if (status === 'upcoming') {
+                                if (!isUpcoming) return false;
+                                if (scheduledStart && scheduledStart <= now) return false;
+                            }
+                            if (status === 'completed') {
+                                if (isLive || isUpcoming) return false;
+                                if (targetDateForFilter > now) return false;
+                            }
+                        }
+                        return true;
+                    });
+
+                    newItemsFound = newItemsFound.concat(items);
+                    loopCount++;
+                    
+                    if (!currentNextPageToken) break; 
+                }
+
+                globalNextPageToken = currentNextPageToken;
+                globalAccumulatedItems = globalAccumulatedItems.concat(newItemsFound);
+
+                loadingIndicator.classList.add('hidden');
+                loadingIndicator.classList.remove('flex');
+                
+                loadMoreBtn.innerHTML = `<span class="material-symbols-rounded">refresh</span> Carregar Mais Lançamentos`;
+                loadMoreBtn.classList.remove('opacity-50', 'pointer-events-none');
+
+                if (globalAccumulatedItems.length === 0) {
+                    resultsGrid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 font-medium bg-white/5 rounded-2xl">Nenhum lançamento encontrado que atenda a todas as regras estipuladas nesta busca.</div>`;
+                    document.getElementById('resultsCount').textContent = '0';
+                    loadMoreContainer.classList.add('hidden');
+                    return;
+                }
+
+                renderGrid(globalAccumulatedItems);
+
+                if (globalNextPageToken) {
+                    loadMoreContainer.classList.remove('hidden');
+                } else {
+                    loadMoreContainer.classList.add('hidden'); 
+                }
+
+            } catch (error) {
+                loadingIndicator.classList.add('hidden');
+                loadingIndicator.classList.remove('flex');
+                loadMoreContainer.classList.add('hidden'); 
+                
+                let errorMsg = error.message;
+                if (error.name === 'AbortError') {
+                    errorMsg = "A ligação demorou muito a responder. A pesquisa foi interrompida (Timeout) para não bloquear o seu ecrã. Tente novamente.";
+                }
+                
+                errorMsg += " Fique tranquilo(a), a sua consulta não foi descontada!";
+                showAlert(`Erro na busca: ${errorMsg}`, true);
+            }
+        }
+
+        function renderGrid(itemsArray) {
+            const sortFilterVal = document.getElementById('sortFilter').value;
+            const statusFilterVal = document.getElementById('statusFilter').value;
+            let itemsToRender = [...itemsArray];
+
+            if (sortFilterVal === 'views') {
+                itemsToRender.sort((a, b) => b.viewCount - a.viewCount);
+            } else if (sortFilterVal === 'comments') {
+                itemsToRender.sort((a, b) => b.commentCount - a.commentCount);
+            } else if (sortFilterVal === 'subs') {
+                itemsToRender.sort((a, b) => b.subscriberCount - a.subscriberCount);
+            } else if (sortFilterVal === 'recent') {
+                if (statusFilterVal === 'upcoming') {
+                    itemsToRender.sort((a, b) => a.targetDateForFilter.getTime() - b.targetDateForFilter.getTime());
+                } else {
+                    itemsToRender.sort((a, b) => b.targetDateForFilter.getTime() - a.targetDateForFilter.getTime());
+                }
+            }
+
+            document.getElementById('resultsCount').textContent = itemsToRender.length.toString();
+            resultsGrid.innerHTML = '';
+
+            itemsToRender.forEach(item => {
+                const videoId = item.id.videoId;
+                const snippet = item.snippet;
+                const commentCount = item.commentCount || 0;
+                const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+                
+                const flagImg = getFlagImg(item.finalCountryCode);
+                const countryName = getCountryNameByCode(item.finalCountryCode || '');
+                
+                let flagPill = '';
+                if(item.finalCountryCode && flagImg) {
+                    flagPill = `<div class="absolute top-4 right-4 bg-[#0C1221] border border-white/20 w-11 h-8 rounded-lg drop-shadow-lg flex items-center justify-center cursor-default z-20" title="${countryName}">
+                                    ${flagImg}
+                                </div>`;
+                }
+
+                let statusBadge = '';
+                if(snippet.liveBroadcastContent === 'live' || (item.liveDetails && item.liveDetails.actualStartTime && !item.liveDetails.actualEndTime)) {
+                    statusBadge = `<div class="absolute top-4 left-4 bg-[#DC2626] text-white px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg border border-[#B91C1C] z-20">
+                                      <span class="material-symbols-rounded text-[14px] sm:text-[16px]">sensors</span> Ao Vivo
+                                   </div>`;
+                } else if (snippet.liveBroadcastContent === 'upcoming' || (item.liveDetails && item.liveDetails.scheduledStartTime && !item.liveDetails.actualStartTime)) {
+                    statusBadge = `<div class="absolute top-4 left-4 bg-[#DC2626] text-white px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold flex items-center gap-1.5 shadow-lg border border-[#B91C1C] z-20">
+                                      <span class="material-symbols-rounded text-[14px] sm:text-[16px]">schedule</span> Agendado
+                                   </div>`;
+                }
+
+                const parser = new DOMParser();
+                const decodedTitle = parser.parseFromString(snippet.title, 'text/html').body.textContent;
+                
+                const pubDate = item.targetDateForFilter.toLocaleDateString('pt-PT');
+                const formattedComments = commentCount.toLocaleString('pt-PT');
+
+                // REDES SOCIAIS E AFILIADO
+                const descRaw = snippet.description;
+                const hotmartRegex = /(https?:\/\/(?:go\.|pay\.|www\.)?hotmart\.com\/[^\s]+)/i;
+                const igRegex = /https?:\/\/(?:www\.)?instagram\.com\/[^\s\n"']+/i;
+                const fbRegex = /https?:\/\/(?:www\.)?facebook\.com\/[^\s\n"']+/i;
+                const waRegex = /https?:\/\/(?:wa\.me|api\.whatsapp\.com|chat\.whatsapp\.com)\/[^\s\n"']+/i;
+
+                const hotmartMatch = descRaw.match(hotmartRegex);
+                const igMatch = descRaw.match(igRegex);
+                const fbMatch = descRaw.match(fbRegex);
+                const waMatch = descRaw.match(waRegex);
+
+                let iconsHtml = '';
+                
+                if (hotmartMatch && hotmartMatch[1]) {
+					const inexplorUrl = premiumId 
+				? `https://inexplor.grupobhds.com/desbloqueio-produto-oculto?id=${premiumId}&po=${encodeURIComponent(hotmartMatch[1])}`
+				: `https://inexplor.grupobhds.com/desbloqueio-produto-oculto?po=${encodeURIComponent(hotmartMatch[1])}`;
+        
+				iconsHtml += `<button onclick="window.open('${inexplorUrl}', '_blank'); event.stopPropagation();" title="Afiliar-se na Hotmart" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0"><span class="material-symbols-rounded text-[18px]">attach_money</span></button>`;
+}
+                
+                if (waMatch && waMatch[0]) {
+                    iconsHtml += `<button onclick="window.open('${waMatch[0]}', '_blank'); event.stopPropagation();" title="WhatsApp" class="w-10 h-10 rounded-full bg-[#25D366]/20 hover:bg-[#25D366] transition-colors flex items-center justify-center border border-[#25D366]/50 shadow-sm flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#FFFFFF" viewBox="0 0 16 16"><path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/></svg>
+                    </button>`;
+                }
+                
+                if (igMatch && igMatch[0]) {
+                    iconsHtml += `<button onclick="window.open('${igMatch[0]}', '_blank'); event.stopPropagation();" title="Instagram" class="w-10 h-10 rounded-full bg-[#E1306C]/20 hover:bg-[#E1306C] transition-colors flex items-center justify-center border border-[#E1306C]/50 shadow-sm flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#FFFFFF" viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.512.51 1.01.77 1.543.923.51.144 1.092.23 1.942.27 1.01.036 1.18.046 3.19.046 2.012 0 2.18-.01 3.19-.046.85-.04 1.432-.126 1.942-.27.533-.153 1.03-.413 1.543-.923.445-.445.718-.891.923-1.417.197-.509.232-1.09.27-1.942.039-.853.048-1.125.048-3.297 0-2.174-.01-2.446-.048-3.297-.038-.852-.173-1.433-.27-1.942a3.927 3.927 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.233-1.942-.27C10.445.008 10.173 0 8 0zm0 1.453c2.136 0 2.389.007 3.232.046.78.036 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm0 3.466c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0 4.543c-.853 0-1.543-.69-1.543-1.543 0-.853.69-1.543 1.543-1.543.853 0 1.543.69 1.543 1.543 0 .853-.69 1.543-1.543 1.543zm3.173-5.522a.93.93 0 1 1-1.86 0 .93.93 0 0 1 1.86 0z"/></svg>
+                    </button>`;
+                }
+                
+                if (fbMatch && fbMatch[0]) {
+                    iconsHtml += `<button onclick="window.open('${fbMatch[0]}', '_blank'); event.stopPropagation();" title="Facebook" class="w-10 h-10 rounded-full bg-[#1877F2]/20 hover:bg-[#1877F2] transition-colors flex items-center justify-center border border-[#1877F2]/50 shadow-sm flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#FFFFFF" viewBox="0 0 16 16"><path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/></svg>
+                    </button>`;
+                }
+
+                const card = document.createElement('article');
+                card.className = "video-card bg-[#0F172A] border border-white/10 rounded-[2rem] overflow-hidden flex flex-col relative z-10 shadow-xl cursor-pointer group";
+                card.onclick = () => window.open(videoUrl, '_blank');
+                
+                const subsFormatted = formatSubs(item.subscriberCount);
+                
+                card.innerHTML = `
+                    <div class="relative aspect-video overflow-hidden bg-slate-900">
+                        <img src="${snippet.thumbnails.high?.url || snippet.thumbnails.medium?.url}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        ${statusBadge}
+                        ${flagPill}
+                    </div>
+                    <div class="p-6 sm:p-7 flex flex-col flex-grow bg-gradient-to-b from-transparent to-[#080B14]">
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold leading-snug mb-3 text-white line-clamp-2" title="${decodedTitle}">${decodedTitle}</h3>
+                        
+                        <div class="flex items-start gap-3 text-slate-400 mb-6 cursor-pointer w-full group/channel relative" onclick="openChannelAndCopy(event, '${item.channelHandle}', '${snippet.channelId}', this)" title="Abrir guia do Canal e Copiar @">
+                            <span class="material-symbols-rounded text-[20px] mt-0.5 flex-shrink-0 group-hover/channel:text-white transition-colors">account_circle</span>
+                            <div class="flex flex-col w-[calc(100%-32px)] overflow-hidden">
+                                <div class="marquee-container">
+                                    <span class="text-sm font-bold text-slate-300 transition-all duration-300 leading-tight marquee-content ${snippet.channelTitle.length > 18 ? 'marquee-long' : ''}">${snippet.channelTitle}</span>
+                                </div>
+                                <span class="text-[11px] font-semibold text-slate-500 mt-0.5">${subsFormatted} inscritos</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-auto flex flex-col gap-4 border-t border-white/10 pt-5">
+                            <div class="flex flex-wrap items-center justify-between gap-y-2">
+                                <div class="flex flex-col flex-shrink-0">
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Data</span>
+                                    <span class="text-sm text-slate-300 font-medium">${pubDate}</span>
+                                </div>
+                                <div class="flex flex-col flex-shrink-0 text-right">
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Comentários</span>
+                                    <span class="text-sm text-slate-300 font-medium flex items-center justify-end gap-1.5">
+                                        <span class="material-symbols-rounded text-[14px]">chat_bubble</span>
+                                        ${formattedComments}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-2 w-full overflow-x-auto scrollbar-hide py-1">
+                                ${iconsHtml}
+                                <div class="flex-grow"></div>
+                                <button onclick="copyToClipboard(event, '${videoUrl}', this)" title="Copiar URL do Vídeo" class="w-10 h-10 rounded-full bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                                    <span class="material-symbols-rounded text-[18px]">content_copy</span>
+                                </button>
+                                <button class="w-10 h-10 rounded-full bg-white/5 group-hover:bg-highlight group-hover:text-white transition-colors flex items-center justify-center border border-white/10 shadow-sm flex-shrink-0">
+                                    <span class="material-symbols-rounded text-[20px]">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                resultsGrid.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
