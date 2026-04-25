@@ -41,10 +41,8 @@
 
     <!-- SISTEMA ANTI-INSPEÇÃO E PROTEÇÃO DE CÓDIGO MÁXIMA -->
     <script>
-        // Bloqueia menu de contexto
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // Bloqueia atalhos de teclado de desenvolvedor
         document.addEventListener('keydown', function(e) {
             if (e.keyCode === 123 || 
                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || 
@@ -54,7 +52,6 @@
             }
         });
 
-        // Congelador de aba (Armadilha para aba Network/Console)
         setInterval(() => { debugger; }, 500);
     </script>
 
@@ -63,7 +60,6 @@
 
     <!-- SISTEMA DE MALHA DE SEGURANÇA MÁXIMA E IDENTIFICAÇÃO -->
     <script>
-        // Captura o ID do plano Premium
         const urlParams = new URLSearchParams(window.location.search);
         const premiumId = urlParams.get('id') || '';
 
@@ -284,7 +280,6 @@
 
                 <div class="mt-6 w-full max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-4 relative z-20">
                     
-                    <!-- BOTÃO DE PLATAFORMAS (COM ÍCONE) -->
                     <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
                         <button id="platformToggleBtn" onclick="toggleMenu('platformDropdown', event)" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
                             <span class="material-symbols-rounded text-[20px]">layers</span>
@@ -337,13 +332,6 @@
                             <button onclick="selectCustomOption('sort', 'subs', 'Nº de Inscritos', event); handleSort();" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">Nº de Inscritos</button>
                         </div>
                         <input type="hidden" id="sortFilter" value="recent">
-                    </div>
-                    
-                    <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
-                        <button onclick="clearAllFilters()" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
-                            <span class="material-symbols-rounded text-[20px]">delete_sweep</span>
-                            <span>Limpar Tudo</span>
-                        </button>
                     </div>
 
                 </div>
@@ -425,9 +413,9 @@
                             <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest ml-1">Intervalo de Datas</label>
                             <div class="w-full min-h-[48px] flex items-center gap-2 bg-surface/50 border border-white/10 hover:border-highlight/50 rounded-xl px-4 transition-colors focus-within:border-highlight overflow-hidden">
                                 <span class="text-slate-400 text-xs font-semibold whitespace-nowrap">De:</span>
-                                <input type="date" id="dateStart" onchange="saveState()" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                                <input type="date" id="dateStart" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
                                 <span class="text-slate-400 text-xs font-semibold whitespace-nowrap ml-1">Até:</span>
-                                <input type="date" id="dateEnd" onchange="saveState()" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
+                                <input type="date" id="dateEnd" class="bg-transparent text-slate-300 outline-none text-sm font-semibold cursor-pointer w-full">
                             </div>
                         </div>
 
@@ -500,7 +488,7 @@
         // ==========================================
         // CONFIGURAÇÃO CLOUDFLARE WORKER (BACKEND)
         // ==========================================
-        const CF_WORKER_URL = "https://unilancamento-youtube.grupo-bhds.workers.dev"; 
+        const CF_WORKER_URL = "https://unilancamento.grupo-bhds.workers.dev"; 
 
         let globalNextPageToken = '';
         let globalAccumulatedItems = [];
@@ -525,118 +513,9 @@
             }
         }
 
-        // === LOCAL STORAGE ===
-        function saveState() {
-            const state = {
-                main: getLogicTokens('mainInputContainer'),
-                desc: getLogicTokens('descContainer'),
-                neg: getLogicTokens('negativeContainer'),
-                channel: getLogicTokens('channelContainer'),
-                lang: document.getElementById('langFilter').value,
-                country: document.getElementById('countryFilter').value,
-                status: document.getElementById('statusFilter').value,
-                subs: document.getElementById('subsFilter').value,
-                sort: document.getElementById('sortFilter').value,
-                filtersOpen: isFiltersOpen
-            };
-            localStorage.setItem('unilancamento_state', JSON.stringify(state));
-        }
-
-        function loadState() {
-            const saved = localStorage.getItem('unilancamento_state');
-            if (saved) {
-                try {
-                    const state = JSON.parse(saved);
-                    
-                    if(state.lang) { document.getElementById('langFilter').value = state.lang; document.getElementById('langActiveText').textContent = getCustomOptionText('lang', state.lang); }
-                    if(state.country) { document.getElementById('countryFilter').value = state.country; document.getElementById('countryActiveText').textContent = getCustomOptionText('country', state.country); }
-                    if(state.status) { document.getElementById('statusFilter').value = state.status; document.getElementById('statusActiveText').textContent = getCustomOptionText('status', state.status); }
-                    if(state.subs) { document.getElementById('subsFilter').value = state.subs; document.getElementById('subsActiveText').textContent = getCustomOptionText('subs', state.subs); }
-                    
-                    if(state.sort) {
-                        document.getElementById('sortFilter').value = state.sort;
-                        document.getElementById('sortActiveText').textContent = getCustomOptionText('sort', state.sort);
-                    } else {
-                        document.getElementById('sortFilter').value = 'recent';
-                        document.getElementById('sortActiveText').textContent = 'Data Mais Recente';
-                    }
-                    
-                    if(state.filtersOpen && !isFiltersOpen) {
-                        document.getElementById('toggleFiltersBtn').click();
-                    }
-
-                    const recreateChips = (containerId, tokens) => {
-                        const container = document.getElementById(containerId);
-                        const input = document.getElementById(containerId.replace('Container', 'Input'));
-                        if(!container || !input || !tokens) return;
-                        
-                        clearChips(containerId);
-                        tokens.forEach(t => {
-                            if(t.type === 'word') {
-                                createChipAndOp(t.value, container, input);
-                            } else if (t.type === 'op') {
-                                const ops = container.querySelectorAll('.chip-op');
-                                if(ops.length > 0) {
-                                    const lastOp = ops[ops.length - 1];
-                                    if(lastOp.getAttribute('data-op') !== t.value) {
-                                        lastOp.click();
-                                    }
-                                }
-                            }
-                        });
-                    };
-
-                    recreateChips('mainInputContainer', state.main);
-                    recreateChips('descContainer', state.desc);
-                    recreateChips('negativeContainer', state.neg);
-                    recreateChips('channelContainer', state.channel);
-                    
-                } catch(e) {}
-            } else {
-                document.getElementById('sortFilter').value = 'recent';
-                document.getElementById('sortActiveText').textContent = 'Data Mais Recente';
-            }
-        }
-
         document.addEventListener("DOMContentLoaded", () => {
             updatePlatformButtonFromUrl();
-            loadState();
         });
-
-        window.clearAllFilters = function() {
-            clearChips('mainInputContainer');
-            clearChips('descContainer');
-            clearChips('negativeContainer');
-            clearChips('channelContainer');
-
-            document.getElementById('langFilter').value = '';
-            document.getElementById('langActiveText').textContent = 'Qualquer Idioma';
-            
-            document.getElementById('countryFilter').value = '';
-            document.getElementById('countryActiveText').textContent = 'Qualquer País';
-            
-            document.getElementById('statusFilter').value = 'all';
-            document.getElementById('statusActiveText').textContent = 'Todos os Status';
-            
-            document.getElementById('subsFilter').value = 'all';
-            document.getElementById('subsActiveText').textContent = 'Todos os Tamanhos';
-            
-            document.getElementById('dateStart').value = '';
-            document.getElementById('dateEnd').value = '';
-
-            document.getElementById('sortFilter').value = 'recent';
-            document.getElementById('sortActiveText').textContent = 'Data Mais Recente';
-
-            saveState();
-            showAlert("Filtros limpos com sucesso!", false);
-            
-            resultsGrid.innerHTML = '';
-            document.getElementById('resultsCount').textContent = '0';
-            globalNextPageToken = '';
-            globalAccumulatedItems = [];
-            loadMoreContainer.classList.add('hidden');
-            resultsContainer.classList.add('hidden');
-        };
 
         const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
         const filtersWrapper = document.getElementById('filtersWrapper');
@@ -688,7 +567,6 @@
                 filtersArrow.classList.remove('rotate-180');
             }
             updateScrollState();
-            saveState();
         });
 
         function toggleMenu(menuId, e) {
@@ -719,45 +597,10 @@
                 activeMenuId = null;
             }
             updateScrollState();
-            saveState();
-        }
-
-        function getCustomOptionText(filterType, val) {
-            if(filterType === 'sort') {
-                if(val==='views') return 'Nº de Visualizações';
-                if(val==='comments') return 'Nº de Comentários';
-                if(val==='subs') return 'Nº de Inscritos';
-                if(val==='recent') return 'Data Mais Recente';
-            }
-            if(filterType === 'status') {
-                if(val==='all') return 'Todos os Status';
-                if(val==='live') return 'Ao Vivo';
-                if(val==='upcoming') return 'Agendado';
-                if(val==='completed') return 'Finalizado';
-            }
-            if(filterType === 'subs') {
-                if(val==='all') return 'Todos os Tamanhos';
-                if(val==='small') return 'Até 10 mil Inscritos';
-                if(val==='medium') return 'De 10 mil a 100 mil';
-                if(val==='large') return 'Mais de 100 mil';
-            }
-            if(filterType === 'lang') {
-                if(val==='') return 'Qualquer Idioma';
-                if(val==='pt') return 'Português';
-                if(val==='en') return 'Inglês';
-                if(val==='es') return 'Espanhol';
-                return val.toUpperCase();
-            }
-            if(filterType === 'country') {
-                if(val==='') return 'Qualquer País';
-                return val.toUpperCase();
-            }
-            return text;
         }
 
         window.handleSort = function() {
             if (globalAccumulatedItems.length > 0) renderGrid(globalAccumulatedItems);
-            saveState();
         };
 
         // === SISTEMA DE ALERTA ===
@@ -936,7 +779,6 @@
                         const prevNode = lastChip.previousElementSibling;
                         if (prevNode && prevNode.classList.contains('chip-op')) prevNode.remove();
                         lastChip.remove();
-                        saveState();
                     }
                 }
             });
@@ -985,7 +827,6 @@
                         this.innerText = 'E';
                         this.className = `${baseClasses} ${andClasses}`;
                     }
-                    saveState();
                 };
                 container.insertBefore(op, input);
             }
@@ -1004,13 +845,11 @@
                 else if (nextNode && nextNode.classList.contains('chip-op')) nextNode.remove();
                 
                 chip.remove();
-                saveState();
                 if(input) input.focus();
             });
 
             container.insertBefore(chip, input);
             if(input) input.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
-            saveState();
         }
 
         function clearChips(containerId) {
@@ -1038,7 +877,10 @@
         }
 
         window.applySmartCombo1 = function() {
-            clearAllFilters(); 
+            clearChips('mainInputContainer');
+            clearChips('descContainer');
+            clearChips('negativeContainer');
+            clearChips('channelContainer');
             addChipWithOp('mainInputContainer', 'Aula 1'); 
             addChipWithOp('mainInputContainer', 'Evento', 'OR');
             addChipWithOp('mainInputContainer', 'Workshop', 'OR');
@@ -1046,12 +888,14 @@
             addChipWithOp('mainInputContainer', 'Online', 'AND');
             addChipWithOp('negativeContainer', 'minicurso');
             addChipWithOp('negativeContainer', 'mini-curso', 'OR');
-            saveState();
             showAlert("Combinação aplicada com sucesso!", false);
         };
 
         window.applySmartCombo2 = function() {
-            clearAllFilters(); 
+            clearChips('mainInputContainer');
+            clearChips('descContainer');
+            clearChips('negativeContainer');
+            clearChips('channelContainer'); 
             addChipWithOp('mainInputContainer', 'aula'); 
             addChipWithOp('mainInputContainer', 'evento', 'OR');
             addChipWithOp('mainInputContainer', 'semana do', 'OR');
@@ -1066,7 +910,6 @@
             addChipWithOp('negativeContainer', 'lista de espera');
             addChipWithOp('negativeContainer', 'encerrado', 'OR');
             addChipWithOp('negativeContainer', 'encerrada', 'OR');
-            saveState();
             showAlert("Combinação aplicada com sucesso!", false);
         };
 
@@ -1166,9 +1009,22 @@
             return h + m + s;
         }
 
-        function buildApiQueryString(tokens) {
-             if(tokens.length === 0) return '';
-             return tokens.filter(t => t.type === 'word').map(t => `"${t.value}"`).join(' ');
+        // =====================================
+        // MOTOR GERADOR DE DORKS MATEMÁTICAS
+        // =====================================
+        function buildDorkString(tokens, prefix = '') {
+            if(tokens.length === 0) return '';
+            let result = '';
+            for(let i = 0; i < tokens.length; i++) {
+                let t = tokens[i];
+                if (t.type === 'word') {
+                    result += `${prefix}"${t.value}"`;
+                } else if (t.type === 'op') {
+                    if (t.value === 'OR') result += '|';
+                    else if (t.value === 'AND') result += ' ';
+                }
+            }
+            return result;
         }
 
         // =====================================
@@ -1223,7 +1079,6 @@
 
             if(isFiltersOpen) document.getElementById('toggleFiltersBtn').click();
             
-            // Mata o token antigo. Ação humana obriga o servidor a cobrar de novo!
             currentBurstToken = null; 
             
             globalNextPageToken = '';
@@ -1241,7 +1096,6 @@
                 return;
             }
             
-            // Mata o token antigo. O utilizador pediu mais, tem que cobrar!
             currentBurstToken = null;
             performSearch(true);
         });
@@ -1274,10 +1128,18 @@
             const dateEnd = document.getElementById('dateEnd').value;
             const sortFilterVal = document.getElementById('sortFilter').value;
 
+            // =====================================
+            // CONSTRUTOR DE DORKS FRONTEND
+            // =====================================
             let queryParts = [];
-            if (mainTokens.length > 0) queryParts.push(`${buildApiQueryString(mainTokens)}`);
-            if (descTokens.length > 0) queryParts.push(`${buildApiQueryString(descTokens)}`);
-            let q = queryParts.join(' ');
+            if (mainTokens.length > 0) queryParts.push(buildDorkString(mainTokens, ''));
+            if (descTokens.length > 0) queryParts.push(buildDorkString(descTokens, 'intext:'));
+            if (negativeTokens.length > 0) {
+                let negStr = negativeTokens.filter(t => t.type === 'word').map(t => `-"${t.value}"`).join(' ');
+                queryParts.push(negStr);
+            }
+            
+            let q = queryParts.join(' ').trim();
 
             let specificChannelId = null;
             if (channelTokens.length === 1 && channelTokens[0].type === 'word') {
@@ -1302,29 +1164,19 @@
                 let newItemsFound = [];
                 let currentNextPageToken = isLoadMore ? globalNextPageToken : '0'; 
 
-                // LIMITE DE REQUISIÇÕES PROFUNDAS BAIXOU DE 15 PARA 3 PARA POUPAR SALDO DATA FOR SEO
                 while (loopCount < 3 && newItemsFound.length < 20) {
                     let searchUrl = baseSearchUrl;
                     if (currentNextPageToken) searchUrl += `&pageToken=${currentNextPageToken}`;
 
                     const searchResponse = await fetchWithTimeout(searchUrl, { timeout: 25000 });
                     
-                    // ==============================================================
-                    // INTERCEPTAÇÃO DE BLOQUEIO DE SALDO OU SEGURANÇA (IPv4 / Identidade)
-                    // ==============================================================
                     if (searchResponse.status === 403) {
                         const errorData = await searchResponse.json();
-                        
-                        // Trava Restrita IPv4
-                        if (errorData.ipv4Error) {
-                            throw new Error(errorData.error?.message || "Apenas conexões IPv4 são permitidas.");
-                        }
-
+                        if (errorData.ipv4Error) throw new Error(errorData.error?.message || "Apenas conexões IPv4 são permitidas.");
                         if (errorData.restoredId && !premiumId) gravarStickyId(errorData.restoredId);
                         
-                        // Trava Restrita Freemium e Falta de Identidade
                         if (errorData.limiteAtingido || errorData.blockIdentity || !premiumId) {
-                            localStorage.setItem('_ga_unlock_count', '3'); // Força bloqueio local
+                            localStorage.setItem('_ga_unlock_count', '3');
                             window.location.href = 'https://pagamento.grupobhds.com/inexplor/smartapps';
                             return; 
                         }
@@ -1348,6 +1200,9 @@
                     if(items.length === 0 && !currentNextPageToken) break;
                     if(items.length === 0) { loopCount++; continue; }
 
+                    // ==============================================================
+                    // MALHA FINA (JAVASCRIPT)
+                    // ==============================================================
                     items = items.filter(item => {
                         if (!item.id || !item.id.videoId) return false;
                         if (globalAccumulatedItems.some(existing => existing.id.videoId === item.id.videoId)) return false;
@@ -1370,7 +1225,6 @@
                     if (items.length > 0) {
                         const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
                         
-                        // O Youtube só aceita 50 IDs no máximo. Precisamos dividir os IDs em pacotes.
                         for(let i = 0; i < uniqueChannelIds.length; i += 50) {
                             const chunkIds = uniqueChannelIds.slice(i, i + 50);
                             const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics,snippet&id=${chunkIds.join(',')}`;
@@ -1425,7 +1279,6 @@
                     if (items.length > 0) {
                         const videoIds = items.map(item => item.id.videoId);
                         
-                        // O YouTube aceita 50 vídeos por consulta, precisamos quebrar os 100 em pedaços de 50.
                         const videosData = { items: [] };
                         for(let i = 0; i < videoIds.length; i += 50) {
                             const chunkIds = videoIds.slice(i, i + 50);
@@ -1515,9 +1368,6 @@
                             if (!isMatch) return false;
                         }
 
-                        // ==============================================================
-                        // LÓGICA ESTRITA DE DATAS E STATUS (FRONTEND)
-                        // ==============================================================
                         const now = new Date();
                         const limite12Meses = new Date(now);
                         limite12Meses.setFullYear(limite12Meses.getFullYear() - 1);
@@ -1529,7 +1379,6 @@
                         const targetDateForFilter = scheduledStart || actualEnd || publishedAt;
                         item.targetDateForFilter = targetDateForFilter; 
 
-                        // REGRA GLOBAL (Guilhotina): Rejeita absolutamente tudo mais velho que 12 meses exatos
                         if (targetDateForFilter < limite12Meses) return false;
 
                         if (dateStart || dateEnd) {
@@ -1556,17 +1405,13 @@
                         }
 
                         if (status === 'live') {
-                            // "Ao Vivo": vídeos em transmissão no exato momento
                             if (!isLive) return false; 
                         } else if (status === 'upcoming') {
-                            // "Agendado": vídeos com data futura (a partir de agora)
                             if (!isUpcoming) return false;
                         } else if (status === 'completed') {
-                            // "Finalizado": de 12 meses atrás até o momento atual (exclui ao vivo e agendados)
                             if (isLive || isUpcoming) return false;
                             if (targetDateForFilter > now) return false;
                         }
-                        // "all" (Todos os Status): Ignora as verificações acima, passando na guilhotina global.
                         
                         return true;
                     });
@@ -1671,7 +1516,6 @@
                 const pubDate = item.targetDateForFilter.toLocaleDateString('pt-PT');
                 const formattedComments = commentCount.toLocaleString('pt-PT');
 
-                // REDES SOCIAIS E AFILIADO
                 const descRaw = snippet.description;
                 const hotmartRegex = /(https?:\/\/(?:go\.|pay\.|www\.)?hotmart\.com\/[^\s]+)/i;
                 const igRegex = /https?:\/\/(?:www\.)?instagram\.com\/[^\s\n"']+/i;
