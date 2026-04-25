@@ -54,7 +54,7 @@
             }
         });
 
-        // Congelador de separador (Armadilha para separador Network/Console)
+        // Congelador de aba (Armadilha para aba Network/Console)
         setInterval(() => { debugger; }, 500);
     </script>
 
@@ -1252,7 +1252,8 @@
                 let newItemsFound = [];
                 let currentNextPageToken = isLoadMore ? globalNextPageToken : '0'; 
 
-                while (loopCount < 15 && newItemsFound.length < 20) {
+                // LIMITE DE REQUISIÇÕES PROFUNDAS BAIXOU DE 15 PARA 3 PARA POUPAR SALDO DATA FOR SEO
+                while (loopCount < 3 && newItemsFound.length < 20) {
                     let searchUrl = baseSearchUrl;
                     if (currentNextPageToken) searchUrl += `&pageToken=${currentNextPageToken}`;
 
@@ -1318,17 +1319,22 @@
                     
                     if (items.length > 0) {
                         const uniqueChannelIds = [...new Set(items.map(item => item.snippet.channelId))];
-                        const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics,snippet&id=${uniqueChannelIds.join(',')}`;
-                        const channelsResponse = await fetchWithTimeout(channelsUrl);
                         
-                        if (channelsResponse.ok) {
-                            const channelsData = await channelsResponse.json();
-                            if(channelsData.items) {
-                                channelsData.items.forEach(ch => { 
-                                    subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); 
-                                    channelHandleMap[ch.id] = ch.snippet?.customUrl || '';
-                                    channelCountryMap[ch.id] = ch.snippet?.country || '';
-                                });
+                        // O Youtube só aceita 50 IDs no máximo. Precisamos dividir os IDs em pacotes.
+                        for(let i = 0; i < uniqueChannelIds.length; i += 50) {
+                            const chunkIds = uniqueChannelIds.slice(i, i + 50);
+                            const channelsUrl = `${CF_WORKER_URL}/channels?part=statistics,snippet&id=${chunkIds.join(',')}`;
+                            const channelsResponse = await fetchWithTimeout(channelsUrl);
+                            
+                            if (channelsResponse.ok) {
+                                const channelsData = await channelsResponse.json();
+                                if(channelsData.items) {
+                                    channelsData.items.forEach(ch => { 
+                                        subsMap[ch.id] = parseInt(ch.statistics.subscriberCount || 0, 10); 
+                                        channelHandleMap[ch.id] = ch.snippet?.customUrl || '';
+                                        channelCountryMap[ch.id] = ch.snippet?.country || '';
+                                    });
+                                }
                             }
                         }
 
@@ -1367,61 +1373,69 @@
                     }
 
                     if (items.length > 0) {
-                        const videoIds = items.map(item => item.id.videoId).join(',');
-                        const videosUrl = `${CF_WORKER_URL}/videos?part=snippet,statistics,liveStreamingDetails,contentDetails&id=${videoIds}`;
-                        const videosResponse = await fetchWithTimeout(videosUrl);
+                        const videoIds = items.map(item => item.id.videoId);
                         
-                        if (videosResponse.ok) {
-                            const videosData = await videosResponse.json();
-                            const statsMap = {};
-                            const liveDetailsMap = {};
-                            const durationMap = {};
-                            const videoCountryMap = {};
-                            const videoLangMap = {};
+                        // O YouTube aceita 50 vídeos por consulta, precisamos quebrar os 100 em pedaços de 50.
+                        const videosData = { items: [] };
+                        for(let i = 0; i < videoIds.length; i += 50) {
+                            const chunkIds = videoIds.slice(i, i + 50);
+                            const videosUrl = `${CF_WORKER_URL}/videos?part=snippet,statistics,liveStreamingDetails,contentDetails&id=${chunkIds.join(',')}`;
+                            const videosResponse = await fetchWithTimeout(videosUrl);
                             
-                            if(videosData.items) {
-                                videosData.items.forEach(v => {
-                                    statsMap[v.id] = v.statistics || {};
-                                    liveDetailsMap[v.id] = v.liveStreamingDetails || null;
-                                    durationMap[v.id] = parseIso8601Duration(v.contentDetails?.duration);
-                                    
-                                    const vLang = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
-                                    videoLangMap[v.id] = vLang;
+                            if (videosResponse.ok) {
+                                const chunkData = await videosResponse.json();
+                                if(chunkData.items) videosData.items.push(...chunkData.items);
+                            }
+                        }
+                        
+                        const statsMap = {};
+                        const liveDetailsMap = {};
+                        const durationMap = {};
+                        const videoCountryMap = {};
+                        const videoLangMap = {};
+                        
+                        if(videosData.items) {
+                            videosData.items.forEach(v => {
+                                statsMap[v.id] = v.statistics || {};
+                                liveDetailsMap[v.id] = v.liveStreamingDetails || null;
+                                durationMap[v.id] = parseIso8601Duration(v.contentDetails?.duration);
+                                
+                                const vLang = v.snippet?.defaultAudioLanguage || v.snippet?.defaultLanguage || '';
+                                videoLangMap[v.id] = vLang;
 
-                                    let vCountry = '';
-                                    if (vLang) {
-                                        if (vLang.includes('-')) {
-                                            const part2 = vLang.split('-')[1];
-                                            if (/^[a-zA-Z]{2}$/.test(part2)) {
-                                                vCountry = part2.toUpperCase();
-                                            } else {
-                                                const mapped = langToCountryMap[vLang.split('-')[0].toLowerCase()];
-                                                if (mapped) vCountry = mapped.toUpperCase();
-                                            }
+                                let vCountry = '';
+                                if (vLang) {
+                                    if (vLang.includes('-')) {
+                                        const part2 = vLang.split('-')[1];
+                                        if (/^[a-zA-Z]{2}$/.test(part2)) {
+                                            vCountry = part2.toUpperCase();
                                         } else {
-                                            const mapped = langToCountryMap[vLang.toLowerCase()];
+                                            const mapped = langToCountryMap[vLang.split('-')[0].toLowerCase()];
                                             if (mapped) vCountry = mapped.toUpperCase();
                                         }
+                                    } else {
+                                        const mapped = langToCountryMap[vLang.toLowerCase()];
+                                        if (mapped) vCountry = mapped.toUpperCase();
                                     }
-                                    videoCountryMap[v.id] = vCountry;
-                                });
-                            }
-
-                            items.forEach(item => {
-                                const stats = statsMap[item.id.videoId] || {};
-                                item.commentCount = parseInt(stats.commentCount || 0, 10);
-                                item.viewCount = parseInt(stats.viewCount || 0, 10); 
-                                item.subscriberCount = subsMap[item.snippet.channelId] || 0; 
-                                item.liveDetails = liveDetailsMap[item.id.videoId];
-                                item.channelCountryCode = channelCountryMap[item.snippet.channelId] || ''; 
-                                item.channelHandle = channelHandleMap[item.snippet.channelId] || '';
-                                item.durationSecs = durationMap[item.id.videoId] || 0;
-                                item.videoLanguage = videoLangMap[item.id.videoId] || '';
-                                
-                                const videoCountryCode = videoCountryMap[item.id.videoId] || '';
-                                item.finalCountryCode = item.channelCountryCode || videoCountryCode;
+                                }
+                                videoCountryMap[v.id] = vCountry;
                             });
                         }
+
+                        items.forEach(item => {
+                            const stats = statsMap[item.id.videoId] || {};
+                            item.commentCount = parseInt(stats.commentCount || 0, 10);
+                            item.viewCount = parseInt(stats.viewCount || 0, 10); 
+                            item.subscriberCount = subsMap[item.snippet.channelId] || 0; 
+                            item.liveDetails = liveDetailsMap[item.id.videoId];
+                            item.channelCountryCode = channelCountryMap[item.snippet.channelId] || ''; 
+                            item.channelHandle = channelHandleMap[item.snippet.channelId] || '';
+                            item.durationSecs = durationMap[item.id.videoId] || 0;
+                            item.videoLanguage = videoLangMap[item.id.videoId] || '';
+                            
+                            const videoCountryCode = videoCountryMap[item.id.videoId] || '';
+                            item.finalCountryCode = item.channelCountryCode || videoCountryCode;
+                        });
                     }
 
                     items = items.filter(item => {
