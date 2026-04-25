@@ -284,6 +284,20 @@
 
                 <div class="mt-6 w-full max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-x-4 sm:gap-x-6 gap-y-4 relative z-20">
                     
+                    <!-- BOTÃO DE PLATAFORMAS (COM ÍCONE) -->
+                    <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
+                        <button id="platformToggleBtn" onclick="toggleMenu('platformDropdown', event)" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
+                            <span class="material-symbols-rounded text-[20px]">layers</span>
+                            <span id="platformActiveText">YouTube</span>
+                        </button>
+                        <div id="platformDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-[calc(100vw-3rem)] sm:w-56 bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50 overflow-hidden text-left">
+                            <button onclick="changePlatform('youtube')" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Buscar no YouTube</button>
+                            <button onclick="changePlatform('instagram')" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Buscar no Instagram</button>
+                            <button onclick="changePlatform('hotmart')" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">Buscar na Hotmart</button>
+                            <button onclick="changePlatform('google')" class="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">Buscar no Google</button>
+                        </div>
+                    </div>
+                    
                     <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
                         <button id="comboToggleBtn" onclick="toggleMenu('comboDropdown', event)" class="bg-[#0F172A] border border-white/10 hover:border-[#DC2626] hover:text-white rounded-xl px-5 py-3 flex justify-center items-center gap-2 text-slate-300 transition-all duration-300 text-sm font-bold w-full h-full shadow-md">
                             <span class="material-symbols-rounded text-[20px]">auto_awesome</span>
@@ -486,11 +500,30 @@
         // ==========================================
         // CONFIGURAÇÃO CLOUDFLARE WORKER (BACKEND)
         // ==========================================
-        const CF_WORKER_URL = "https://unilancamento-youtube.grupo-bhds.workers.dev"; 
+        const CF_WORKER_URL = "https://unilancamento.grupo-bhds.workers.dev"; 
 
         let globalNextPageToken = '';
         let globalAccumulatedItems = [];
         let currentBurstToken = null; // Memória do Passe Livre
+
+        // ==========================================
+        // AUTO-DETEÇÃO DE PLATAFORMA VIA URL
+        // ==========================================
+        function updatePlatformButtonFromUrl() {
+            const path = window.location.pathname.toLowerCase();
+            const platformTextElement = document.getElementById('platformActiveText');
+            if (!platformTextElement) return;
+
+            if (path.includes('/instagram')) {
+                platformTextElement.textContent = 'Instagram';
+            } else if (path.includes('/hotmart')) {
+                platformTextElement.textContent = 'Hotmart';
+            } else if (path.includes('/google')) {
+                platformTextElement.textContent = 'Google';
+            } else {
+                platformTextElement.textContent = 'YouTube';
+            }
+        }
 
         // === LOCAL STORAGE ===
         function saveState() {
@@ -564,7 +597,11 @@
                 document.getElementById('sortActiveText').textContent = 'Data Mais Recente';
             }
         }
-        document.addEventListener("DOMContentLoaded", loadState);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            updatePlatformButtonFromUrl();
+            loadState();
+        });
 
         window.clearAllFilters = function() {
             clearChips('mainInputContainer');
@@ -625,6 +662,19 @@
                 window.scrollTo(0, 0);
             }
         }
+
+        // REDIRECIONAMENTO DE PLATAFORMAS
+        window.changePlatform = function(platform) {
+            const currentUrl = new URL(window.location.href);
+            const params = currentUrl.search; // Mantém o ?id=VIP123 se houver
+            let baseUrl = 'https://inexplor.grupobhds.com/unilancamento';
+            
+            if (platform === 'youtube') {
+                window.location.href = baseUrl + params;
+            } else {
+                window.location.href = baseUrl + '/' + platform + params;
+            }
+        };
 
         toggleFiltersBtn.addEventListener('click', () => {
             isFiltersOpen = !isFiltersOpen;
