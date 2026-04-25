@@ -298,16 +298,32 @@
                             <span class="material-symbols-rounded text-[20px]">auto_awesome</span>
                             Combinações
                         </button>
-                        <div id="comboDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-[calc(100vw-3rem)] sm:w-80 bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50 max-h-[300px] overflow-y-auto text-left">
+                        <div id="comboDropdown" class="absolute top-full left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 mt-2 w-[calc(100vw-3rem)] sm:w-[350px] bg-[#0F172A] border border-white/10 rounded-xl shadow-2xl hidden transition-all duration-300 z-50 max-h-[350px] overflow-y-auto text-left">
+                            
                             <button onclick="applySmartCombo1(); toggleMenu('comboDropdown', event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">
-                                "Aula 1" <span class="text-orange-400 font-bold">OU</span> "Evento" <span class="text-orange-400 font-bold">OU</span> "Workshop" <span class="text-blue-400 font-bold">E</span> Gratuito <span class="text-blue-400 font-bold">E</span> Online <br><br>
-                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas:</span>
-                                minicurso <span class="text-orange-400 font-bold">OU</span> mini-curso
+                                "aula 1" <span class="text-orange-400 font-bold">OU</span> "clase 1" <br><br>
+                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Filtros Ativados:</span>
+                                Status: Agendado
                             </button>
-                            <button onclick="applySmartCombo2(); toggleMenu('comboDropdown', event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-                                "aula" <span class="text-orange-400 font-bold">OU</span> "evento" <span class="text-orange-400 font-bold">OU</span> "semana do" <span class="text-orange-400 font-bold">OU</span> "semana da" <span class="text-orange-400 font-bold">OU</span> "semana de" <span class="text-blue-400 font-bold">E</span> "grátis" <span class="text-orange-400 font-bold">OU</span> "gratis" <span class="text-orange-400 font-bold">OU</span> "gratuito" <span class="text-orange-400 font-bold">OU</span> "gratuita" <span class="text-blue-400 font-bold">E</span> "100% online" <span class="text-orange-400 font-bold">OU</span> "online" <br><br>
-                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Negativas:</span>
-                                "lista de espera" <span class="text-orange-400 font-bold">OU</span> "encerrado" <span class="text-orange-400 font-bold">OU</span> "encerrada"
+                            
+                            <button onclick="applySmartCombo2(); toggleMenu('comboDropdown', event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">
+                                "aula 3" <span class="text-orange-400 font-bold">OU</span> "aula 4" <br><br>
+                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Filtros Ativados:</span>
+                                Descrição: hotmart.com
+                            </button>
+
+                            <button onclick="applySmartCombo3(); toggleMenu('comboDropdown', event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">
+                                "clase 1" <span class="text-orange-400 font-bold">OU</span> "workshop" <br><br>
+                                <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Filtros Ativados:</span>
+                                Status: Agendado • Idioma: Espanhol
+                            </button>
+
+                            <button onclick="applySmartCombo4(); toggleMenu('comboDropdown', event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors border-b border-white/5">
+                                "aula 1" <span class="text-orange-400 font-bold">OU</span> "evento" <span class="text-orange-400 font-bold">OU</span> "workshop"
+                            </button>
+
+                            <button onclick="applySmartCombo5(); toggleMenu('comboDropdown', event);" class="w-full text-left px-4 py-4 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                                "semana da" <span class="text-orange-400 font-bold">OU</span> "semana do" <span class="text-orange-400 font-bold">OU</span> "semana de" <span class="text-blue-400 font-bold">E</span> "gratuito" <span class="text-blue-400 font-bold">E</span> "online"
                             </button>
                         </div>
                     </div>
@@ -495,7 +511,7 @@
         let currentBurstToken = null; // Memória do Passe Livre
 
         // ==========================================
-        // AUTO-DETEÇÃO DE PLATAFORMA VIA URL
+        // AUTO-DETEÇÃO E MÁSCARA DE PLATAFORMA VIA URL
         // ==========================================
         function updatePlatformButtonFromUrl() {
             const path = window.location.pathname.toLowerCase();
@@ -510,6 +526,11 @@
                 platformTextElement.textContent = 'Google';
             } else {
                 platformTextElement.textContent = 'YouTube';
+            }
+
+            if (path.includes('/instagram') || path.includes('/hotmart') || path.includes('/google')) {
+                const newUrl = '/unilancamento' + window.location.search;
+                window.history.replaceState(null, '', newUrl);
             }
         }
 
@@ -717,10 +738,10 @@
             type();
         }
 
-        setupTypewriter('urlInput', '', ["Digite a sua palavra-chave...", "Ex: masterclass", "Ex: workshop"], true);
+        setupTypewriter('urlInput', '', ["Digite a sua palavra-chave...", "Ex: masterclass", "Ex: workshop", "Ex: aula 1", "Ex: clase 1"], true);
         setupTypewriter('channelInput', '', ["Ex: https://youtube.com/@Canal", "Ex: https://youtube.com/@InexplorOficial"], true);
-        setupTypewriter('descInput', '', ["Ex: Hotmart"], true);
-        setupTypewriter('negativeInput', '', ["Ex: webinar"], true);
+        setupTypewriter('descInput', '', ["Ex: hotmart.com", "Ex: entrar no grupo"], true);
+        setupTypewriter('negativeInput', '', ["Ex: webinar", "Ex: minicurso"], true);
 
         function cleanChannelInput(val) {
             let v = val.trim();
@@ -860,6 +881,31 @@
             if(input) { input.value = ''; container.scrollLeft = 0; }
         }
 
+        function clearAllFiltersBase() {
+            clearChips('mainInputContainer');
+            clearChips('descContainer');
+            clearChips('negativeContainer');
+            clearChips('channelContainer');
+
+            document.getElementById('langFilter').value = '';
+            document.getElementById('langActiveText').textContent = 'Qualquer Idioma';
+            
+            document.getElementById('countryFilter').value = '';
+            document.getElementById('countryActiveText').textContent = 'Qualquer País';
+            
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('statusActiveText').textContent = 'Todos os Status';
+            
+            document.getElementById('subsFilter').value = 'all';
+            document.getElementById('subsActiveText').textContent = 'Todos os Tamanhos';
+            
+            document.getElementById('dateStart').value = '';
+            document.getElementById('dateEnd').value = '';
+
+            document.getElementById('sortFilter').value = 'recent';
+            document.getElementById('sortActiveText').textContent = 'Data Mais Recente';
+        }
+
         function addChipWithOp(containerId, text, opBefore = 'AND') {
             const input = document.getElementById(containerId.replace('Container', 'Input'));
             const container = document.getElementById(containerId);
@@ -876,40 +922,60 @@
             }
         }
 
+        // =====================================
+        // NOVAS COMBINAÇÕES INTELIGENTES
+        // =====================================
         window.applySmartCombo1 = function() {
-            clearChips('mainInputContainer');
-            clearChips('descContainer');
-            clearChips('negativeContainer');
-            clearChips('channelContainer');
-            addChipWithOp('mainInputContainer', 'Aula 1'); 
-            addChipWithOp('mainInputContainer', 'Evento', 'OR');
-            addChipWithOp('mainInputContainer', 'Workshop', 'OR');
-            addChipWithOp('mainInputContainer', 'Gratuito', 'AND');
-            addChipWithOp('mainInputContainer', 'Online', 'AND');
-            addChipWithOp('negativeContainer', 'minicurso');
-            addChipWithOp('negativeContainer', 'mini-curso', 'OR');
+            clearAllFiltersBase(); 
+            addChipWithOp('mainInputContainer', 'aula 1'); 
+            addChipWithOp('mainInputContainer', 'clase 1', 'OR');
+            
+            document.getElementById('statusFilter').value = 'upcoming';
+            document.getElementById('statusActiveText').textContent = 'Agendado';
+            
             showAlert("Combinação aplicada com sucesso!", false);
         };
 
         window.applySmartCombo2 = function() {
-            clearChips('mainInputContainer');
-            clearChips('descContainer');
-            clearChips('negativeContainer');
-            clearChips('channelContainer'); 
-            addChipWithOp('mainInputContainer', 'aula'); 
+            clearAllFiltersBase(); 
+            addChipWithOp('mainInputContainer', 'aula 3'); 
+            addChipWithOp('mainInputContainer', 'aula 4', 'OR');
+            
+            addChipWithOp('descContainer', 'hotmart.com');
+            
+            showAlert("Combinação aplicada com sucesso!", false);
+        };
+
+        window.applySmartCombo3 = function() {
+            clearAllFiltersBase(); 
+            addChipWithOp('mainInputContainer', 'clase 1'); 
+            addChipWithOp('mainInputContainer', 'workshop', 'OR');
+            
+            document.getElementById('statusFilter').value = 'upcoming';
+            document.getElementById('statusActiveText').textContent = 'Agendado';
+            document.getElementById('langFilter').value = 'es';
+            document.getElementById('langActiveText').textContent = 'Espanhol';
+            
+            showAlert("Combinação aplicada com sucesso!", false);
+        };
+
+        window.applySmartCombo4 = function() {
+            clearAllFiltersBase(); 
+            addChipWithOp('mainInputContainer', 'aula 1'); 
             addChipWithOp('mainInputContainer', 'evento', 'OR');
+            addChipWithOp('mainInputContainer', 'workshop', 'OR');
+            
+            showAlert("Combinação aplicada com sucesso!", false);
+        };
+
+        window.applySmartCombo5 = function() {
+            clearAllFiltersBase(); 
+            addChipWithOp('mainInputContainer', 'semana da'); 
             addChipWithOp('mainInputContainer', 'semana do', 'OR');
-            addChipWithOp('mainInputContainer', 'semana da', 'OR');
             addChipWithOp('mainInputContainer', 'semana de', 'OR');
-            addChipWithOp('mainInputContainer', 'grátis', 'AND');
-            addChipWithOp('mainInputContainer', 'gratis', 'OR');
-            addChipWithOp('mainInputContainer', 'gratuito', 'OR');
-            addChipWithOp('mainInputContainer', 'gratuita', 'OR');
-            addChipWithOp('mainInputContainer', '100% online', 'AND');
-            addChipWithOp('mainInputContainer', 'online', 'OR');
-            addChipWithOp('negativeContainer', 'lista de espera');
-            addChipWithOp('negativeContainer', 'encerrado', 'OR');
-            addChipWithOp('negativeContainer', 'encerrada', 'OR');
+            addChipWithOp('mainInputContainer', 'gratuito', 'AND');
+            addChipWithOp('mainInputContainer', 'online', 'AND');
+            
             showAlert("Combinação aplicada com sucesso!", false);
         };
 
@@ -1128,9 +1194,6 @@
             const dateEnd = document.getElementById('dateEnd').value;
             const sortFilterVal = document.getElementById('sortFilter').value;
 
-            // =====================================
-            // CONSTRUTOR DE DORKS FRONTEND
-            // =====================================
             let queryParts = [];
             if (mainTokens.length > 0) queryParts.push(buildDorkString(mainTokens, ''));
             if (descTokens.length > 0) queryParts.push(buildDorkString(descTokens, 'intext:'));
@@ -1200,9 +1263,6 @@
                     if(items.length === 0 && !currentNextPageToken) break;
                     if(items.length === 0) { loopCount++; continue; }
 
-                    // ==============================================================
-                    // MALHA FINA (JAVASCRIPT)
-                    // ==============================================================
                     items = items.filter(item => {
                         if (!item.id || !item.id.videoId) return false;
                         if (globalAccumulatedItems.some(existing => existing.id.videoId === item.id.videoId)) return false;
