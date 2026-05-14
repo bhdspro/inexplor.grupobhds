@@ -465,14 +465,17 @@
                 
                 // Se for hotmart, a rota fica vazia para levar à raiz do base path, senão coloca o nome (ex: logzz, braip)
                 const route = platform === 'hotmart' ? '' : platform;
+                
+                // Captura todos os parâmetros da URL atual (ex: ?id=PREMIUM123)
+                const parametrosAtuais = window.location.search;
 
                 if (isPreview) {
-                    mostrarErro(`Simulação: No seu domínio real, seria levado para ${basePath}${route}`);
+                    mostrarErro(`Simulação: No seu domínio real, seria levado para ${basePath}${route}${parametrosAtuais}`);
                     document.getElementById('platformSelect').value = 'logzz';
                     document.getElementById('selectedPlatformText').textContent = 'Logzz';
                 } else {
-                    // Direciona respeitando o sub-diretório + a nova rota
-                    window.location.href = window.location.origin + basePath + route;
+                    // Direciona respeitando o sub-diretório + a nova rota + os parâmetros (id=)
+                    window.location.href = window.location.origin + basePath + route + parametrosAtuais;
                 }
             }
         }
