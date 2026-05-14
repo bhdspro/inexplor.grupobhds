@@ -456,18 +456,23 @@
 
         function mudarPlataforma() {
             const platform = document.getElementById('platformSelect').value;
+            
             if (platform !== 'logzz') {
                 const isPreview = window.location.protocol === 'blob:' || window.location.hostname.includes('usercontent') || window.location.hostname.includes('google');
                 
-                // Se o usuário selecionar Hotmart, joga para a raiz, as outras para suas respectivas rotas
+                // Define o diretório base (subpasta) onde o site está instalado
+                const basePath = '/desbloqueio-produto-oculto/';
+                
+                // Se for hotmart, a rota fica vazia para levar à raiz do base path, senão coloca o nome (ex: logzz, braip)
                 const route = platform === 'hotmart' ? '' : platform;
 
                 if (isPreview) {
-                    mostrarErro(`Simulação: No seu domínio real, seria levado para /${route}.`);
+                    mostrarErro(`Simulação: No seu domínio real, seria levado para ${basePath}${route}`);
                     document.getElementById('platformSelect').value = 'logzz';
                     document.getElementById('selectedPlatformText').textContent = 'Logzz';
                 } else {
-                    window.location.href = window.location.origin + '/' + route;
+                    // Direciona respeitando o sub-diretório + a nova rota
+                    window.location.href = window.location.origin + basePath + route;
                 }
             }
         }
